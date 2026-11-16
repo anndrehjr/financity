@@ -8,7 +8,7 @@ export const personagem = {
   // Personalidade: só documentação para quem escreve falas. Não é usada no código.
   personalidade: "PROVISÓRIO — definir depois",
   visual: {
-    tipo: "svg-placeholder" as "svg-placeholder" | "imagem", // depois: "imagem" (PNG/SVG por expressão)
+    tipo: "nina" as "nina" | "svg-placeholder" | "imagem", // "nina" = Nina anime em camadas (imagem de referência enquanto a arte não chega)
     imagens: {
       feliz: "/guia/nina/feliz.png",
       pensando: "/guia/nina/pensando.png",
@@ -20,6 +20,8 @@ export const personagem = {
     corDestaque: "#1fa38a",
   },
   comportamento: {
+    // Tutorial guiado por eventos (Driver.js + Nina). Se false, volta ao tutorial antigo de falas.
+    tutorialGuiado: true,
     velocidadeDigitacaoMs: 28,
     segundosParado: 30,
     // Se false, a Nina não comenta o resultado de cada resposta (hoje o jogo não mostra se acertou).
