@@ -16,8 +16,14 @@ Sem senhas, PINs ou chaves neste arquivo.
 - Testes: e2e 87/87 (pela cadeia completa) e 29/29 de segurança. Backup/restauração testados na VPS.
 - VPS: ensaio descartável criado e **totalmente removido**; os 22 containers originais não foram afetados.
 
-## Não feito (aguarda aprovação) — ver `docs/MIGRACAO-E-ROLLBACK.md` §3
-- Troca definitiva, domínio/DNS/certificados, projeto na Vercel, pilha definitiva na VPS (`~/docker` é do root: precisa de `sudo`), push para GitHub.
+## Banco na VPS — FEITO em 2026-11-16 (autorizado pelo André)
+- Pilha definitiva em `~/docker/financity` (compose: `financity-db-1` PostgreSQL 16 + `financity-api-1`), segredos em `.env.production` (600, gerados na VPS). Banco só na rede interna; API na rede `docker_proxy`; **nenhuma porta publicada**, sem host no NPM e sem DNS (domínio ainda não definido) → nada acessível pela internet.
+- Dados migrados do backup final (`financity-backups\final-20261116-123518`), verificação sem divergências (`docs/relatorios/migracao-definitiva-vps-pg16.json`); login real do professor + painel validados (14/14).
+- Backup diário às 02:40 (cron do usuário `sombra`, local em `~/backups/financity`, sem envio ao Drive ainda) e restauração testada.
+- O sistema SQLite local continua sendo o que os alunos usam até a troca final.
+
+## Não feito (aguarda você)
+- Domínio/DNS/certificados/host no NPM, projeto na Vercel (precisa de `API_URL` e do `GATEWAY_SECRET` que está na VPS em `~/docker/financity/.env.production`), push para o GitHub (`gh` não está logado), envio dos backups ao Drive (`RCLONE_REMOTE`).
 
 ## Pendências (ação do André)
 1. Informar o domínio comprado (não foi inventado nenhum).
