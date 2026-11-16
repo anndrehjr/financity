@@ -1,0 +1,9 @@
+# Usado SÓ durante a importação dos dados: publica o PostgreSQL em 127.0.0.1 da VPS (inacessível pela internet)
+# para o túnel SSH do script de migração. Depois da importação, recrie o banco SEM este arquivo (volta a não publicar porta).
+#   docker compose -f docker-compose.yml -f docker-compose.import.yml --env-file ../.env.production up -d db
+networks:
+  internal:
+    internal: false
+services:
+  db:
+    ports: ["127.0.0.1:55432:5432"]
