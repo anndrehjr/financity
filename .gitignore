@@ -18,3 +18,8 @@ dist
 # voz da Nina: áudios de referência e chaves NUNCA vão para o repositório
 tools/nina-voz/referencia/
 tools/nina-voz/.env*
+# gravação original (MP3 grande), ambiente Python local e arquivos intermediários: só ficam na máquina
+tools/nina-voz/origem/
+tools/nina-voz/.venv/
+tools/nina-voz/trabalho/*
+!tools/nina-voz/trabalho/CORTES-PARA-REVISAO.md

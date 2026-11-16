@@ -1,0 +1,406 @@
+{
+  "arquivo_origem": "ElevenLabs_2026-11-16T23_13_23_sylphiette _gen_sp96_s57_sb75_se0_b_m2.mp3",
+  "observacao": "Cortes aprovados pelo professor (tempos em segundos no arquivo original, já com folga). Textos e usos ainda NÃO preenchidos: pendente de revisão.",
+  "falas": [
+    {
+      "id": "sem_uso.1",
+      "trechos": [
+        1
+      ],
+      "inicio": 0,
+      "fim": 1,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.2",
+      "trechos": [
+        2
+      ],
+      "inicio": 1.2,
+      "fim": 3.1,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.3",
+      "trechos": [
+        3
+      ],
+      "inicio": 3.35,
+      "fim": 9.61,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.4",
+      "trechos": [
+        4
+      ],
+      "inicio": 9.81,
+      "fim": 12.63,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.5",
+      "trechos": [
+        5
+      ],
+      "inicio": 13.47,
+      "fim": 18.81,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.6",
+      "trechos": [
+        6
+      ],
+      "inicio": 19.46,
+      "fim": 20.27,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.7",
+      "trechos": [
+        7
+      ],
+      "inicio": 20.95,
+      "fim": 27.22,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.8",
+      "trechos": [
+        8
+      ],
+      "inicio": 27.76,
+      "fim": 31.25,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.9",
+      "trechos": [
+        9
+      ],
+      "inicio": 31.77,
+      "fim": 44.58,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.10",
+      "trechos": [
+        10
+      ],
+      "inicio": 44.93,
+      "fim": 46.1,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.11",
+      "trechos": [
+        11
+      ],
+      "inicio": 46.3,
+      "fim": 48.39,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.12",
+      "trechos": [
+        12
+      ],
+      "inicio": 48.71,
+      "fim": 53.31,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.13",
+      "trechos": [
+        13
+      ],
+      "inicio": 54,
+      "fim": 55.94,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.14",
+      "trechos": [
+        14
+      ],
+      "inicio": 56.2,
+      "fim": 67.29,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.15",
+      "trechos": [
+        15
+      ],
+      "inicio": 67.65,
+      "fim": 68.46,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.16",
+      "trechos": [
+        16
+      ],
+      "inicio": 68.95,
+      "fim": 70.15,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.17",
+      "trechos": [
+        17
+      ],
+      "inicio": 70.39,
+      "fim": 77.36,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.18",
+      "trechos": [
+        18
+      ],
+      "inicio": 77.85,
+      "fim": 81.99,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.19",
+      "trechos": [
+        19
+      ],
+      "inicio": 82.41,
+      "fim": 86.77,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.20",
+      "trechos": [
+        20
+      ],
+      "inicio": 86.99,
+      "fim": 92.15,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.21",
+      "trechos": [
+        21
+      ],
+      "inicio": 92.37,
+      "fim": 107.37,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.22",
+      "trechos": [
+        22
+      ],
+      "inicio": 107.72,
+      "fim": 122.58,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.23",
+      "trechos": [
+        23
+      ],
+      "inicio": 123.03,
+      "fim": 125.3,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.24",
+      "trechos": [
+        24
+      ],
+      "inicio": 125.49,
+      "fim": 133.24,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.25",
+      "trechos": [
+        25
+      ],
+      "inicio": 133.48,
+      "fim": 136.69,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.26",
+      "trechos": [
+        26
+      ],
+      "inicio": 136.92,
+      "fim": 140.47,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.27",
+      "trechos": [
+        27
+      ],
+      "inicio": 141,
+      "fim": 142.25,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.28",
+      "trechos": [
+        28
+      ],
+      "inicio": 142.48,
+      "fim": 146.84,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.29",
+      "trechos": [
+        29
+      ],
+      "inicio": 147.02,
+      "fim": 147.92,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.30",
+      "trechos": [
+        30
+      ],
+      "inicio": 148.11,
+      "fim": 151.32,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.31",
+      "trechos": [
+        31
+      ],
+      "inicio": 151.6,
+      "fim": 157.91,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.32",
+      "trechos": [
+        32
+      ],
+      "inicio": 158.09,
+      "fim": 177.46,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.33",
+      "trechos": [
+        33
+      ],
+      "inicio": 177.69,
+      "fim": 182.55,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.34",
+      "trechos": [
+        34
+      ],
+      "inicio": 183.02,
+      "fim": 191.15,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.35",
+      "trechos": [
+        35
+      ],
+      "inicio": 191.38,
+      "fim": 196.9,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.36",
+      "trechos": [
+        36
+      ],
+      "inicio": 197.12,
+      "fim": 205.44,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.37",
+      "trechos": [
+        37
+      ],
+      "inicio": 205.63,
+      "fim": 208.43,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.38",
+      "trechos": [
+        38
+      ],
+      "inicio": 208.63,
+      "fim": 218.98,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.39",
+      "trechos": [
+        39
+      ],
+      "inicio": 219.36,
+      "fim": 223.11,
+      "texto": "",
+      "uso": null
+    },
+    {
+      "id": "sem_uso.40",
+      "trechos": [
+        40
+      ],
+      "inicio": 223.45,
+      "fim": 226.19,
+      "texto": "",
+      "uso": null
+    }
+  ]
+}
