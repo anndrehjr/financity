@@ -19,6 +19,8 @@ export const personagem = {
     posicao: "inferior-esquerda" as "inferior-esquerda" | "inferior-direita",
     corDestaque: "#1fa38a",
   },
+  // Plano gratuito da ElevenLabs exige atribuição; no plano pago ponha false.
+  creditos: { mostrarElevenLabs: true, texto: "Voz gerada com ElevenLabs (elevenlabs.io)" },
   comportamento: {
     // Tutorial guiado por eventos (Driver.js + Nina). Se false, volta ao tutorial antigo de falas.
     tutorialGuiado: true,

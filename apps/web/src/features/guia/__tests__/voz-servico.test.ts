@@ -49,7 +49,7 @@ test("com manifesto e fala: toca o MP3 pré-gerado, com volume, e emite início 
   const ev: string[] = []; s.on("inicio", () => ev.push("inicio")); s.on("boca", (f) => ev.push("boca:" + f));
   s.setVolume(0.4);
   assert.equal(await s.tocar("acerto.1", "Mandou bem!"), "audio");
-  assert.equal(audios[0].src, "/guia/nina/voz/acerto.1.aaaa1111.mp3"); assert.equal(audios[0].volume, 0.4); assert.equal(audios[0].tocou, 1);
+  assert.equal(audios[0].src, "/guia/nina/audio/acerto.1.aaaa1111.mp3"); assert.equal(audios[0].volume, 0.4); assert.equal(audios[0].tocou, 1);
   assert.equal(s.falando, true); assert.equal(ev[0], "inicio");
   for (const t of [...tarefas]) t.f();
   assert.deepEqual(ev.filter((x) => x.startsWith("boca")), ["boca:a", "boca:m"]);
