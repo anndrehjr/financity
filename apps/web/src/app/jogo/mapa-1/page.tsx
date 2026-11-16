@@ -1,12 +1,6 @@
 import { redirect } from "next/navigation";
-import { getSession } from "@/lib/session";
-import Mapa1Client from "./Mapa1Client";
 
-export const dynamic = "force-dynamic";
-
-export default async function Mapa1() {
-  const s = await getSession();
-  if (!s) redirect("/");
-  if (s.role !== "student") redirect("/admin");
-  return <Mapa1Client />;
+// Endereço antigo do Mapa 1: mantido para links e favoritos existentes.
+export default function Mapa1Antigo() {
+  redirect("/jogo/1");
 }

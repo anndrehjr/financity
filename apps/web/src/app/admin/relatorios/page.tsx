@@ -3,9 +3,10 @@ import Link from "next/link";
 import { useState } from "react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
 import { ErrorBox, Spinner, fmt, useApi } from "@/components/ui";
-import FilterBar, { Scope, qs } from "../FilterBar";
+import FilterBar, { Scope, qs, useAsm } from "../FilterBar";
 
 type R = {
+  assessmentTitle: string;
   title: string; school: string; teacher: string; className: string; scope: string; generatedAt: string; participants: number; registered: number; completed: number;
   avgPoints: number | null; avgPct: number | null; best: number | null; max: number;
   distribution: { label: string; alunos: number }[];
@@ -16,14 +17,14 @@ type R = {
 };
 
 export default function Page() {
-  const [scope, setScope] = useState<Scope>("real"); const [cls, setCls] = useState("");
-  const { data, error, loading, reload } = useApi<R>(`/api/admin/report?${qs(scope, cls)}`);
-  const q = qs(scope, cls);
+  const [scope, setScope] = useState<Scope>("real"); const [cls, setCls] = useState(""); const [asm, setAsm] = useAsm();
+  const { data, error, loading, reload } = useApi<R>(`/api/admin/report?${qs(scope, cls, asm)}`);
+  const q = qs(scope, cls, asm);
   return (
     <div className="space-y-4">
       <div className="no-print flex flex-wrap items-end justify-between gap-3">
         <div><h1 className="font-display text-3xl font-extrabold">Relatórios</h1><p className="text-slate-600">Relatório geral da turma, com dados reais registrados.</p></div>
-        <FilterBar scope={scope} setScope={setScope} cls={cls} setCls={setCls} />
+        <FilterBar scope={scope} setScope={setScope} cls={cls} setCls={setCls} asm={asm} setAsm={setAsm} />
       </div>
       <div className="no-print flex flex-wrap gap-2">
         <button className="btn btn-primary btn-sm" onClick={() => window.print()}>Exportar PDF</button>
@@ -38,7 +39,7 @@ export default function Page() {
           <header className="border-b pb-3">
             <p className="text-sm font-bold text-slate-600">{data.school || "Escola (configure em Configurações)"} • Prof. {data.teacher || "—"} • {new Date(data.generatedAt).toLocaleDateString("pt-BR")}</p>
             <h1 className="font-display text-2xl font-extrabold">{data.title}</h1>
-            <p className="text-sm">Turma: <b>{data.className}</b> • Mapa 1 — Consumo Consciente</p>
+            <p className="text-sm">Turma: <b>{data.className}</b> • {data.assessmentTitle}</p>
             {data.scope !== "real" && <p className="mt-1 inline-block rounded bg-amber-100 px-2 py-0.5 text-sm font-bold text-amber-900">Inclui DADOS DE DEMONSTRAÇÃO (fictícios)</p>}
           </header>
           <section className="grid grid-cols-2 gap-3 md:grid-cols-5">

@@ -3,9 +3,10 @@ import Link from "next/link";
 import { useState } from "react";
 import { Bar, BarChart, CartesianGrid, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { ErrorBox, Notice, Spinner, apiFetch, fmt, useApi } from "@/components/ui";
-import FilterBar, { Scope, qs } from "./FilterBar";
+import FilterBar, { Scope, qs, useAsm } from "./FilterBar";
 
 type D = {
+  assessment: { id: number; grade: number; sort: number; title: string };
   max: number;
   cards: { totalStudents: number; started: number; completed: number; avgPoints: number | null; best: number | null; avgPct: number | null };
   byMap: { name: string; available: boolean; avgPct: number | null }[];
@@ -25,8 +26,9 @@ const BAR = "#7c3aed";
 export default function Dashboard() {
   const [scope, setScope] = useState<Scope>("real");
   const [cls, setCls] = useState("");
+  const [asm, setAsm] = useAsm();
   const [demoMsg, setDemoMsg] = useState<string | null>(null);
-  const { data, error, loading, reload } = useApi<D>(`/api/admin/dashboard?${qs(scope, cls)}`);
+  const { data, error, loading, reload } = useApi<D>(`/api/admin/dashboard?${qs(scope, cls, asm)}`);
   const [altQ, setAltQ] = useState(1);
 
   async function demo(kind: "add" | "remove") {
@@ -42,8 +44,8 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       <div className="no-print flex flex-wrap items-end justify-between gap-3">
-        <div><h1 className="font-display text-3xl font-extrabold">Painel geral</h1><p className="text-slate-600">Mapa 1 — Consumo Consciente (pontuação máxima: {data?.max ?? 25})</p></div>
-        <FilterBar scope={scope} setScope={setScope} cls={cls} setCls={setCls} />
+        <div><h1 className="font-display text-3xl font-extrabold">Painel geral</h1><p className="text-slate-600">{data ? `Mapa ${data.assessment.sort} — ${data.assessment.title}` : ""} (pontuação máxima: {data?.max ?? 25})</p></div>
+        <FilterBar scope={scope} setScope={setScope} cls={cls} setCls={setCls} asm={asm} setAsm={setAsm} />
       </div>
 
       {loading && !data && <Spinner />}
@@ -53,7 +55,7 @@ export default function Dashboard() {
         <section aria-label="Indicadores" className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
           <Card label="Alunos cadastrados" value={fmt(data.cards.totalStudents)} />
           <Card label="Iniciaram o jogo" value={fmt(data.cards.started)} />
-          <Card label="Concluíram o Mapa 1" value={fmt(data.cards.completed)} />
+          <Card label="Concluíram o mapa" value={fmt(data.cards.completed)} />
           <Card label="Média de pontos (concluintes)" value={fmt(data.cards.avgPoints)} />
           <Card label="Melhor pontuação" value={fmt(data.cards.best)} />
           <Card label="Aproveitamento médio" value={fmt(data.cards.avgPct, "%")} />
@@ -128,7 +130,7 @@ export default function Dashboard() {
           <p className="text-sm text-slate-600">Empates compartilham a mesma colocação. O tempo de resposta não é usado como critério. Visível apenas ao professor.</p>
           {data.ranking.length === 0 ? <p className="mt-3 text-slate-600">Nenhum aluno concluiu o mapa neste filtro.</p> : (
             <table className="mt-2 w-full min-w-[640px]">
-              <thead><tr className="border-b"><th className="th">#</th><th className="th">Aluno</th><th className="th">Turma</th><th className="th">Mapa 1</th><th className="th">Geral</th><th className="th">Aproveitamento</th><th className="th">Status</th></tr></thead>
+              <thead><tr className="border-b"><th className="th">#</th><th className="th">Aluno</th><th className="th">Turma</th><th className="th">Pontos</th><th className="th">Geral</th><th className="th">Aproveitamento</th><th className="th">Status</th></tr></thead>
               <tbody>{data.ranking.map((r) => (
                 <tr key={r.studentId} className="border-b last:border-0">
                   <td className="td font-extrabold">{r.rank}º</td>

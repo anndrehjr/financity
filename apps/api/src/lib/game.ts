@@ -9,7 +9,17 @@ export const MEDALS = [
   { pct: 0, key: "explorador", title: "Explorador em Desenvolvimento", msg: "Toda grande jornada começa com um passo. Que tal conversar com o professor e explorar o tema de novo?" },
 ];
 export const medalMin = (pct: number, max: number) => Math.ceil((pct * max) / 100);
-export const medalFor = (score: number, max: number) => MEDALS.find((m) => score >= medalMin(m.pct, max))!;
+/** Títulos específicos por mapa (o Mapa 1 mantém os originais). A chave da medalha (e a arte) é a mesma. */
+const TITULOS: Record<string, Partial<Record<string, string>>> = {
+  "economia-decisoes": { mestre: "Mestre das Decisões Econômicas", guardiao: "Estrategista do Mercado", aprendiz: "Aprendiz de Economia" },
+  "planejamento-financeiro": { mestre: "Mestre do Planejamento", guardiao: "Arquiteto do Futuro", aprendiz: "Aprendiz Planejador" },
+  "cidadania-financeira": { mestre: "Mestre da Cidadania Financeira", guardiao: "Guardião da Cidade Digital", aprendiz: "Aprendiz Cidadão" },
+};
+export const medalFor = (score: number, max: number, slug?: string) => {
+  const m = MEDALS.find((x) => score >= medalMin(x.pct, max))!;
+  const t = slug ? TITULOS[slug]?.[m.key] : undefined;
+  return t ? { ...m, title: t } : m;
+};
 
 export type AssessmentRow = {
   id: number; map_id: number; grade: number; sort: number; status: string;
@@ -101,7 +111,7 @@ export async function assessmentState(studentId: number, assessmentId: number) {
   const attempt = await one<{ id: number; status: string; total_points: number }>(
     "SELECT id,status,total_points FROM attempts WHERE student_id=$1 AND assessment_id=$2 AND status<>'voided'", [studentId, a.id]);
   const totalQ = (await one<{ c: number }>("SELECT COUNT(*) c FROM questions WHERE map_id=$1", [a.map_id]))!.c;
-  const mapInfo = { id: a.id, title: a.title, subtitle: a.subtitle };
+  const mapInfo = { id: a.id, title: a.title, subtitle: a.subtitle, sort: a.sort };
   if (!attempt) return { map: mapInfo, status: "not_started", score: 0, max, answered: 0, total: totalQ };
   const answered = (await one<{ c: number }>("SELECT COUNT(*) c FROM answers WHERE attempt_id=$1", [attempt.id]))!.c;
   const base = { map: mapInfo, status: attempt.status, score: attempt.total_points, max, answered, total: totalQ };
@@ -156,5 +166,5 @@ export async function assessmentResult(studentId: number, assessmentId: number, 
     "SELECT total_points,completed_at FROM attempts WHERE student_id=$1 AND assessment_id=$2 AND status='completed'", [studentId, a.id]);
   if (!at) throw new HttpError(409, "A atividade ainda não foi concluída.");
   const max = await maxPointsForMap(a.map_id);
-  return { studentName, mapTitle: a.title, score: at.total_points, max, pct: Math.round((at.total_points / max) * 100), medal: medalFor(at.total_points, max), completedAt: at.completed_at };
+  return { studentName, mapTitle: a.title, score: at.total_points, max, pct: Math.round((at.total_points / max) * 100), medal: medalFor(at.total_points, max, a.slug), completedAt: at.completed_at };
 }

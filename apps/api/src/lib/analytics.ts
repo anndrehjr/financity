@@ -9,7 +9,7 @@ export const parseScope = (v: string | null | undefined): Scope => (v === "demo"
 /** teacherId: só entram turmas do professor. assessmentId: sem ele, usa a primeira avaliação da série consultada. */
 export type Filter = { scope: Scope; classId?: number | null; teacherId: number; assessmentId?: number | null };
 
-type Ctx = { assessmentId: number; mapId: number; grade: number; max: number; title: string };
+type Ctx = { assessmentId: number; mapId: number; grade: number; sort: number; max: number; title: string };
 
 /** Define qual avaliação está sendo analisada e confere que o professor tem turmas dessa série. */
 async function resolve(f: Filter): Promise<Ctx> {
@@ -34,9 +34,9 @@ async function resolve(f: Filter): Promise<Ctx> {
     if (!first) throw new HttpError(404, "Nenhuma avaliação cadastrada para as suas turmas.");
     assessmentId = first.id;
   }
-  const a = (await one<{ id: number; map_id: number; grade: number; title: string }>(
-    "SELECT a.id,a.map_id,a.grade,m.title FROM assessments a JOIN maps m ON m.id=a.map_id WHERE a.id=$1", [assessmentId]))!;
-  return { assessmentId: a.id, mapId: a.map_id, grade: a.grade, max: await maxPointsForMap(a.map_id), title: a.title };
+  const a = (await one<{ id: number; map_id: number; grade: number; sort: number; title: string }>(
+    "SELECT a.id,a.map_id,a.grade,a.sort,m.title FROM assessments a JOIN maps m ON m.id=a.map_id WHERE a.id=$1", [assessmentId]))!;
+  return { assessmentId: a.id, mapId: a.map_id, grade: a.grade, sort: a.sort, max: await maxPointsForMap(a.map_id), title: a.title };
 }
 
 /** Alunos do escopo: do professor, da série da avaliação, e filtros de demo/turma. */
@@ -139,12 +139,19 @@ export async function dashboard(f: Filter) {
   ].map((b) => ({ label: b.label, alunos: done.filter((a) => a.total_points >= b.from && a.total_points <= b.to).length }));
 
   const stats = await questionStats(f, cx);
-  const list = await q<{ sort: number; title: string; status: string }>(
-    "SELECT a.sort,m.title,a.status FROM assessments a JOIN maps m ON m.id=a.map_id WHERE a.grade=$1 ORDER BY a.sort", [cx.grade]);
-  const firstSort = list[0]?.sort;
-  const byMap = list.map((m) => m.sort === firstSort
-    ? { name: `Mapa ${m.sort} — ${m.title}`, available: true, avgPct: avg !== null ? round1((avg / max) * 100) : null }
-    : { name: `Mapa ${m.sort} — ${m.title}`, available: false, avgPct: null });
+  // média de cada avaliação da série (mesmo escopo de turmas/demonstração), em % da pontuação máxima do mapa
+  const wm = studentWhere(f, cx);
+  const gp = wm.param(cx.grade);
+  const list = await q<{ sort: number; title: string; status: string; maxp: number; avgp: number | null }>(
+    `SELECT a.sort,m.title,a.status,
+       (SELECT COALESCE(SUM(mx),0) FROM (SELECT MAX(o.points) mx FROM questions qq JOIN options o ON o.question_id=qq.id WHERE qq.map_id=m.id GROUP BY qq.id) t) maxp,
+       (SELECT AVG(at.total_points) FROM attempts at JOIN students s ON s.id=at.student_id JOIN classes c ON c.id=s.class_id
+         WHERE at.assessment_id=a.id AND at.status='completed'${wm.sql}) avgp
+     FROM assessments a JOIN maps m ON m.id=a.map_id WHERE a.grade=${gp} ORDER BY a.sort`, wm.vals);
+  const byMap = list.map((m) => ({
+    name: `Mapa ${m.sort} — ${m.title}`, available: m.status === "available",
+    avgPct: m.status === "available" && m.avgp !== null && m.maxp > 0 ? round1((m.avgp / m.maxp) * 100) : null,
+  }));
 
   // Ranking: só concluintes; empate = mesma colocação (sem usar tempo de resposta)
   const sorted = [...done].sort((a, b) => b.total_points - a.total_points || a.full_name.localeCompare(b.full_name, "pt-BR"));
@@ -157,7 +164,7 @@ export async function dashboard(f: Filter) {
     .sort((a, b) => a.name.localeCompare(b.name, "pt-BR"));
 
   return {
-    scope: f.scope, max, assessment: { id: cx.assessmentId, grade: cx.grade, title: cx.title },
+    scope: f.scope, max, assessment: { id: cx.assessmentId, grade: cx.grade, sort: cx.sort, title: cx.title },
     cards: { totalStudents: students.c, started: attempts.length, completed: done.length, avgPoints: avg, best, avgPct: avg !== null ? round1((avg / max) * 100) : null },
     byMap, distribution: bands,
     byQuestion: stats.map((s) => ({ name: `Q${s.number}`, theme: s.theme, media: s.avg, n: s.n })),
@@ -208,9 +215,11 @@ export async function studentReport(teacherId: number, studentId: number, assess
   await assertTeacherStudent(teacherId, studentId);
   const s = (await one<{ id: number; full_name: string; username: string; active: number; is_demo: number; class_name: string | null; grade: number | null }>(
     `SELECT s.id,s.full_name,s.username,s.active,s.is_demo,c.name class_name,c.grade FROM students s LEFT JOIN classes c ON c.id=s.class_id WHERE s.id=$1`, [studentId]))!;
+  type AR = { id: number; map_id: number; sort: number; title: string; slug: string };
+  const A = "SELECT a.id,a.map_id,a.sort,m.title,m.slug FROM assessments a JOIN maps m ON m.id=a.map_id";
   const aRow = s.grade === null ? undefined : assessmentId
-    ? await one<{ id: number; map_id: number }>("SELECT id,map_id FROM assessments WHERE id=$1 AND grade=$2", [assessmentId, s.grade])
-    : await one<{ id: number; map_id: number }>("SELECT id,map_id FROM assessments WHERE grade=$1 ORDER BY sort LIMIT 1", [s.grade]);
+    ? await one<AR>(`${A} WHERE a.id=$1 AND a.grade=$2`, [assessmentId, s.grade])
+    : await one<AR>(`${A} WHERE a.grade=$1 ORDER BY a.sort LIMIT 1`, [s.grade]);
   const a = aRow ? await one<{ id: number; status: string; total_points: number; started_at: Date; completed_at: Date | null }>(
     "SELECT id,status,total_points,started_at,completed_at FROM attempts WHERE student_id=$1 AND assessment_id=$2 AND status<>'voided'", [studentId, aRow.id]) : undefined;
   const max = aRow ? await maxPointsForMap(aRow.map_id) : 0;
@@ -232,7 +241,8 @@ export async function studentReport(teacherId: number, studentId: number, assess
   return {
     student: { id: s.id, name: s.full_name, username: s.username, className: s.class_name, active: !!s.active, demo: !!s.is_demo },
     school: await getSetting("school_name", ""), teacher: await getSetting("teacher_name", ""),
-    attempt: a ? { status: a.status, total: a.total_points, max, pct: Math.round((a.total_points / max) * 100), startedAt: a.started_at, completedAt: a.completed_at, medal: a.status === "completed" ? medalFor(a.total_points, max).title : null } : null,
+    attempt: a ? { status: a.status, total: a.total_points, max, pct: Math.round((a.total_points / max) * 100), startedAt: a.started_at, completedAt: a.completed_at, medal: a.status === "completed" ? medalFor(a.total_points, max, aRow?.slug).title : null } : null,
+    assessment: aRow ? { id: aRow.id, sort: aRow.sort, title: aRow.title } : null,
     answers: rows.map((r) => ({ number: r.number, title: r.title, theme: r.theme, letter: r.letter, text: r.text, points: r.points, why: r.why })),
     strengths: strong.map((r) => r.theme), retake: weak.map((r) => r.theme), diagnosis, history,
   };
@@ -248,6 +258,7 @@ export async function classReport(f: Filter) {
   const recs = sorted.filter((s) => s.index! < 70).map((s) => `Questão ${s.number} — ${s.theme}: retomar ${s.retake} (desempenho médio ${s.index}%).`);
   return {
     title: `RELATÓRIO DE APRENDIZAGEM — EDUCAÇÃO FINANCEIRA — ${cx.grade}º ANO`, school: await getSetting("school_name", ""), teacher: await getSetting("teacher_name", ""),
+    assessmentTitle: `Mapa ${cx.sort} — ${cx.title}`,
     className: classRow?.name ?? "Todas as turmas", scope: f.scope, generatedAt: new Date().toISOString(),
     participants: d.cards.started, registered: d.cards.totalStudents, completed: d.cards.completed, avgPoints: d.cards.avgPoints, avgPct: d.cards.avgPct, best: d.cards.best, max: d.max,
     distribution: d.distribution, questions: stats.map((s) => ({ number: s.number, theme: s.theme, n: s.n, avg: s.avg, index: s.index, excellent: s.excellent, inadequate: s.inadequate })),

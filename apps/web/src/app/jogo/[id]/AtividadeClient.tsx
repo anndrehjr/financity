@@ -1,15 +1,15 @@
 "use client";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import { Alex, Medal, SceneByKey, SceneMall } from "@/components/art";
+import { Alex, MapArt, Medal, SceneByKey } from "@/components/art";
 import { ErrorBox, Spinner, apiFetch } from "@/components/ui";
 
-const MAP_ID = 1;
+
 type Question = { id: number; number: number; title: string; scene: string; scenario: string; dialog: string; prompt: string; options: { id: number; letter: string; text: string }[] };
-type State = { map: { title: string; subtitle: string }; status: "not_started" | "in_progress" | "completed"; score: number; max: number; answered: number; total: number; question?: Question };
+type State = { map: { title: string; subtitle: string; sort?: number }; status: "not_started" | "in_progress" | "completed"; score: number; max: number; answered: number; total: number; question?: Question };
 type Result = { studentName: string; score: number; max: number; pct: number; medal: { key: string; title: string; msg: string } };
 
-export default function Mapa1Client() {
+export default function AtividadeClient({ id }: { id: number }) {
   const [state, setState] = useState<State | null>(null);
   const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -20,24 +20,24 @@ export default function Mapa1Client() {
   const load = useCallback(async () => {
     setError(null);
     try {
-      const s = await apiFetch<State>(`/api/game/${MAP_ID}/state`);
+      const s = await apiFetch<State>(`/api/game/${id}/state`);
       setState(s);
       setSelected(null);
-      if (s.status === "completed") setResult(await apiFetch<Result>(`/api/game/${MAP_ID}/result`));
+      if (s.status === "completed") setResult(await apiFetch<Result>(`/api/game/${id}/result`));
     } catch (e) { setError((e as Error).message); }
-  }, []);
+  }, [id]);
   useEffect(() => { void load(); }, [load]);
 
   async function start() {
     setBusy(true); setError(null);
-    try { setState(await apiFetch<State>(`/api/game/${MAP_ID}/start`, { method: "POST" })); } catch (e) { setError((e as Error).message); } finally { setBusy(false); }
+    try { setState(await apiFetch<State>(`/api/game/${id}/start`, { method: "POST" })); } catch (e) { setError((e as Error).message); } finally { setBusy(false); }
   }
 
   async function confirm() {
     if (!state?.question || selected === null || busy) return;
     setBusy(true); setError(null);
     try {
-      await apiFetch(`/api/game/${MAP_ID}/answer`, { method: "POST", body: { questionId: state.question.id, optionId: selected } });
+      await apiFetch(`/api/game/${id}/answer`, { method: "POST", body: { questionId: state.question.id, optionId: selected } });
       setTransition(true);
       await new Promise((r) => setTimeout(r, 1700));
       setTransition(false);
@@ -89,7 +89,7 @@ export default function Mapa1Client() {
       <main className="game-bg px-4 pb-10">
         <Top />
         <section className="mx-auto max-w-4xl overflow-hidden rounded-3xl bg-white shadow-xl animate-pop">
-          <div className="relative aspect-[16/9] md:aspect-[2/1]"><SceneMall className="h-full w-full" />
+          <div className="relative aspect-[16/9] md:aspect-[2/1]"><MapArt n={(state.map.sort ?? 1) as 1 | 2 | 3 | 4} />
             <div className="absolute bottom-0 left-4 h-[62%] animate-floaty"><Alex /></div></div>
           <div className="p-6 md:p-8">
             <h1 className="font-display text-3xl font-extrabold md:text-4xl">A CIDADE DO CONSUMO</h1>

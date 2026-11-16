@@ -2,8 +2,10 @@
 import Link from "next/link";
 import { use } from "react";
 import { ErrorBox, Spinner, fmtDate, useApi } from "@/components/ui";
+import { useAsm } from "../../FilterBar";
 
 type R = {
+  assessment: { id: number; sort: number; title: string } | null;
   student: { id: number; name: string; username: string; className: string | null; active: boolean; demo: boolean };
   school: string; teacher: string;
   attempt: { status: string; total: number; max: number; pct: number; startedAt: string; completedAt: string | null; medal: string | null } | null;
@@ -14,7 +16,8 @@ const ACTIONS: Record<string, string> = { cadastro_alunos: "Cadastro", redefinir
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const { data, error, loading, reload } = useApi<R>(`/api/admin/students/${id}/report`);
+  const [asm] = useAsm();
+  const { data, error, loading, reload } = useApi<R>(`/api/admin/students/${id}/report${asm ? `?assessment=${asm}` : ""}`);
   if (loading && !data) return <Spinner />;
   if (error) return <ErrorBox message={error} onRetry={reload} />;
   if (!data) return null;
@@ -32,7 +35,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         <dl className="grid gap-2 text-sm sm:grid-cols-2">
           <div><dt className="font-bold text-slate-600">Estudante</dt><dd className="text-lg font-bold">{data.student.name}</dd></div>
           <div><dt className="font-bold text-slate-600">Turma</dt><dd>{data.student.className ?? "—"}</dd></div>
-          <div><dt className="font-bold text-slate-600">Mapa realizado</dt><dd>Mapa 1 — Consumo Consciente</dd></div>
+          <div><dt className="font-bold text-slate-600">Mapa realizado</dt><dd>{data.assessment ? `Mapa ${data.assessment.sort} — ${data.assessment.title}` : "—"}</dd></div>
           <div><dt className="font-bold text-slate-600">Situação da atividade</dt><dd>{status}</dd></div>
           <div><dt className="font-bold text-slate-600">Início</dt><dd>{fmtDate(a?.startedAt)}</dd></div>
           <div><dt className="font-bold text-slate-600">Conclusão</dt><dd>{fmtDate(a?.completedAt)}</dd></div>

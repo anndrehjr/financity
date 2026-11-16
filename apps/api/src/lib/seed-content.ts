@@ -1,12 +1,13 @@
+import { seedMapas234 } from "./seed-mapas.js";
 import { tx } from "./db.js";
 
 /** Conteúdo aprovado do Mapa 1. Inserido apenas se ainda não existir (nunca sobrescreve edições do professor). */
 
 export const MAPS = [
   { sort: 1, slug: "consumo-consciente", title: "Consumo Consciente", subtitle: "A Cidade do Consumo", topics: ["Consumismo", "Fast fashion", "Sustentabilidade"], status: "available" },
-  { sort: 2, slug: "economia-decisoes", title: "Economia e Decisões", subtitle: "O Mercado das Escolhas", topics: ["Porcentagens", "Promoções", "Inflação"], status: "developing" },
-  { sort: 3, slug: "planejamento-financeiro", title: "Planejamento Financeiro", subtitle: "O Bairro do Futuro", topics: ["Orçamento", "Receitas e despesas", "Reserva de emergência"], status: "developing" },
-  { sort: 4, slug: "cidadania-financeira", title: "Cidadania Financeira", subtitle: "A Cidade Digital", topics: ["Ética", "Segurança", "Prioridades financeiras"], status: "developing" },
+  { sort: 2, slug: "economia-decisoes", title: "Economia e Decisões", subtitle: "O Mercado das Escolhas", topics: ["Porcentagens", "Promoções", "Inflação"], status: "available" },
+  { sort: 3, slug: "planejamento-financeiro", title: "Planejamento Financeiro", subtitle: "O Bairro do Futuro", topics: ["Orçamento", "Receitas e despesas", "Reserva de emergência"], status: "available" },
+  { sort: 4, slug: "cidadania-financeira", title: "Cidadania Financeira", subtitle: "A Cidade Digital", topics: ["Ética", "Segurança", "Prioridades financeiras"], status: "available" },
 ] as const;
 
 type Opt = { text: string; points: number; why: string };
@@ -103,6 +104,11 @@ export const MAP1_QUESTIONS: Q[] = [
  * Nunca sobrescreve pontuações ou textos já existentes. Rodado por `npm run migrate -- --seed`, não a cada inicialização.
  */
 export async function seedContent() {
+  await seedBase();
+  await seedMapas234(); // Mapas 2–4 (conteúdo em src/content); idempotente
+}
+
+async function seedBase() {
   await tx(async (c) => {
     await c.query("INSERT INTO subjects(slug,name) VALUES ('educacao-financeira','Educação Financeira') ON CONFLICT(slug) DO NOTHING");
     const subj = (await c.query("SELECT id FROM subjects WHERE slug='educacao-financeira'")).rows[0].id as number;
