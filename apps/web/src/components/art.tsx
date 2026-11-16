@@ -172,7 +172,41 @@ export function SceneParty() {
 }
 
 const SCENES: Record<string, () => ReactNode> = { shoe: SceneShoe, trend: SceneTrend, jeans: SceneJeans, ad: SceneAd, party: SceneParty };
-export function SceneByKey({ k }: { k: string }) { const S = SCENES[k] ?? SceneShoe; return <S />; }
+
+/** Cenas provisórias dos Mapas 2–4: ícone grande + legenda, no mesmo estilo visual. Substituíveis por ilustrações próprias (mesma chave). */
+const GENERIC: Record<string, { icon: string; label: string; from: string; to: string }> = {
+  snack: { icon: "🥪", label: "Cantina da escola", from: "#fde68a", to: "#fff7ed" },
+  packs: { icon: "📚", label: "Pacote de cadernos", from: "#bfdbfe", to: "#eff6ff" },
+  bag: { icon: "🎒", label: "Mochila em promoção", from: "#fecaca", to: "#fff1f2" },
+  plan: { icon: "📝", label: "Minha regra para promoções", from: "#ddd6fe", to: "#f5f3ff" },
+  ledger: { icon: "📒", label: "Caderno de contas", from: "#bbf7d0", to: "#f0fdf4" },
+  envelopes: { icon: "💵", label: "A mesada em três partes", from: "#bbf7d0", to: "#ecfccb" },
+  phone: { icon: "📱", label: "Celular quebrado", from: "#bae6fd", to: "#f0f9ff" },
+  bike: { icon: "🚲", label: "Bicicleta para o conserto", from: "#bbf7d0", to: "#f0fdf4" },
+  goal: { icon: "🎧", label: "Meta: fone novo", from: "#ddd6fe", to: "#f5f3ff" },
+  message: { icon: "💬", label: "Mensagem suspeita", from: "#fecaca", to: "#fff1f2" },
+  install: { icon: "💳", label: "À vista ou parcelado?", from: "#fde68a", to: "#fffbeb" },
+  lootbox: { icon: "🎁", label: "Caixas surpresa", from: "#fbcfe8", to: "#fdf2f8" },
+  cash: { icon: "💰", label: "Caixa da turma", from: "#fde68a", to: "#fffbeb" },
+  pact: { icon: "🤝", label: "Nosso pacto", from: "#bae6fd", to: "#f0f9ff" },
+};
+function SceneGeneric({ k }: { k: string }) {
+  const g = GENERIC[k]!;
+  return (
+    <Frame id={`g-${k}`} label={g.label} from={g.from} to={g.to}>
+      <Cloud x={120} y={70} /><Cloud x={690} y={90} s={0.8} />
+      <circle cx="400" cy="215" r="135" fill="#fff" opacity=".85" />
+      <text x="400" y="262" textAnchor="middle" fontSize="150">{g.icon}</text>
+      <rect x="190" y="365" width="420" height="52" rx="26" fill={C.ink} opacity=".9" />
+      <text x="400" y="400" textAnchor="middle" fontFamily="sans-serif" fontWeight="800" fontSize="26" fill="#fff">{g.label}</text>
+    </Frame>
+  );
+}
+export function SceneByKey({ k }: { k: string }) {
+  if (SCENES[k]) { const S = SCENES[k]; return <S />; }
+  if (GENERIC[k]) return <SceneGeneric k={k} />;
+  return <SceneShoe />;
+}
 
 /** Ilustrações dos quatro mapas (cartões da tela principal). */
 export function MapArt({ n }: { n: 1 | 2 | 3 | 4 }) {

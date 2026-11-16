@@ -84,13 +84,13 @@ ok(r.json.score === 18 && r.json.max === 25 && r.json.pct === 72 && r.json.medal
 r = await S.req("POST", `/api/game/${m1}/answer`, { questionId: 1, optionId: 1 });
 ok(r.status === 409, "não aceita respostas após concluir");
 r = await S.req("GET", "/api/me");
-ok(r.json.maps[1].unlocked === false, "concluir o Mapa 1 não libera o Mapa 2");
+ok(r.json.maps[1].unlocked === true && r.json.maps[1].published === true && r.json.maps[2].unlocked === false, "concluir o Mapa 1 libera o Mapa 2 (e só ele)");
 
 console.log("\n6) Painel do professor com dados reais");
 r = await T.req("GET", "/api/admin/dashboard?scope=real");
 ok(r.json.cards.totalStudents === 2 && r.json.cards.started === 1 && r.json.cards.completed === 1 && r.json.cards.avgPoints === 18 && r.json.cards.best === 18, "cards refletem os dados reais", JSON.stringify(r.json.cards));
 ok(r.json.ranking.length === 1 && r.json.ranking[0].rank === 1 && r.json.ranking[0].name === "Maria Souza", "ranking reflete resultado real");
-ok(r.json.byMap[1].available === false && r.json.byMap[1].avgPct === null, "mapas 2–4 aparecem como indisponíveis (não zero)");
+ok(r.json.byMap.length === 4 && r.json.byMap[1].available === true && r.json.byMap[1].avgPct === null && r.json.byMap[0].avgPct === 72, "Mapa 2 aparece disponível, sem média ainda (não zero); Mapa 1 com média 72%", JSON.stringify(r.json.byMap));
 ok(r.json.byQuestion.map((q) => q.media).join() === "5,5,0,4,4", "média por questão correta", r.json.byQuestion.map((q) => q.media).join());
 ok(r.json.progress.map((p) => p.value).join() === "1,0,1", "progresso da turma: 1 não começou, 0 em andamento, 1 concluiu", r.json.progress.map((p) => p.value).join());
 r = await T.req("GET", "/api/admin/questions/3?scope=real");
@@ -254,6 +254,53 @@ r = await T.req("GET", `/api/admin/dashboard?class=${cls.find((c) => c.name === 
 ok(r.status === 404, "painel de turma do 7º sem avaliações responde 404 claro");
 r = await T.req("GET", "/api/admin/dashboard");
 ok(r.status === 200 && r.json.assessment.grade === 8 && !JSON.stringify(r.json.ranking).includes("Sete Aluno"), "painel padrão é do 8º e não mistura alunos do 7º");
+
+console.log("\n12) Mapas 2 a 4: jogar, desbloqueio em sequência e painel por mapa (novo)");
+r = await T.req("POST", "/api/admin/students", { rows: [{ name: "Quatro Mapas Teste", className: "8º A", pin: "381947" }] });
+const qm = r.json.created[0];
+const QM = new Client();
+await QM.req("POST", "/api/auth/login", { username: qm.username, password: "381947" });
+r = await QM.req("GET", "/api/me");
+const asm = r.json.maps;
+ok(asm.length === 4 && asm.every((m) => m.published) && asm[0].unlocked && !asm[1].unlocked, "aluno novo: 4 mapas publicados; só o Mapa 1 desbloqueado");
+async function jogar(id, escolher = 0) {
+  let st = (await QM.req("POST", `/api/game/${id}/start`)).json;
+  const cenas = [];
+  for (let i = 0; i < 5; i++) {
+    if (!st.question) break;
+    cenas.push(st.question.scene);
+    const opt = st.question.options[escolher];
+    await QM.req("POST", `/api/game/${id}/answer`, { questionId: st.question.id, optionId: opt.id });
+    st = (await QM.req("GET", `/api/game/${id}/state`)).json;
+  }
+  return { st, cenas };
+}
+let g = await jogar(asm[0].id);
+ok(g.st.status === "completed", "Mapa 1 concluído");
+r = await QM.req("GET", "/api/me"); ok(r.json.maps[1].unlocked && !r.json.maps[2].unlocked, "Mapa 2 liberado; Mapa 3 ainda não");
+r = await QM.req("POST", `/api/game/${asm[2].id}/start`); ok(r.status === 403, "Mapa 3 não inicia antes de concluir o Mapa 2 (403)");
+const s2 = (await QM.req("POST", `/api/game/${asm[1].id}/start`)).json;
+ok(s2.map.sort === 2 && s2.map.title === "Economia e Decisões" && s2.total === 5 && s2.max === 25, "Mapa 2 inicia com 5 questões e máximo de 25 pontos");
+ok(s2.question.options.length === 5 && !/points|"why"|gabarito/i.test(JSON.stringify(s2)), "Mapa 2: 5 alternativas e nenhuma pontuação/gabarito vaza ao aluno");
+ok(s2.question.number === 1 && s2.question.title === "O Desconto em Cadeia", "Mapa 2 começa pela questão 1");
+g = await jogar(asm[1].id);
+ok(g.st.status === "completed" && g.cenas.length === 5, "Mapa 2 concluído (5 respostas)");
+r = await QM.req("GET", `/api/game/${asm[1].id}/result`);
+ok(r.status === 200 && r.json.max === 25 && !/Consumo Consciente/.test(r.json.medal.title) && /Mapa|Aprendiz|Explorador|Mestre|Estrategista/.test(r.json.medal.title), `resultado do Mapa 2 com medalha própria (${r.json.medal?.title})`);
+r = await QM.req("GET", "/api/me"); ok(r.json.maps[2].unlocked && !r.json.maps[3].unlocked, "Mapa 3 liberado; Mapa 4 ainda não");
+g = await jogar(asm[2].id); ok(g.st.status === "completed", "Mapa 3 concluído");
+g = await jogar(asm[3].id); ok(g.st.status === "completed", "Mapa 4 concluído");
+r = await QM.req("GET", `/api/game/${asm[3].id}/result`); ok(r.status === 200 && /Cidadania|Guardião|Aprendiz|Explorador|Cidade/.test(r.json.medal.title), `resultado do Mapa 4 (${r.json.medal?.title})`);
+r = await T.req("GET", `/api/admin/dashboard?assessment=${asm[1].id}`);
+ok(r.status === 200 && r.json.assessment.sort === 2 && r.json.questions.length === 5 && r.json.cards.completed >= 1, "painel do professor para o Mapa 2");
+ok(r.json.byMap[1].avgPct !== null && r.json.byMap.every((m) => m.available), "médias por mapa no painel (Mapas 1 a 4 disponíveis)");
+r = await T.req("GET", `/api/admin/questions/3?assessment=${asm[2].id}`);
+ok(r.status === 200 && r.json.title === "O Celular que Quebrou" && r.json.options.length === 5, "detalhe de questão do Mapa 3 pelo painel");
+r = await T.req("GET", `/api/admin/students/${qm.id}/report?assessment=${asm[3].id}`);
+ok(r.status === 200 && r.json.assessment.sort === 4 && r.json.answers.length === 5, "relatório individual do Mapa 4");
+r = await T.req("GET", `/api/admin/report?assessment=${asm[1].id}`);
+ok(r.status === 200 && /Mapa 2/.test(r.json.assessmentTitle), "relatório da turma do Mapa 2");
+r = await seven.req("POST", `/api/game/${asm[1].id}/start`); ok(r.status === 404, "aluno do 7º não acessa o Mapa 2 (404)");
 
 console.log(`\nResultado: ${pass} ok, ${fail} falhas`);
 process.exit(fail ? 1 : 0);

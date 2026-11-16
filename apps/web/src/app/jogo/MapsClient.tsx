@@ -46,13 +46,13 @@ export default function MapsClient() {
                     <p className="mt-1 text-sm font-semibold text-slate-600">{m.topics.join(" • ")}</p>
                     <div className="mt-3 flex flex-wrap items-center gap-2">
                       <span className={`rounded-full px-3 py-1 text-xs font-extrabold ${playable ? "bg-emerald-100 text-emerald-800" : "bg-slate-200 text-slate-700"}`}>
-                        {playable ? (m.progress === "completed" ? "CONCLUÍDO" : "DESBLOQUEADO") : "EM DESENVOLVIMENTO"}
+                        {playable ? (m.progress === "completed" ? "CONCLUÍDO" : "DESBLOQUEADO") : m.published ? "CONCLUA O MAPA ANTERIOR" : "EM DESENVOLVIMENTO"}
                       </span>
                     </div>
                     {playable ? (
-                      <Link href="/jogo/mapa-1" className="btn btn-primary mt-4 w-full">{label}</Link>
+                      <Link href={`/jogo/${m.id}`} className="btn btn-primary mt-4 w-full">{label}</Link>
                     ) : (
-                      <button className="btn btn-ghost mt-4 w-full" disabled aria-disabled="true"><Lock className="h-5 w-5" /> Em breve</button>
+                      <button className="btn btn-ghost mt-4 w-full" disabled aria-disabled="true"><Lock className="h-5 w-5" /> {m.published ? "Complete o mapa anterior" : "Em breve"}</button>
                     )}
                   </div>
                 </li>

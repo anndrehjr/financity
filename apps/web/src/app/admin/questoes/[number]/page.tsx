@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { use, useEffect, useState } from "react";
 import { ErrorBox, Notice, Spinner, apiFetch, fmt, useApi } from "@/components/ui";
-import FilterBar, { Scope, qs } from "../../FilterBar";
+import FilterBar, { Scope, qs, useAsm } from "../../FilterBar";
 
 type Detail = {
   number: number; title: string; theme: string; prompt: string; scenario: string; note: string; n: number; avg: number | null; index: number | null; excellent: number; inadequate: number;
@@ -12,8 +12,8 @@ type Detail = {
 
 export default function Page({ params }: { params: Promise<{ number: string }> }) {
   const { number } = use(params);
-  const [scope, setScope] = useState<Scope>("real"); const [cls, setCls] = useState("");
-  const { data, error, loading, reload } = useApi<Detail>(`/api/admin/questions/${number}?${qs(scope, cls)}`);
+  const [scope, setScope] = useState<Scope>("real"); const [cls, setCls] = useState(""); const [asm, setAsm] = useAsm();
+  const { data, error, loading, reload } = useApi<Detail>(`/api/admin/questions/${number}?${qs(scope, cls, asm)}`);
   const [pts, setPts] = useState<Record<string, number>>({});
   const [msg, setMsg] = useState<{ ok: boolean; t: string } | null>(null);
   useEffect(() => { if (data) setPts(Object.fromEntries(data.options.map((o) => [o.letter, o.points]))); }, [data]);
@@ -28,7 +28,7 @@ export default function Page({ params }: { params: Promise<{ number: string }> }
     <div className="space-y-4">
       <div className="no-print flex flex-wrap items-end justify-between gap-3">
         <nav aria-label="Questões" className="flex flex-wrap gap-1">{[1, 2, 3, 4, 5].map((n) => <Link key={n} href={`/admin/questoes/${n}`} aria-current={String(n) === number ? "page" : undefined} className={`btn btn-sm ${String(n) === number ? "btn-primary" : "btn-ghost"}`}>Q{n}</Link>)}</nav>
-        <FilterBar scope={scope} setScope={setScope} cls={cls} setCls={setCls} />
+        <FilterBar scope={scope} setScope={setScope} cls={cls} setCls={setCls} asm={asm} setAsm={setAsm} />
       </div>
       {loading && !data && <Spinner />}
       {error && <ErrorBox message={error} onRetry={reload} />}
