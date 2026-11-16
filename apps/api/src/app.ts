@@ -89,18 +89,25 @@ app.post("/api/auth/login", async (c) => {
 });
 app.post("/api/auth/logout", async (c) => { await logout(c); return c.json({ ok: true }); });
 
+/** ID de rota: inteiro positivo ou 404 (nunca chega ao banco como NaN/texto). */
+const pid = (c: { req: { param(k: string): string } }, name: string): number => {
+  const n = toId(c.req.param(name));
+  if (!Number.isInteger(n) || n < 1) throw new HttpError(404, "Não encontrado.");
+  return n;
+};
+
 // ───────── aluno ─────────
 app.get("/api/me", async (c) => {
   const u = await requireRole(c, "student");
   return c.json({ name: u.name, ...(await listAssessments(u.id)) });
 });
-app.post("/api/game/:id/start", async (c) => { const u = await requireRole(c, "student"); return c.json(await startAttempt(u.id, toId(c.req.param("id")))); });
-app.get("/api/game/:id/state", async (c) => { const u = await requireRole(c, "student"); return c.json(await assessmentState(u.id, toId(c.req.param("id")))); });
-app.get("/api/game/:id/result", async (c) => { const u = await requireRole(c, "student"); return c.json(await assessmentResult(u.id, toId(c.req.param("id")), u.name)); });
+app.post("/api/game/:id/start", async (c) => { const u = await requireRole(c, "student"); return c.json(await startAttempt(u.id, pid(c, "id"))); });
+app.get("/api/game/:id/state", async (c) => { const u = await requireRole(c, "student"); return c.json(await assessmentState(u.id, pid(c, "id"))); });
+app.get("/api/game/:id/result", async (c) => { const u = await requireRole(c, "student"); return c.json(await assessmentResult(u.id, pid(c, "id"), u.name)); });
 app.post("/api/game/:id/answer", async (c) => {
   const u = await requireRole(c, "student");
   const b = await json(c, z.object({ questionId: z.coerce.number().int(), optionId: z.coerce.number().int() }));
-  return c.json(await submitAnswer(u.id, toId(c.req.param("id")), b.questionId, b.optionId));
+  return c.json(await submitAnswer(u.id, pid(c, "id"), b.questionId, b.optionId));
 });
 
 // ───────── professor ─────────
@@ -138,14 +145,14 @@ app.post("/api/admin/pins", async (c) => {
 
 app.get("/api/admin/questions/:number", async (c) => {
   const t = await requireRole(c, "teacher");
-  const r = await questionDetail(toId(c.req.param("number")), filterOf(c, t.id));
+  const r = await questionDetail(pid(c, "number"), filterOf(c, t.id));
   if (!r) throw new HttpError(404, "Questão não encontrada.");
   return c.json(r);
 });
 /** Configuração das pontuações. Vale para respostas futuras; as já gravadas mantêm a pontuação da época. */
 app.put("/api/admin/questions/:number", async (c) => {
   const t = await requireRole(c, "teacher");
-  const number = toId(c.req.param("number"));
+  const number = pid(c, "number");
   const { points } = await json(c, z.object({ points: z.record(z.string(), z.number()) }));
   const qid = await questionIdFor(number, filterOf(c, t.id));
   if (!qid) throw new HttpError(404, "Questão não encontrada.");
@@ -189,7 +196,7 @@ app.post("/api/admin/students", async (c) => {
 });
 app.patch("/api/admin/students/:id", async (c) => {
   const t = await requireRole(c, "teacher");
-  const id = toId(c.req.param("id"));
+  const id = pid(c, "id");
   const b = await json(c, z.object({ action: z.string(), pin: z.string().optional(), reason: z.string().optional(), confirm: z.boolean().optional(), assessment: z.number().int().optional() }));
   if (b.action === "reset_pin") return c.json({ pin: await resetPin(id, t.id, b.pin) });
   if (b.action === "deactivate") { await setActive(id, false, t.id); return c.json({ ok: true }); }
@@ -203,7 +210,7 @@ app.patch("/api/admin/students/:id", async (c) => {
 });
 app.get("/api/admin/students/:id/report", async (c) => {
   const t = await requireRole(c, "teacher");
-  return c.json(await studentReport(t.id, toId(c.req.param("id")), toId(c.req.query("assessment")) || null));
+  return c.json(await studentReport(t.id, pid(c, "id"), toId(c.req.query("assessment")) || null));
 });
 
 app.notFound((c) => c.json({ error: "Não encontrado." }, 404));

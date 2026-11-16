@@ -1,9 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { Baloo_2, Nunito } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const display = Baloo_2({ subsets: ["latin"], weight: ["600", "700", "800"], variable: "--font-display" });
-const body = Nunito({ subsets: ["latin"], weight: ["400", "600", "700", "800"], variable: "--font-body" });
+// Fontes hospedadas no próprio projeto (subconjunto latino, cobre o português): o build não depende do Google
+// e o navegador do aluno não faz requisições a terceiros. Fontes variáveis, licença OFL (Baloo 2 e Nunito).
+const display = localFont({ src: "../fonts/baloo2-latin.woff2", weight: "600 800", variable: "--font-display", display: "swap" });
+const body = localFont({ src: "../fonts/nunito-latin.woff2", weight: "400 800", variable: "--font-body", display: "swap" });
 
 export const metadata: Metadata = {
   title: "Financity — A jornada das decisões financeiras",
