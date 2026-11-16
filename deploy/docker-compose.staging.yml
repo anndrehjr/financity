@@ -1,0 +1,15 @@
+# ENSAIO (staging) na VPS: pilha isolada e descartável, sem a rede do proxy e sem domínio.
+# As portas são publicadas SOMENTE em 127.0.0.1 da VPS (inacessíveis pela internet); o acesso é por túnel SSH.
+#   docker compose -p financity-staging -f docker-compose.yml -f docker-compose.staging.yml --env-file .env.production up -d db
+# Desmontar tudo (inclui os dados do ensaio):  docker compose -p financity-staging ... down -v
+name: financity-staging
+
+networks:
+  internal:
+    internal: false   # em rede "internal" o Docker não publica portas; só no ensaio
+services:
+  db:
+    ports: ["127.0.0.1:55432:5432"]
+  api:
+    ports: ["127.0.0.1:58787:8787"]
+    networks: !override [internal]
