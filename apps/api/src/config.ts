@@ -13,9 +13,9 @@ export const config = {
   host: process.env.HOST || "0.0.0.0",
   databaseUrl: need("DATABASE_URL", "postgres://financity_dev:dev-local-only@127.0.0.1:54329/financity"),
   /** Segredo do HMAC dos PINs (impressão digital única). NÃO pode mudar depois de cadastrar alunos. */
-  pinSecret: need("FINANCITY_SECRET", "dev-only-pin-secret-do-not-use-in-production"),
+  pinSecret: need("FINANCITY_SECRET", "dev-only-pin-secret-do-not-use-in-production").trim(),
   /** Segredo compartilhado com o gateway da Vercel para assinar as chamadas. */
-  gatewaySecret: need("GATEWAY_SECRET", "dev-only-gateway-secret-do-not-use-in-production"),
+  gatewaySecret: need("GATEWAY_SECRET", "dev-only-gateway-secret-do-not-use-in-production").trim(),
   /** Origens (https://jogos.<domínio>) autorizadas a originar requisições que alteram dados. */
   allowedOrigins: (process.env.ALLOWED_ORIGINS || "http://localhost:3000").split(",").map((s) => s.trim()).filter(Boolean),
   /** Em desenvolvimento/testes pode-se dispensar a assinatura (nunca em produção). */
