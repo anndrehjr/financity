@@ -22,11 +22,11 @@ const limite = args.includes("--limite") ? Number(args[args.indexOf("--limite") 
 const MOTOR = "elevenlabs", MODELO = process.env.NINA_VOZ_MODELO || "eleven_multilingual_v2";
 const VOZ_ID = process.env.NINA_VOZ_ID || "aiUUgjHa4mpHf6UenZuf";
 const FORMATO = "mp3_44100_128", KBPS = 128;
-const AJUSTES: Record<Emocao, { stability: number; similarity_boost: number; style: number }> = {
-  alegria: { stability: 0.35, similarity_boost: 0.8, style: 0.45 }, curiosidade: { stability: 0.45, similarity_boost: 0.8, style: 0.3 },
-  explicacao: { stability: 0.6, similarity_boost: 0.8, style: 0.15 }, incentivo: { stability: 0.5, similarity_boost: 0.8, style: 0.35 },
-  comemoracao: { stability: 0.3, similarity_boost: 0.8, style: 0.6 },
-};
+// Ajustes aprovados na amostra "sylphiette_gen_sp96_s57_sb75_se0_b_m2": velocidade 0,96, estabilidade 57%, similaridade 75%,
+// exagero de estilo 0, speaker boost ligado, modelo Multilingual v2. Valem para todas as emoções (a emoção fica registrada no
+// manifesto); para variar por emoção depois, edite só esta tabela e rode de novo (o hash muda e só as falas afetadas são regeneradas).
+const BASE = { stability: 0.57, similarity_boost: 0.75, style: 0, speed: 0.96 };
+const AJUSTES: Record<Emocao, typeof BASE> = { alegria: BASE, curiosidade: BASE, explicacao: BASE, incentivo: BASE, comemoracao: BASE };
 
 function exigirLicenca() {
   const f = path.join(raiz, "LICENCA-VOZ.md");
@@ -82,7 +82,7 @@ async function main() {
   let geradas = 0;
   for (const f of todas) {
     const texto = aplicarPronuncia(f.texto, pron);
-    const h = hashFala(texto, MOTOR, VOZ_ID, f.emocao, MODELO);
+    const h = hashFala(texto, MOTOR, VOZ_ID, f.emocao, `${MODELO}:${JSON.stringify(AJUSTES[f.emocao])}`); // ajustes entram no hash
     const nome = `${f.id}.${h}.mp3`, arq = path.join(saida, nome), bocaNome = `${f.id}.${h}.boca.json`;
     if (!fs.existsSync(arq)) {
       const mp3 = await sintetizar(texto, f.emocao, chave);
