@@ -134,17 +134,12 @@ function GuiaBase() {
               className="pointer-events-auto text-sm font-bold text-slate-600 underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-indigo-700">{g.voz.ativa ? "🔊 Voz ligada" : "🔇 Ligar voz"}</button>
           )}
         </div>
+        {g.voz.ativa && personagem.creditos.mostrarElevenLabs && <p className="mt-2 text-xs font-semibold text-slate-500">{personagem.creditos.texto}</p>}
         {g.voz.ativa && (
           <div className="mt-2 flex flex-wrap items-center gap-2 text-sm font-semibold text-slate-700">
             <button type="button" className="pointer-events-auto underline" onClick={() => g.servico.repetir()}>🔁 Repetir fala</button>
             <label>Volume <input type="range" min={0} max={1} step={0.1} defaultValue={g.servico.volume} onChange={(e) => g.servico.setVolume(Number(e.target.value))} aria-label="Volume da voz" /></label>
             <label>Velocidade <input type="range" min={0.7} max={1.5} step={0.1} defaultValue={g.voz.velocidade} onChange={(e) => g.voz.definirVelocidade(Number(e.target.value))} aria-label="Velocidade da voz" /></label>
-            {g.voz.vozes().length > 1 && (
-              <select aria-label="Escolher voz" defaultValue={g.voz.nome ?? ""} onChange={(e) => g.voz.definirVoz(e.target.value || null)} className="rounded border px-1">
-                <option value="">Voz padrão (pt-BR)</option>
-                {g.voz.vozes().map((v) => <option key={v.name} value={v.name}>{v.name}</option>)}
-              </select>
-            )}
           </div>
         )}
       </div>

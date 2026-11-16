@@ -1,5 +1,6 @@
 // NinaVoiceService: toca os áudios pré-gerados das falas (arquivos estáticos). Independente de React e do Phaser.
-// Plano B sempre ativo: sem manifesto/arquivo/erro → Web Speech (se a voz estiver ligada e houver suporte) → só legenda.
+// Plano B sempre ativo: sem manifesto, sem arquivo da fala ou erro ao tocar → SÓ LEGENDA (com a animação de fala pela duração estimada).
+// O site nunca chama a ElevenLabs e nunca usa outra voz (nem a do navegador) como substituta.
 // Só toca depois de uma interação do usuário. Voz desligada por padrão.
 import { armazemDoNavegador, type Armazem } from "./armazenamento";
 import { bocaDaFala } from "./nina/animacao";
@@ -9,10 +10,10 @@ export type EntradaVoz = { audio: string; duracaoMs: number; emocao?: string; bo
 export type ManifestoVoz = { versao: number; motor?: string; voz?: string; falas: Record<string, EntradaVoz> };
 export type Cue = { t: number; forma: string };
 export type EventoVoz = "inicio" | "boca" | "fim" | "erro";
-export type Via = "audio" | "webspeech" | "legenda";
+export type Via = "audio" | "legenda";
 
 export const CHAVE_VOLUME = "financity_nina_voz_volume";
-const BASE = "/guia/nina/voz/";
+const BASE = "/guia/nina/audio/";
 const limitar = (v: number, a: number, b: number) => (Number.isFinite(v) ? Math.min(b, Math.max(a, v)) : b);
 
 type AudioLike = {
@@ -116,10 +117,8 @@ export class NinaVoiceService {
   }
 
   private planoB(texto: string): Via {
-    this.falando = true; this.emitir("inicio", { via: "legenda" });
-    if (this.voz.suportado) { this.via = "webspeech"; this.voz.falar(texto); this.avisar(); return "webspeech"; }
     // só legenda: a "fala" dura o tempo estimado do texto
-    this.via = "legenda"; this.avisar();
+    this.falando = true; this.via = "legenda"; this.emitir("inicio", { via: "legenda" }); this.avisar();
     this.timers.push(this.agendar(() => this.terminou(), Math.max(1200, texto.length * 55)));
     return "legenda";
   }
@@ -131,7 +130,7 @@ export class NinaVoiceService {
   parar(): void {
     const tinha = this.falando;
     try { this.audio?.pause(); if (this.audio) this.audio.currentTime = 0; } catch { /* ignora */ }
-    this.audio = null; this.voz.cancelar(); this.limpar();
+    this.audio = null; this.limpar();
     if (tinha) { this.emitir("fim"); this.avisar(); }
   }
   repetir(): void { if (this.ultimo) void this.tocar(this.ultimo.id, this.ultimo.texto); }

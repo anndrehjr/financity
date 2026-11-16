@@ -1,0 +1,16 @@
+{
+  "comentario": "Falas da gravação original usadas no site. 'trechos' são os números dos cortes aprovados em cortes.json (concatenados com 150 ms de pausa). 'texto' é a LEGENDA OFICIAL (corrigida a partir do Whisper): edite aqui e rode cortar.py de novo. IDs seguem o formato tutorial.<tutorial>.<etapa>.",
+  "origem": "ElevenLabs, voz sylphiette, gerado em 2026-11-16 (modelo multilingual v2, velocidade 0,96, estabilidade 57, similaridade 75, estilo 0 — nome do arquivo; confirmar)",
+  "falas": [
+    { "id": "tutorial.primeiros-passos.abertura-1", "trechos": [1, 2], "texto": "Oiê! Que alegria ter você aqui.", "animacao": "happy", "contexto": "abertura do tutorial" },
+    { "id": "tutorial.primeiros-passos.abertura-2", "trechos": [3], "texto": "Eu sou a **Nina**, sua amiga e guia nesta incrível aventura pelo mundo da educação financeira.", "animacao": "explaining", "contexto": "apresentação" },
+    { "id": "tutorial.primeiros-passos.abertura-3", "trechos": [4], "texto": "Seja muito bem-vindo ao **Financity**.", "animacao": "happy", "contexto": "boas-vindas" },
+    { "id": "tutorial.primeiros-passos.abertura-4", "trechos": [5], "texto": "Você já parou para pensar em como pequenas decisões podem transformar o seu futuro?", "animacao": "thinking", "contexto": "educação financeira" },
+    { "id": "tutorial.primeiros-passos.abertura-5", "trechos": [6, 7, 8], "texto": "Pois é. Às vezes, uma escolha que parece simples pode fazer uma diferença enorme na nossa vida. E é exatamente isso que vamos descobrir juntos.", "animacao": "explaining", "contexto": "educação financeira" },
+    { "id": "tutorial.primeiros-passos.abertura-6", "trechos": [9], "texto": "Aqui no Financity, você vai aprender a cuidar do seu dinheiro, planejar seus sonhos, entender como funcionam os investimentos e descobrir os desafios de administrar uma empresa.", "animacao": "explaining", "contexto": "o que vamos aprender" },
+    { "id": "tutorial.primeiros-passos.abertura-7", "trechos": [10, 11, 12], "texto": "Mas calma, não precisa saber tudo agora. Eu vou estar aqui para ajudar você em cada etapa dessa jornada.", "animacao": "happy", "contexto": "incentivo" },
+    { "id": "tutorial.primeiros-passos.abertura-8", "trechos": [36, 37], "texto": "Afinal, o mais importante não é acertar tudo de primeira, mas compreender o que estamos aprendendo. Agora me conta, você está preparado para começar essa aventura?", "animacao": "explaining", "contexto": "incentivo" },
+    { "id": "tutorial.primeiros-passos.abertura-9", "trechos": [38], "texto": "Eu estou super animada. Então vamos lá. Respire fundo, prepare suas ideias e venha comigo explorar o incrível mundo da educação financeira.", "animacao": "celebrating", "contexto": "convite para começar" },
+    { "id": "tutorial.primeiros-passos.tchau", "trechos": [39, 40], "texto": "Eu sou a **Nina** e estarei ao seu lado nessa jornada. Até já, futuro empreendedor.", "animacao": "goodbye", "contexto": "encerramento" }
+  ]
+}
