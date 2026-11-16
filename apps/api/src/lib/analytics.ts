@@ -74,7 +74,7 @@ export async function questionStats(f: Filter, cx: Ctx) {
     `SELECT an.question_id,an.points,o.letter FROM answers an JOIN attempts a ON a.id=an.attempt_id JOIN students s ON s.id=a.student_id
        JOIN classes c ON c.id=s.class_id JOIN options o ON o.id=an.option_id
       WHERE a.assessment_id=${aid} AND a.status<>'voided'${w.sql}`, w.vals);
-  const maxes = await q<{ question_id: number; m: number }>("SELECT question_id,MAX(points) m FROM options WHERE question_id = ANY($1::int[]) GROUP BY question_id", [qs.map((x) => x.id)]);
+  const maxes = await q<{ question_id: number; m: number }>("SELECT id question_id,max_points m FROM questions WHERE id = ANY($1::int[])", [qs.map((x) => x.id)]);
   const maxBy = new Map(maxes.map((m) => [m.question_id, m.m]));
   return qs.map((qq) => {
     const rs = rows.filter((r) => r.question_id === qq.id);
@@ -88,10 +88,17 @@ export async function questionStats(f: Filter, cx: Ctx) {
       index: n ? round1((sum / (n * max)) * 100) : null as number | null, // índice de desempenho (%)
       excellent: rs.filter((r) => r.points === max).length,
       inadequate: rs.filter((r) => r.points === 0).length,
-      intermediate: { 2: rs.filter((r) => r.points === 2).length, 3: rs.filter((r) => r.points === 3).length, 4: rs.filter((r) => r.points === 4).length },
+      intermediate: { 2: rs.filter((r) => bucket(r.points, max) === 2).length, 3: rs.filter((r) => bucket(r.points, max) === 3).length, 4: rs.filter((r) => bucket(r.points, max) === 4).length },
       letters,
     };
   });
+}
+
+/** Faixa intermediária (2, 3 ou 4) proporcional à pontuação máxima da questão; nas questões de 0 a 5 equivale aos pontos. */
+function bucket(points: number, max: number): number {
+  if (points <= 0 || points >= max) return 0;
+  const r = points / max;
+  return r < 0.5 ? 2 : r < 0.7 ? 3 : 4;
 }
 
 type Stats = Awaited<ReturnType<typeof questionStats>>;
@@ -117,6 +124,7 @@ export async function assessmentsForTeacher(teacherId: number) {
     `SELECT a.id,a.grade,a.sort,a.status,m.title,m.subtitle,s.name subject
        FROM assessments a JOIN maps m ON m.id=a.map_id JOIN subjects s ON s.id=m.subject_id
       WHERE a.grade IN (SELECT c.grade FROM teacher_classes tc JOIN classes c ON c.id=tc.class_id WHERE tc.teacher_id=$1 AND c.grade IS NOT NULL)
+        AND a.status<>'archived'
       ORDER BY a.grade,a.sort`, [teacherId]);
 }
 
@@ -144,10 +152,10 @@ export async function dashboard(f: Filter) {
   const gp = wm.param(cx.grade);
   const list = await q<{ sort: number; title: string; status: string; maxp: number; avgp: number | null }>(
     `SELECT a.sort,m.title,a.status,
-       (SELECT COALESCE(SUM(mx),0) FROM (SELECT MAX(o.points) mx FROM questions qq JOIN options o ON o.question_id=qq.id WHERE qq.map_id=m.id GROUP BY qq.id) t) maxp,
+       (SELECT COALESCE(SUM(max_points),0) FROM questions qq WHERE qq.map_id=m.id) maxp,
        (SELECT AVG(at.total_points) FROM attempts at JOIN students s ON s.id=at.student_id JOIN classes c ON c.id=s.class_id
          WHERE at.assessment_id=a.id AND at.status='completed'${wm.sql}) avgp
-     FROM assessments a JOIN maps m ON m.id=a.map_id WHERE a.grade=${gp} ORDER BY a.sort`, wm.vals);
+     FROM assessments a JOIN maps m ON m.id=a.map_id WHERE a.grade=${gp} AND a.status<>'archived' ORDER BY a.sort`, wm.vals);
   const byMap = list.map((m) => ({
     name: `Mapa ${m.sort} — ${m.title}`, available: m.status === "available",
     avgPct: m.status === "available" && m.avgp !== null && m.maxp > 0 ? round1((m.avgp / m.maxp) * 100) : null,
@@ -223,10 +231,10 @@ export async function studentReport(teacherId: number, studentId: number, assess
   const a = aRow ? await one<{ id: number; status: string; total_points: number; started_at: Date; completed_at: Date | null }>(
     "SELECT id,status,total_points,started_at,completed_at FROM attempts WHERE student_id=$1 AND assessment_id=$2 AND status<>'voided'", [studentId, aRow.id]) : undefined;
   const max = aRow ? await maxPointsForMap(aRow.map_id) : 0;
-  const rows = a ? await q<{ number: number; title: string; theme: string; strength: string; retake: string; letter: string; text: string; why: string; points: number }>(
-    `SELECT q.number,q.title,q.theme,q.strength,q.retake,o.letter,o.text,o.why,an.points FROM answers an JOIN questions q ON q.id=an.question_id
+  const rows = a ? await q<{ number: number; title: string; theme: string; strength: string; retake: string; letter: string; text: string; why: string; points: number; mx: number }>(
+    `SELECT q.number,q.title,q.theme,q.strength,q.retake,o.letter,o.text,o.why,an.points,q.max_points mx FROM answers an JOIN questions q ON q.id=an.question_id
        JOIN options o ON o.id=an.option_id WHERE an.attempt_id=$1 ORDER BY q.number`, [a.id]) : [];
-  const strong = rows.filter((r) => r.points >= 4), weak = rows.filter((r) => r.points <= 2);
+  const strong = rows.filter((r) => r.points / r.mx >= 0.8), weak = rows.filter((r) => r.points / r.mx <= 0.4);
   let diagnosis = "Ainda não há respostas registradas para este estudante.";
   if (rows.length) {
     const parts: string[] = [];

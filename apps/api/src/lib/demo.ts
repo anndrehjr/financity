@@ -12,7 +12,8 @@ export async function seedDemo(teacherId: number) {
   if (await one("SELECT 1 FROM students WHERE is_demo=1")) return { created: 0 };
   const a = await one<{ id: number; map_id: number }>("SELECT id,map_id FROM assessments WHERE grade=8 ORDER BY sort LIMIT 1");
   if (!a) return { created: 0 };
-  const qs = await q<{ id: number }>("SELECT id FROM questions WHERE map_id=$1 ORDER BY number", [a.map_id]);
+  const qs = await q<{ id: number; max_points: number }>("SELECT id,max_points FROM questions WHERE map_id=$1 ORDER BY number", [a.map_id]);
+  const nq = qs.length;
   const opts = new Map<number, { id: number; points: number }[]>();
   for (const x of qs) opts.set(x.id, await q("SELECT id,points FROM options WHERE question_id=$1 ORDER BY points", [x.id]));
   const rnd = rng(42);
@@ -29,20 +30,20 @@ export async function seedDemo(teacherId: number) {
       // 70% concluem, 15% em andamento, 15% não começam
       const r = rnd();
       if (r > 0.85) continue;
-      const upto = r > 0.7 ? 1 + Math.floor(rnd() * 4) : 5;
+      const upto = r > 0.7 ? 1 + Math.floor(rnd() * (nq - 1)) : nq;
       const at = await one<{ id: number }>(
-        "INSERT INTO attempts(student_id,map_id,assessment_id,status) VALUES($1,$2,$3,$4) RETURNING id", [s!.id, a.map_id, a.id, upto === 5 ? "completed" : "in_progress"], c);
+        "INSERT INTO attempts(student_id,map_id,assessment_id,status) VALUES($1,$2,$3,$4) RETURNING id", [s!.id, a.map_id, a.id, upto === nq ? "completed" : "in_progress"], c);
       let total = 0;
       for (const [qi, qq] of qs.slice(0, upto).entries()) {
         const o = opts.get(qq.id)!;
-        // a questão 4 (índice 3) é mais difícil nos dados fictícios
+        // a questão 4 (índice 3) é mais difícil nos dados fictícios; a pontuação fictícia é proporcional à máxima da questão
         const skill = qi === 3 ? 0.35 : 0.6;
-        let idx = Math.min(4, Math.max(0, Math.round(rnd() * 2 + skill * 2 + (rnd() - 0.5) * 2)));
-        idx = Math.min(idx, 4);
-        total += o[idx].points;
-        await q("INSERT INTO answers(attempt_id,question_id,option_id,points,display_pos) VALUES($1,$2,$3,$4,$5)", [at!.id, qq.id, o[idx].id, o[idx].points, 1 + Math.floor(rnd() * 5)], c);
+        const frac = Math.min(1, Math.max(0, (rnd() * 2 + skill * 2 + (rnd() - 0.5) * 2) / 4));
+        const pts = Math.round(frac * qq.max_points);
+        total += pts;
+        await q("INSERT INTO answers(attempt_id,question_id,option_id,points,display_pos) VALUES($1,$2,$3,$4,$5)", [at!.id, qq.id, o[0].id, pts, 1 + Math.floor(rnd() * o.length)], c);
       }
-      await q("UPDATE attempts SET total_points=$1, completed_at=CASE WHEN $2::int=5 THEN now() END WHERE id=$3", [total, upto, at!.id], c);
+      await q("UPDATE attempts SET total_points=$1, completed_at=CASE WHEN $2::int=$4::int THEN now() END WHERE id=$3", [total, upto, at!.id, nq], c);
       n++;
     }
   });

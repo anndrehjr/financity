@@ -1,6 +1,7 @@
 import { config } from "../config.js";
 import { one, q, tx } from "./db.js";
 import { HttpError } from "./auth.js";
+import { dominio, grade, RespostaInvalida, type Kind, type OptG, type Resp } from "./grading.js";
 
 /** Medalhas por percentual da pontuação máxima (para o Mapa 1, de 25 pontos: 23, 19 e 13 — igual ao sistema anterior). */
 export const MEDALS = [
@@ -15,6 +16,10 @@ const TITULOS: Record<string, Partial<Record<string, string>>> = {
   "economia-decisoes": { mestre: "Mestre das Decisões Econômicas", guardiao: "Estrategista do Mercado", aprendiz: "Aprendiz de Economia" },
   "planejamento-financeiro": { mestre: "Mestre do Planejamento", guardiao: "Arquiteto do Futuro", aprendiz: "Aprendiz Planejador" },
   "cidadania-financeira": { mestre: "Mestre da Cidadania Financeira", guardiao: "Guardião da Cidade Digital", aprendiz: "Aprendiz Cidadão" },
+  "culm-cidadania-financeira": { mestre: "Mestre da Cidadania Financeira", guardiao: "Guardião da Cidadania", aprendiz: "Aprendiz Cidadão" },
+  "culm-etica-financeira": { mestre: "Mestre da Ética Financeira", guardiao: "Guardião da Honestidade", aprendiz: "Aprendiz de Ética" },
+  "culm-seguranca-digital": { mestre: "Mestre da Segurança Digital", guardiao: "Guardião dos Dados", aprendiz: "Aprendiz de Segurança" },
+  "culm-consumo-matematica": { mestre: "Mestre do Consumo Consciente", guardiao: "Guardião das Boas Decisões", aprendiz: "Aprendiz Consumidor" },
 };
 export const medalFor = (score: number, max: number, slug?: string) => {
   const m = MEDALS.find((x) => score >= medalMin(x.pct, max))!;
@@ -31,7 +36,7 @@ const ASSESSMENT_SQL = `SELECT a.id,a.map_id,a.grade,a.sort,a.status,m.slug,m.ti
 
 export async function maxPointsForMap(mapId: number): Promise<number> {
   const r = await one<{ s: number }>(
-    `SELECT COALESCE(SUM(m),0) s FROM (SELECT MAX(o.points) m FROM questions q JOIN options o ON o.question_id=q.id WHERE q.map_id=$1 GROUP BY q.id) t`, [mapId]);
+    "SELECT COALESCE(SUM(max_points),0)::int s FROM questions WHERE map_id=$1", [mapId]);
   return r!.s;
 }
 
@@ -60,7 +65,7 @@ async function unlocked(studentId: number, a: AssessmentRow): Promise<boolean> {
 
 export async function listAssessments(studentId: number) {
   const grade = await studentGrade(studentId);
-  const rows = grade === null ? [] : await q<AssessmentRow>(`${ASSESSMENT_SQL} WHERE a.grade=$1 ORDER BY a.sort`, [grade]);
+  const rows = grade === null ? [] : await q<AssessmentRow>(`${ASSESSMENT_SQL} WHERE a.grade=$1 AND a.status<>'archived' ORDER BY a.sort`, [grade]);
   const att = await q<{ assessment_id: number; status: string; total_points: number }>(
     "SELECT assessment_id,status,total_points FROM attempts WHERE student_id=$1 AND status<>'voided'", [studentId]);
   const byA = new Map(att.map((x) => [x.assessment_id, x]));
@@ -118,23 +123,30 @@ export async function assessmentState(studentId: number, assessmentId: number) {
   const answered = (await one<{ c: number }>("SELECT COUNT(*) c FROM answers WHERE attempt_id=$1", [attempt.id]))!.c;
   const base = { map: mapInfo, status: attempt.status, score: attempt.total_points, max, answered, total: totalQ };
   if (attempt.status === "completed") return base;
-  const qq = await one<{ id: number; number: number; title: string; scene: string; scenario: string; dialog: string; prompt: string }>(NEXT_Q, [a.map_id, attempt.id]);
+  const qq = await one<{ id: number; number: number; title: string; scene: string; scenario: string; dialog: string; prompt: string; kind: Kind; max_points: number; hint: string | null }>(NEXT_Q, [a.map_id, attempt.id]);
   if (!qq) return base;
-  const order = await shuffledOptionIds(attempt.id, qq.id);
-  const rows = await q<{ id: number; text: string }>("SELECT id,text FROM options WHERE question_id=$1", [qq.id]); // sem pontos nem letra canônica
+  let order = await shuffledOptionIds(attempt.id, qq.id);
+  const rows = await q<{ id: number; text: string; seq: number | null }>("SELECT id,text,seq FROM options WHERE question_id=$1", [qq.id]); // sem pontos, gabarito nem letra canônica
   const byId = new Map(rows.map((r) => [r.id, r.text]));
+  if (qq.kind === "order") {
+    // a primeira ordem mostrada nunca é a ordem correta (giro de uma posição se coincidir)
+    const correct = [...rows].sort((x, y) => (x.seq ?? 0) - (y.seq ?? 0)).map((r) => r.id);
+    if (order.every((id, i) => id === correct[i])) order = [...order.slice(1), order[0]];
+  }
   return {
     ...base,
     question: {
       id: qq.id, number: qq.number, title: qq.title, scene: qq.scene, scenario: qq.scenario, dialog: qq.dialog, prompt: qq.prompt,
-      options: order.map((id, i) => ({ id, letter: "ABCDE"[i], text: byId.get(id)! })),
+      kind: qq.kind, hint: qq.hint,
+      options: order.map((id, i) => ({ id, letter: qq.kind === "order" ? "" : "ABCDE"[i], text: byId.get(id)! })),
     },
   };
 }
 
-export async function submitAnswer(studentId: number, assessmentId: number, questionId: number, optionId: number) {
+export async function submitAnswer(studentId: number, assessmentId: number, questionId: number, resp: Resp, usedHint = false) {
   const a = await assessmentOf(studentId, assessmentId);
   await assertPlayable(studentId, a);
+  let earned = 0, questionMax = 0;
   try {
     await tx(async (c) => {
       // trava a tentativa: duas respostas simultâneas do mesmo aluno são processadas uma de cada vez
@@ -144,11 +156,15 @@ export async function submitAnswer(studentId: number, assessmentId: number, ques
       if (attempt.status === "completed") throw new HttpError(409, "Esta atividade já foi concluída.");
       const next = await one<{ id: number }>(NEXT_Q.replace("SELECT *", "SELECT id"), [a.map_id, attempt.id], c);
       if (!next || next.id !== questionId) throw new HttpError(409, "Esta pergunta já foi respondida ou não é a atual.");
-      const opt = await one<{ id: number; points: number }>("SELECT id,points FROM options WHERE id=$1 AND question_id=$2", [optionId, questionId], c);
-      if (!opt) throw new HttpError(400, "Alternativa inválida.");
-      const pos = (await shuffledOptionIds(attempt.id, questionId)).indexOf(opt.id) + 1;
-      await q("INSERT INTO answers(attempt_id,question_id,option_id,points,display_pos) VALUES($1,$2,$3,$4,$5)", [attempt.id, questionId, opt.id, opt.points, pos], c);
-      await q("UPDATE attempts SET total_points = total_points + $1 WHERE id=$2", [opt.points, attempt.id], c);
+      const qinfo = (await one<{ kind: Kind; max_points: number }>("SELECT kind,max_points FROM questions WHERE id=$1", [questionId], c))!;
+      const opts = await q<OptG>("SELECT id,points,is_correct,seq FROM options WHERE question_id=$1", [questionId], c);
+      let g;
+      try { g = grade(qinfo.kind, qinfo.max_points, opts, resp); } catch (e) { if (e instanceof RespostaInvalida) throw new HttpError(400, e.message); throw e; }
+      earned = g.points; questionMax = qinfo.max_points;
+      const pos = (await shuffledOptionIds(attempt.id, questionId)).indexOf(g.rep) + 1;
+      await q("INSERT INTO answers(attempt_id,question_id,option_id,points,display_pos,response,used_hint) VALUES($1,$2,$3,$4,$5,$6::jsonb,$7)",
+        [attempt.id, questionId, g.rep, g.points, pos, JSON.stringify(g.response), usedHint], c);
+      await q("UPDATE attempts SET total_points = total_points + $1 WHERE id=$2", [g.points, attempt.id], c);
       const left = (await one<{ c: number }>(
         "SELECT COUNT(*) c FROM questions WHERE map_id=$1 AND id NOT IN (SELECT question_id FROM answers WHERE attempt_id=$2)", [a.map_id, attempt.id], c))!.c;
       if (left === 0) await q("UPDATE attempts SET status='completed', completed_at=now() WHERE id=$1", [attempt.id], c);
@@ -159,7 +175,7 @@ export async function submitAnswer(studentId: number, assessmentId: number, ques
     throw e;
   }
   const s = await assessmentState(studentId, assessmentId);
-  return { score: s.score, max: s.max, answered: s.answered, total: s.total, completed: s.status === "completed" };
+  return { score: s.score, max: s.max, answered: s.answered, total: s.total, completed: s.status === "completed", earned, questionMax };
 }
 
 export async function assessmentResult(studentId: number, assessmentId: number, studentName: string) {
@@ -168,5 +184,5 @@ export async function assessmentResult(studentId: number, assessmentId: number, 
     "SELECT total_points,completed_at FROM attempts WHERE student_id=$1 AND assessment_id=$2 AND status='completed'", [studentId, a.id]);
   if (!at) throw new HttpError(409, "A atividade ainda não foi concluída.");
   const max = await maxPointsForMap(a.map_id);
-  return { studentName, mapTitle: a.title, score: at.total_points, max, pct: Math.round((at.total_points / max) * 100), medal: medalFor(at.total_points, max, a.slug), completedAt: at.completed_at };
+  return { studentName, mapTitle: a.title, score: at.total_points, max, pct: Math.round((at.total_points / max) * 100), medal: medalFor(at.total_points, max, a.slug), dominio: dominio(Math.round((at.total_points / max) * 100)), completedAt: at.completed_at };
 }

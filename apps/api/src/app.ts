@@ -106,8 +106,14 @@ app.get("/api/game/:id/state", async (c) => { const u = await requireRole(c, "st
 app.get("/api/game/:id/result", async (c) => { const u = await requireRole(c, "student"); return c.json(await assessmentResult(u.id, pid(c, "id"), u.name)); });
 app.post("/api/game/:id/answer", async (c) => {
   const u = await requireRole(c, "student");
-  const b = await json(c, z.object({ questionId: z.coerce.number().int(), optionId: z.coerce.number().int() }));
-  return c.json(await submitAnswer(u.id, pid(c, "id"), b.questionId, b.optionId));
+  const b = await json(c, z.object({
+    questionId: z.coerce.number().int(),
+    optionId: z.coerce.number().int().optional(),
+    optionIds: z.array(z.coerce.number().int()).max(10).optional(),
+    order: z.array(z.coerce.number().int()).max(10).optional(),
+    usedHint: z.boolean().optional(),
+  }));
+  return c.json(await submitAnswer(u.id, pid(c, "id"), b.questionId, { optionId: b.optionId, optionIds: b.optionIds, order: b.order }, b.usedHint === true));
 });
 
 // ───────── professor ─────────
@@ -157,8 +163,10 @@ app.put("/api/admin/questions/:number", async (c) => {
   const qid = await questionIdFor(number, filterOf(c, t.id));
   if (!qid) throw new HttpError(404, "Questão não encontrada.");
   const entries = Object.entries(points || {});
-  if (entries.length !== 5 || entries.some(([l, v]) => !"ABCDE".includes(l) || !Number.isInteger(v) || v < 0 || v > 5))
-    throw new HttpError(400, "Informe 5 pontuações inteiras entre 0 e 5.");
+  const info = (await one<{ kind: string; max_points: number; n: number }>("SELECT kind,max_points,(SELECT COUNT(*) FROM options WHERE question_id=$1)::int n FROM questions WHERE id=$1", [qid]))!;
+  if (info.kind !== "choice") throw new HttpError(400, "As pontuações desta questão seguem a regra do tipo de questão e não são editáveis.");
+  if (entries.length !== info.n || entries.some(([l, v]) => !"ABCDE".includes(l) || !Number.isInteger(v) || v < 0 || v > info.max_points))
+    throw new HttpError(400, `Informe ${info.n} pontuações inteiras entre 0 e ${info.max_points}.`);
   await tx(async (cl) => {
     for (const [l, v] of entries) await q("UPDATE options SET points=$1 WHERE question_id=$2 AND letter=$3", [v, qid, l], cl);
     await log(t.id, "editar_pontuacoes", null, `Questão ${number}: ${JSON.stringify(points)}`, cl);
