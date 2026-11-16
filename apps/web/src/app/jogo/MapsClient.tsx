@@ -1,5 +1,7 @@
 "use client";
 import Link from "next/link";
+import { useEffect } from "react";
+import { emitir } from "@/features/guia/tutorial/barramento";
 import { Lock, MapArt } from "@/components/art";
 import { ErrorBox, Spinner, doLogout, useApi } from "@/components/ui";
 
@@ -7,6 +9,7 @@ type Me = { name: string; totalPoints: number; maps: { id: number; sort: number;
 
 export default function MapsClient() {
   const { data, error, loading, reload } = useApi<Me>("/api/me");
+  useEffect(() => { if (data) emitir("jogo:aberto", { mapas: data.maps.length }); }, [data]);
   return (
     <main className="game-bg px-4 pb-10">
       <header className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 py-4">
@@ -25,7 +28,7 @@ export default function MapsClient() {
         {error && <div className="mt-6"><ErrorBox message={error} onRetry={reload} /></div>}
 
         {data && (
-          <ul className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <ul data-tutorial="lista-mapas" className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
             {data.maps.map((m) => {
               const playable = m.published && m.unlocked;
               const label = m.progress === "completed" ? "VER RESULTADO" : m.progress === "in_progress" ? "CONTINUAR" : "ENTRAR NO MAPA";
@@ -50,7 +53,7 @@ export default function MapsClient() {
                       </span>
                     </div>
                     {playable ? (
-                      <Link href={`/jogo/${m.id}`} className="btn btn-primary mt-4 w-full">{label}</Link>
+                      <Link href={`/jogo/${m.id}`} data-tutorial={`entrar-mapa-${m.sort}`} onClick={() => emitir("mapa:entrou", { mapa: m.sort, id: m.id })} className="btn btn-primary mt-4 w-full">{label}</Link>
                     ) : (
                       <button className="btn btn-ghost mt-4 w-full" disabled aria-disabled="true"><Lock className="h-5 w-5" /> {m.published ? "Complete o mapa anterior" : "Em breve"}</button>
                     )}

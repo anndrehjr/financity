@@ -6,6 +6,8 @@ import { ErrorBox, Spinner, apiFetch } from "@/components/ui";
 import { personagem } from "@/features/guia/config/personagem";
 import { reacaoPorPontos } from "@/features/guia/motor";
 import { useGuia } from "@/features/guia/useGuia";
+import { emitir } from "@/features/guia/tutorial/barramento";
+import { useTutorial } from "@/features/guia/tutorial/TutorialProvider";
 
 
 type Question = { id: number; number: number; title: string; scene: string; scenario: string; dialog: string; prompt: string; kind: "choice" | "multi" | "order"; hint: string | null; options: { id: number; letter: string; text: string }[] };
@@ -23,6 +25,7 @@ export default function AtividadeClient({ id }: { id: number }) {
   const [busy, setBusy] = useState(false);
   const [transition, setTransition] = useState(false);
   const guia = useGuia();
+  const tut = useTutorial();
   const falouIntro = useRef<number | null>(null);
   const falouFim = useRef(false);
 
@@ -44,9 +47,12 @@ export default function AtividadeClient({ id }: { id: number }) {
     if (state?.status === "not_started" && falouIntro.current !== id) { falouIntro.current = id; guia.falar(`mapa_${sort}`); }
   }, [state?.status, id, sort, guia]);
   useEffect(() => {
-    if (state?.status === "completed" && result && !falouFim.current) { falouFim.current = true; guia.falar(sort >= 4 ? "vitoria" : "fase_concluida"); }
+    if (state?.status === "completed" && result && !falouFim.current) { falouFim.current = true; guia.falar(sort >= 4 ? "vitoria" : "fase_concluida"); emitir("atividade:concluida", { id }); }
   }, [state?.status, result, sort, guia]);
+  const emAndamento = state?.status === "in_progress";
+  useEffect(() => { if (emAndamento) emitir("atividade:iniciada", { id }); }, [emAndamento, id]);
   const perguntaId = state?.status === "in_progress" && !transition ? state.question?.id : undefined;
+  useEffect(() => { if (perguntaId !== undefined) emitir("pergunta:exibida", { id, pergunta: perguntaId }); }, [perguntaId, id]);
   useEffect(() => {
     if (perguntaId === undefined) return;
     const t = setTimeout(() => guia.falar("parado"), personagem.comportamento.segundosParado * 1000);
@@ -68,6 +74,7 @@ export default function AtividadeClient({ id }: { id: number }) {
       const body = qk.kind === "choice" ? { optionId: selected } : qk.kind === "multi" ? { optionIds: multi } : { order };
       const r = await apiFetch<{ score: number; completed: boolean; earned: number; questionMax: number }>(`/api/game/${id}/answer`, { method: "POST", body: { questionId: qk.id, usedHint: showHint, ...body } });
       const c = personagem.comportamento;
+      emitir("pergunta:respondida", { id, pergunta: qk.id, pontos: r.earned, maximo: r.questionMax });
       if (c.reagirAoResultado && !r.completed) guia.falar(reacaoPorPontos((r.earned / Math.max(1, r.questionMax)) * 5, c.minAcerto, c.minParcial));
       setTransition(true);
       await new Promise((r) => setTimeout(r, 1700));
@@ -129,8 +136,8 @@ export default function AtividadeClient({ id }: { id: number }) {
             <ul className="mt-3 list-disc space-y-1 pl-6 text-slate-700"><li>Responda uma situação de cada vez.</li><li>Depois de confirmar, a resposta não pode ser trocada.</li><li>Se fechar a página, você continua de onde parou.</li></ul>
             {error && <div className="mt-3"><ErrorBox message={error} /></div>}
             <div className="mt-5 flex flex-wrap items-center gap-3">
-              <button className="btn btn-sun w-full text-xl md:w-auto" onClick={start} disabled={busy}>{busy ? "Preparando…" : "COMEÇAR AVENTURA"}</button>
-              <button type="button" className="btn btn-ghost" onClick={() => guia.reverTutorial()}>Ver tutorial com a {personagem.nome}</button>
+              <button data-tutorial="comecar" className="btn btn-sun w-full text-xl md:w-auto" onClick={start} disabled={busy}>{busy ? "Preparando…" : "COMEÇAR AVENTURA"}</button>
+              <button type="button" className="btn btn-ghost" onClick={() => tut.iniciar()}>Ver tutorial com a {personagem.nome}</button>
             </div>
           </div>
         </section>
@@ -176,11 +183,11 @@ export default function AtividadeClient({ id }: { id: number }) {
             {q.kind === "order" && <p className="mt-1 text-sm font-bold text-city-grape">Use as setas para colocar as etapas na ordem mais adequada.</p>}
 
             {q.kind === "choice" && (
-              <div role="radiogroup" aria-labelledby="enunciado" className="mt-4 grid gap-3">
+              <div data-tutorial="opcoes" role="radiogroup" aria-labelledby="enunciado" className="mt-4 grid gap-3">
                 {q.options.map((o) => {
                   const on = selected === o.id;
                   return (
-                    <button key={o.id} type="button" role="radio" aria-checked={on} disabled={busy} onClick={() => setSelected(o.id)}
+                    <button key={o.id} type="button" role="radio" aria-checked={on} disabled={busy} onClick={() => { setSelected(o.id); emitir("opcao:selecionada", { opcao: o.id }); }}
                       className={`flex items-start gap-3 rounded-2xl border-2 p-3 text-left text-base font-semibold transition md:text-lg ${on ? "border-city-grape bg-violet-50 ring-2 ring-city-grape" : "border-indigo-100 bg-white hover:border-indigo-300 hover:bg-indigo-50"}`}>
                       <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-display text-lg font-extrabold ${on ? "bg-city-grape text-white" : "bg-indigo-100 text-indigo-800"}`}>{o.letter}</span>
                       <span className="pt-1">{o.text}</span>
@@ -191,12 +198,12 @@ export default function AtividadeClient({ id }: { id: number }) {
             )}
 
             {q.kind === "multi" && (
-              <div role="group" aria-labelledby="enunciado" className="mt-4 grid gap-3">
+              <div data-tutorial="opcoes" role="group" aria-labelledby="enunciado" className="mt-4 grid gap-3">
                 {q.options.map((o) => {
                   const on = multi.includes(o.id);
                   return (
                     <button key={o.id} type="button" role="checkbox" aria-checked={on} disabled={busy}
-                      onClick={() => setMulti((m) => (m.includes(o.id) ? m.filter((x) => x !== o.id) : [...m, o.id]))}
+                      onClick={() => { setMulti((m) => (m.includes(o.id) ? m.filter((x) => x !== o.id) : [...m, o.id])); emitir("opcao:selecionada", { opcao: o.id }); }}
                       className={`flex items-start gap-3 rounded-2xl border-2 p-3 text-left text-base font-semibold transition md:text-lg ${on ? "border-city-grape bg-violet-50 ring-2 ring-city-grape" : "border-indigo-100 bg-white hover:border-indigo-300 hover:bg-indigo-50"}`}>
                       <span aria-hidden="true" className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg font-display text-lg font-extrabold ${on ? "bg-city-grape text-white" : "bg-indigo-100 text-indigo-800"}`}>{on ? "✓" : o.letter}</span>
                       <span className="pt-1">{o.text}</span>
@@ -207,10 +214,10 @@ export default function AtividadeClient({ id }: { id: number }) {
             )}
 
             {q.kind === "order" && (
-              <ol aria-labelledby="enunciado" className="mt-4 grid gap-3">
+              <ol data-tutorial="opcoes" aria-labelledby="enunciado" className="mt-4 grid gap-3">
                 {order.map((oid, i) => {
                   const txt = q.options.find((o) => o.id === oid)?.text ?? "";
-                  const move = (d: number) => setOrder((arr) => { const n = [...arr]; const j = i + d; if (j < 0 || j >= n.length) return arr; [n[i], n[j]] = [n[j], n[i]]; return n; });
+                  const move = (d: number) => { emitir("opcao:selecionada", { ordem: true }); setOrder((arr) => { const n = [...arr]; const j = i + d; if (j < 0 || j >= n.length) return arr; [n[i], n[j]] = [n[j], n[i]]; return n; }); };
                   return (
                     <li key={oid} className="flex items-center gap-3 rounded-2xl border-2 border-indigo-100 bg-white p-3 text-base font-semibold md:text-lg">
                       <span aria-hidden="true" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-100 font-display text-lg font-extrabold text-indigo-800">{i + 1}</span>
@@ -228,14 +235,14 @@ export default function AtividadeClient({ id }: { id: number }) {
             {q.hint && (
               <div className="mt-4">
                 {!showHint
-                  ? <button type="button" className="btn btn-ghost btn-sm" onClick={() => setShowHint(true)}>💡 Preciso de uma dica</button>
+                  ? <button type="button" className="btn btn-ghost btn-sm" onClick={() => { setShowHint(true); emitir("dica:aberta", { id }); }}>💡 Preciso de uma dica</button>
                   : <p role="note" className="rounded-2xl bg-amber-50 p-3 font-semibold text-amber-900">💡 Dica: {q.hint} <span className="block text-xs font-bold text-amber-800">A dica ajuda a pensar e não tira pontos.</span></p>}
               </div>
             )}
 
             {error && <div className="mt-4"><ErrorBox message={error} /></div>}
             <div className="mt-5 flex flex-wrap items-center gap-3">
-              <button className="btn btn-sun text-xl" onClick={confirm} disabled={busy || (q.kind === "choice" && selected === null) || (q.kind === "multi" && multi.length === 0)}>{busy ? "Enviando…" : "CONFIRMAR RESPOSTA"}</button>
+              <button data-tutorial="confirmar" className="btn btn-sun text-xl" onClick={confirm} disabled={busy || (q.kind === "choice" && selected === null) || (q.kind === "multi" && multi.length === 0)}>{busy ? "Enviando…" : "CONFIRMAR RESPOSTA"}</button>
               <span className="text-sm font-semibold text-slate-600">Depois de confirmar, não será possível alterar.</span>
             </div>
           </div>
