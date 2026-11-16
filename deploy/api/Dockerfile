@@ -18,7 +18,7 @@ COPY package.json package-lock.json ./
 COPY apps/api/package.json apps/api/
 COPY apps/web/package.json apps/web/
 COPY packages/gateway-sign packages/gateway-sign
-RUN npm ci --omit=dev --workspace apps/api --workspace packages/gateway-sign --include-workspace-root --ignore-scripts \
+RUN npm ci --omit=dev --omit=optional --workspace apps/api --workspace packages/gateway-sign --include-workspace-root --ignore-scripts \
  && npm cache clean --force
 COPY --from=build /app/apps/api/dist apps/api/dist
 COPY apps/api/migrations apps/api/migrations
