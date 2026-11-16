@@ -1,0 +1,42 @@
+{
+  "versao": 1,
+  "comentario": "Manifesto da Nina em camadas. Marque \"existe\": true quando o arquivo PNG for colocado em public/guia/nina/camadas/. Enquanto nenhuma camada existir, a Nina usa a imagem de referência estática. Âncoras em pixels da tela-base.",
+  "base": { "largura": 1024, "altura": 1365 },
+  "referencia": "/guia/nina/referencia.webp",
+  "pasta": "/guia/nina/camadas/",
+  "respiracao": false,
+  "poses": {
+    "neutra":      { "arquivo": "pose-neutra.png",      "existe": false, "rosto": { "x": 512, "y": 330, "escala": 1 } },
+    "explicando":  { "arquivo": "pose-explicando.png",  "existe": false, "rosto": { "x": 512, "y": 330, "escala": 1 } },
+    "apontando":   { "arquivo": "pose-apontando.png",   "existe": false, "rosto": { "x": 512, "y": 330, "escala": 1 } },
+    "comemorando": { "arquivo": "pose-comemorando.png", "existe": false, "rosto": { "x": 512, "y": 330, "escala": 1 } },
+    "tchau":       { "arquivo": "pose-tchau.png",       "existe": false, "rosto": { "x": 512, "y": 330, "escala": 1 } }
+  },
+  "olhos": {
+    "abertos":  { "arquivo": "olhos-abertos.png",  "existe": false },
+    "meio":     { "arquivo": "olhos-meio.png",     "existe": false },
+    "fechados": { "arquivo": "olhos-fechados.png", "existe": false },
+    "felizes":  { "arquivo": "olhos-felizes.png",  "existe": false },
+    "surpresos":{ "arquivo": "olhos-surpresos.png","existe": false },
+    "pensando": { "arquivo": "olhos-pensando.png", "existe": false }
+  },
+  "sobrancelhas": {
+    "neutra":     { "arquivo": "sobr-neutra.png",     "existe": false },
+    "alegre":     { "arquivo": "sobr-alegre.png",     "existe": false },
+    "preocupada": { "arquivo": "sobr-preocupada.png", "existe": false },
+    "surpresa":   { "arquivo": "sobr-surpresa.png",   "existe": false }
+  },
+  "bocas": {
+    "fechada": { "arquivo": "boca-fechada.png", "existe": false },
+    "sorriso": { "arquivo": "boca-sorriso.png", "existe": false },
+    "a":       { "arquivo": "boca-a.png",       "existe": false },
+    "e":       { "arquivo": "boca-e.png",       "existe": false },
+    "o":       { "arquivo": "boca-o.png",       "existe": false },
+    "m":       { "arquivo": "boca-m.png",       "existe": false }
+  },
+  "extras": {
+    "brilho":  { "arquivo": "brilho-comemoracao.png", "existe": false },
+    "gota":    { "arquivo": "gota-preocupada.png",    "existe": false },
+    "seta":    { "arquivo": "seta-apontar.png",       "existe": false }
+  }
+}
