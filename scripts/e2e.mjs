@@ -148,7 +148,7 @@ ok(r.status === 429, "mesmo o PIN correto é recusado durante o bloqueio");
 
 console.log("\n10) Gerador Automático de PINs");
 const mkRows = (n, cls, extra = {}) => Array.from({ length: n }, (_, i) => ({ name: `Gerador ${cls} ${String.fromCharCode(65 + (i % 26))}${String.fromCharCode(97 + Math.floor(i / 26))} Silva`, className: cls, ...extra }));
-r = await T.req("POST", "/api/admin/students", { rows: mkRows(40, "7 GERADOR", { noPin: true }) });
+r = await T.req("POST", "/api/admin/students", { rows: mkRows(40, "8 GERADOR", { noPin: true }) });
 ok(r.json.created.length === 40 && r.json.created.every((c) => c.pin === ""), "40 alunos cadastrados sem PIN");
 r = await T.req("GET", "/api/admin/pins");
 ok(r.json.pending === 40, "contagem de alunos sem PIN", String(r.json.pending));
@@ -199,7 +199,7 @@ ok(!JSON.stringify(after.history).includes(sel.find((c) => c.id === P.id).pin) &
 
 // turma inteira
 const classes = (await T.req("GET", "/api/admin/classes")).json;
-const gClass = classes.find((c) => c.name === "7 GERADOR").id;
+const gClass = classes.find((c) => c.name === "8 GERADOR").id;
 r = await T.req("POST", "/api/admin/pins", { mode: "class", classId: gClass });
 ok(r.status === 400, "redefinição da turma sem confirmação é recusada");
 const preList = (await T.req("GET", "/api/admin/students?scope=real&class=" + gClass)).json.length;
@@ -227,6 +227,33 @@ r = await SP.req("GET", "/api/admin/pins");
 ok(r.status === 403, "aluno não consegue consultar o gerador (403)");
 r = await new Client().req("POST", "/api/admin/pins", { mode: "missing", confirm: true });
 ok(r.status === 401, "visitante não consegue usar o gerador (401)");
+
+console.log("\n11) Séries e avaliações por série (novo)");
+r = await new Client().req("GET", "/api/session");
+ok(r.status === 200 && r.json.session === null, "visitante: /api/session devolve sessão vazia");
+r = await T.req("POST", "/api/admin/students", { rows: [
+  { name: "Sete Aluno Teste", className: "7º TESTE", pin: "482916" },
+  { name: "Sem Serie Aluno", className: "Turma Livre" },
+] });
+ok(r.json.created.length === 1 && r.json.skipped.some((s) => /série/.test(s.reason)), "turma nova sem série no nome é recusada; com série é criada");
+const sevenUser = r.json.created[0].username;
+const cls = (await T.req("GET", "/api/admin/classes")).json;
+ok(cls.find((c) => c.name === "7º TESTE")?.grade === 7 && cls.find((c) => c.name === "8º A")?.grade === 8, "série deduzida do nome da turma (7 e 8)");
+const seven = new Client();
+r = await seven.req("POST", "/api/auth/login", { username: sevenUser, password: "482916" });
+ok(r.status === 200, "aluno do 7º entra");
+r = await seven.req("GET", "/api/me");
+ok(r.status === 200 && r.json.maps.length === 0, "aluno do 7º não vê atividades do 8º (ainda não há avaliações do 7º)");
+r = await seven.req("POST", "/api/game/1/start");
+ok(r.status === 404, "aluno do 7º não consegue iniciar a avaliação do 8º pelo ID (404)");
+r = await seven.req("GET", "/api/game/1/state");
+ok(r.status === 404, "nem ver o estado dela (404)");
+r = await T.req("GET", "/api/admin/assessments");
+ok(r.status === 200 && r.json.length >= 1 && r.json.every((a) => a.grade === 8 || a.grade === 7), "professor lista as avaliações das séries das suas turmas");
+r = await T.req("GET", `/api/admin/dashboard?class=${cls.find((c) => c.name === "7º TESTE").id}`);
+ok(r.status === 404, "painel de turma do 7º sem avaliações responde 404 claro");
+r = await T.req("GET", "/api/admin/dashboard");
+ok(r.status === 200 && r.json.assessment.grade === 8 && !JSON.stringify(r.json.ranking).includes("Sete Aluno"), "painel padrão é do 8º e não mistura alunos do 7º");
 
 console.log(`\nResultado: ${pass} ok, ${fail} falhas`);
 process.exit(fail ? 1 : 0);
