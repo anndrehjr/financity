@@ -6,6 +6,8 @@ import { bocaDaFala, intervaloPiscar, resolverEstado, type Camadas, type Manifes
 export type ControleNina = {
   definirEstado(e: EstadoNina): void;
   definirFalando(f: boolean): void;
+  /** Forma de boca vinda do áudio (lip sync). null = volta à alternância aproximada. */
+  definirBoca(forma: string | null): void;
   destruir(): void;
 };
 type Opts = { largura: number; altura: number; reduzirMovimento: boolean; avisar?: (m: string) => void };
@@ -19,7 +21,7 @@ export async function criarNinaPhaser(el: HTMLElement, m: Manifesto, o: Opts): P
   const chave = (g: string, n: string) => `${g}/${n}`;
 
   class Cena extends Phaser.Scene {
-    estado: EstadoNina = "idle"; falando = false; piscando = false; tick = 0; leve = false;
+    estado: EstadoNina = "idle"; falando = false; bocaForcada: string | null = null; piscando = false; tick = 0; leve = false;
     pose?: Phaser.GameObjects.Image; olhos?: Phaser.GameObjects.Image; sobr?: Phaser.GameObjects.Image; boca?: Phaser.GameObjects.Image;
     extras: Phaser.GameObjects.Image[] = [];
     constructor() { super("nina"); }
@@ -56,7 +58,7 @@ export async function criarNinaPhaser(el: HTMLElement, m: Manifesto, o: Opts): P
       if (x !== undefined && y !== undefined) img.setPosition(x, y);
     }
     aplicar() {
-      const c: Camadas = resolverEstado(m, this.estado, { piscando: this.piscando, bocaFala: this.falando ? bocaDaFala(this.tick) : null, avisar: o.avisar });
+      const c: Camadas = resolverEstado(m, this.estado, { piscando: this.piscando, bocaFala: this.bocaForcada ?? (this.falando ? bocaDaFala(this.tick) : null), avisar: o.avisar });
       if (c.pose) this.pose?.setTexture(chave(c.pose.grupo, c.pose.nome)).setVisible(true); else this.pose?.setVisible(false);
       const rosto = c.pose?.entrada.rosto ?? { x: m.base.largura / 2, y: m.base.altura * 0.25, escala: 1 };
       const rx = rosto.x * esc, ry = rosto.y * esc, rs = esc * rosto.escala;
@@ -77,6 +79,7 @@ export async function criarNinaPhaser(el: HTMLElement, m: Manifesto, o: Opts): P
   const ctrl: ControleNina = {
     definirEstado(e) { const c = cena(); if (c) { c.estado = e; if (c.pose) c.aplicar(); } },
     definirFalando(f) { const c = cena(); if (c) { c.falando = f; if (c.pose) c.aplicar(); } },
+    definirBoca(f) { const c = cena(); if (c) { c.bocaForcada = f; if (c.pose) c.aplicar(); } },
     destruir() { document.removeEventListener("visibilitychange", pausar); jogo.destroy(true); if (atual === ctrl) atual = null; },
   };
   atual = ctrl;

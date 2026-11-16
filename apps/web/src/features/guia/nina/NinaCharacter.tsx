@@ -12,13 +12,13 @@ export function carregarManifesto(): Promise<Manifesto | null> {
 }
 const reduzMovimento = () => { try { return window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch { return false; } };
 
-type Props = { estado: EstadoNina; falando: boolean; tamanho: number };
+type Props = { estado: EstadoNina; falando: boolean; boca?: string | null; tamanho: number };
 
 /**
  * Nina anime. Com arte em camadas no manifesto: renderiza com Phaser (carregado sob demanda).
  * Sem arte (estado atual): mostra a imagem de referência estática — "infraestrutura pronta, arte pendente".
  */
-function NinaCharacterBase({ estado, falando, tamanho }: Props) {
+function NinaCharacterBase({ estado, falando, boca = null, tamanho }: Props) {
   const [m, setM] = useState<Manifesto | null>(null);
   const [pronto, setPronto] = useState(false);
   const alvo = useRef<HTMLDivElement>(null);
@@ -39,6 +39,7 @@ function NinaCharacterBase({ estado, falando, tamanho }: Props) {
   }, [camadas, m, largura, altura]);
   useEffect(() => { ctrl.current?.definirEstado(estado); }, [estado]);
   useEffect(() => { ctrl.current?.definirFalando(falando); }, [falando]);
+  useEffect(() => { ctrl.current?.definirBoca(boca); }, [boca]);
 
   if (camadas) return <div ref={alvo} role="img" aria-label="Nina, Guardiã Veterana" style={{ width: largura, height: altura }} />;
   if (!pronto) return <div style={{ width: largura, height: altura }} aria-hidden="true" />;

@@ -17,14 +17,15 @@ export function abrir(atual: Aberta | null, nome: string, config: Falas, ultimo:
   if (atual?.protegida && !alta) return undefined; // tutorial aberto: reações são descartadas
   if (m.somenteSeLivre && atual) return undefined;
   let falas = m.falas;
-  if (m.tipo === "unica") falas = [m.falas[0]];
+  let ids = m.falas.map((_, i) => `${nome}.${i + 1}`);
+  if (m.tipo === "unica") { falas = [m.falas[0]]; ids = [ids[0]]; }
   else if (m.tipo === "sorteio") {
     const candidatos = m.falas.map((_, i) => i).filter((i) => m.falas.length < 2 || i !== ultimo[nome]);
     const i = candidatos[Math.min(candidatos.length - 1, Math.floor(rnd() * candidatos.length))];
     ultimo[nome] = i;
-    falas = [m.falas[i]];
+    falas = [m.falas[i]]; ids = [`${nome}.${i + 1}`];
   }
-  return { momento: nome, falas, indice: 0, protegida: alta };
+  return { momento: nome, falas, indice: 0, protegida: alta, ids };
 }
 
 /** Próxima fala da sequência; null quando acabou. */
