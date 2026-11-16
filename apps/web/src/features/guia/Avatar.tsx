@@ -14,7 +14,7 @@ const EXPRESSAO_DO_ESTADO: Record<EstadoNina, Expressao> = {
  *  - "nina": Nina anime (arte em camadas com Phaser quando existir; senão a imagem de referência estática);
  *  - "svg-placeholder" / "imagem": versões provisórias antigas, mantidas como reserva.
  */
-export function Avatar({ estado, falando = false, tamanho = personagem.visual.tamanhoPx, icone = false }: { estado: EstadoNina; falando?: boolean; tamanho?: number; icone?: boolean }) {
+export function Avatar({ estado, falando = false, boca = null, tamanho = personagem.visual.tamanhoPx, icone = false }: { estado: EstadoNina; falando?: boolean; boca?: string | null; tamanho?: number; icone?: boolean }) {
   const expressao = EXPRESSAO_DO_ESTADO[estado];
   if (personagem.visual.tipo === "imagem") {
     // eslint-disable-next-line @next/next/no-img-element
@@ -25,5 +25,5 @@ export function Avatar({ estado, falando = false, tamanho = personagem.visual.ta
     // eslint-disable-next-line @next/next/no-img-element
     return <img src="/guia/nina/referencia.webp" alt={`Chamar a ${personagem.nome}`} width={tamanho} height={tamanho} className="h-full w-full object-cover object-top" decoding="async" />;
   }
-  return <NinaCharacter estado={estado} falando={falando} tamanho={tamanho} />;
+  return <NinaCharacter estado={estado} falando={falando} boca={boca} tamanho={tamanho} />;
 }
