@@ -7,40 +7,112 @@
       "prioridade": "alta",
       "quando": "Primeira vez que o aluno entra no jogo (depois só com o botão 'Ver tutorial').",
       "falas": [
-        { "expressao": "feliz", "texto": "E aí! Eu sou a **Nina**, Guardiã Veterana. Vou te acompanhar nesta aventura." },
-        { "expressao": "pensando", "texto": "Em cada mapa você enfrenta **5 desafios** do dia a dia. Escolha a atitude mais adequada." },
-        { "expressao": "feliz", "texto": "Depois de confirmar, a resposta **não pode ser trocada**. Leia tudo com calma." },
-        { "expressao": "comemorando", "texto": "Respostas mais bem pensadas valem mais pontos. **Errar faz parte de aprender!**" },
-        { "expressao": "comemorando", "texto": "Se fechar a página, você continua de onde parou. Bora?" }
+        {
+          "expressao": "feliz",
+          "texto": "E aí! Eu sou a **Nina**, Guardiã Veterana. Vou te acompanhar nesta aventura."
+        },
+        {
+          "expressao": "pensando",
+          "texto": "São **4 temas** com **8 desafios** cada. Escolha a melhor atitude, marque várias ou ordene etapas."
+        },
+        {
+          "expressao": "feliz",
+          "texto": "Depois de confirmar, a resposta **não pode ser trocada**. Leia tudo com calma."
+        },
+        {
+          "expressao": "comemorando",
+          "texto": "Respostas mais bem pensadas valem mais pontos. **Errar faz parte de aprender!**"
+        },
+        {
+          "expressao": "comemorando",
+          "texto": "Se fechar a página, você continua de onde parou. Bora?"
+        }
       ]
     },
-    "mapa_1": { "tipo": "unica", "quando": "Introdução do Mapa 1.", "falas": [{ "expressao": "feliz", "texto": "Mapa 1! Leia cada situação com atenção antes de escolher." }] },
-    "mapa_2": { "tipo": "unica", "quando": "Introdução do Mapa 2 — Economia e Decisões.", "falas": [{ "expressao": "pensando", "texto": "Mapa 2: **economia e decisões**. Nem todo desconto é vantagem. Confira as contas!" }] },
-    "mapa_3": { "tipo": "unica", "quando": "Introdução do Mapa 3 — Planejamento Financeiro.", "falas": [{ "expressao": "pensando", "texto": "Mapa 3: **planejamento**. Pense no que vem depois, não só no hoje." }] },
-    "mapa_4": { "tipo": "unica", "quando": "Introdução do Mapa 4 — Cidadania Financeira.", "falas": [{ "expressao": "feliz", "texto": "Mapa 4: **cidadania financeira**. Suas escolhas também afetam os outros." }] },
+    "mapa_1": {
+      "tipo": "unica",
+      "quando": "Introdução do Tema 1 — Cidadania Financeira.",
+      "falas": [
+        {
+          "expressao": "feliz",
+          "texto": "Tema 1: **cidadania financeira**. Direitos, deveres e escolhas que afetam todos."
+        }
+      ]
+    },
+    "mapa_2": {
+      "tipo": "unica",
+      "quando": "Introdução do Tema 2 — Ética Financeira.",
+      "falas": [
+        {
+          "expressao": "pensando",
+          "texto": "Tema 2: **ética financeira**. Honestidade vale mais que qualquer lucro."
+        }
+      ]
+    },
+    "mapa_3": {
+      "tipo": "unica",
+      "quando": "Introdução do Tema 3 — Segurança Digital e Privacidade.",
+      "falas": [
+        {
+          "expressao": "preocupada",
+          "texto": "Tema 3: **segurança digital**. Desconfie de pressa, links e pedidos de código."
+        }
+      ]
+    },
+    "mapa_4": {
+      "tipo": "unica",
+      "quando": "Introdução do Tema 4 — Consumo Consciente e Matemática.",
+      "falas": [
+        {
+          "expressao": "pensando",
+          "texto": "Tema 4: **consumo consciente**. Faça as contas antes de se empolgar com promoção."
+        }
+      ]
+    },
     "acerto": {
       "tipo": "sorteio",
       "quando": "Resposta com pontuação alta (config minAcerto).",
       "falas": [
-        { "expressao": "comemorando", "texto": "Mandou bem! Boa escolha." },
-        { "expressao": "comemorando", "texto": "Isso aí! Pensou com cuidado." },
-        { "expressao": "feliz", "texto": "Boa! Seguimos para o próximo." }
+        {
+          "expressao": "comemorando",
+          "texto": "Mandou bem! Boa escolha."
+        },
+        {
+          "expressao": "comemorando",
+          "texto": "Isso aí! Pensou com cuidado."
+        },
+        {
+          "expressao": "feliz",
+          "texto": "Boa! Seguimos para o próximo."
+        }
       ]
     },
     "parcial": {
       "tipo": "sorteio",
       "quando": "Resposta com pontuação intermediária.",
       "falas": [
-        { "expressao": "pensando", "texto": "Tem coisa boa aí! Dá para pensar ainda mais." },
-        { "expressao": "feliz", "texto": "Foi um bom caminho. Vamos ao próximo!" }
+        {
+          "expressao": "pensando",
+          "texto": "Tem coisa boa aí! Dá para pensar ainda mais."
+        },
+        {
+          "expressao": "feliz",
+          "texto": "Foi um bom caminho. Vamos ao próximo!"
+        }
       ]
     },
     "erro": {
       "tipo": "sorteio",
       "quando": "Resposta com pontuação baixa.",
       "falas": [
-        { "expressao": "pensando", "texto": "Essa não foi a melhor. Sem problema, o próximo é uma nova chance." },
-        { "expressao": "preocupada", "texto": "Errar aqui é melhor que errar com **dinheiro de verdade**." }
+        {
+          "expressao": "pensando",
+          "texto": "Essa não foi a melhor. Sem problema, o próximo é uma nova chance."
+        },
+        {
+          "expressao": "preocupada",
+          "texto": "Errar aqui é melhor que errar com **dinheiro de verdade**."
+        }
       ]
     },
     "parado": {
@@ -48,24 +120,42 @@
       "somenteSeLivre": true,
       "quando": "Aluno parado na mesma pergunta por segundosParado.",
       "falas": [
-        { "expressao": "pensando", "texto": "Tá difícil? Respira e **releia o enunciado** com calma." },
-        { "expressao": "pensando", "texto": "Compare as opções uma a uma: qual cuida melhor do dinheiro?" }
+        {
+          "expressao": "pensando",
+          "texto": "Tá difícil? Respira e **releia o enunciado** com calma."
+        },
+        {
+          "expressao": "pensando",
+          "texto": "Compare as opções uma a uma: qual cuida melhor do dinheiro?"
+        }
       ]
     },
     "fase_concluida": {
       "tipo": "sorteio",
       "quando": "Mapa concluído (tela de resultado).",
       "falas": [
-        { "expressao": "comemorando", "texto": "Mapa completo! Que jornada!" },
-        { "expressao": "comemorando", "texto": "Missão cumprida! Bora para o próximo mapa?" }
+        {
+          "expressao": "comemorando",
+          "texto": "Tema concluído! Que jornada!"
+        },
+        {
+          "expressao": "comemorando",
+          "texto": "Missão cumprida! Bora para o próximo tema?"
+        }
       ]
     },
     "vitoria": {
       "tipo": "sequencia",
       "quando": "Concluiu o último mapa (Mapa 4).",
       "falas": [
-        { "expressao": "comemorando", "texto": "VOCÊ CHEGOU AO FIM! Todos os mapas concluídos!" },
-        { "expressao": "feliz", "texto": "Na vida real é igual: **pense antes de gastar** e cuide do seu dinheiro." }
+        {
+          "expressao": "comemorando",
+          "texto": "VOCÊ CHEGOU AO FIM! Todos os temas concluídos!"
+        },
+        {
+          "expressao": "feliz",
+          "texto": "Na vida real é igual: **pense antes de gastar** e cuide do seu dinheiro."
+        }
       ]
     }
   }

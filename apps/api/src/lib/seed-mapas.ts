@@ -31,7 +31,7 @@ export async function seedMapas234(): Promise<{ criadas: number }> {
 export async function ativarMapas(grade = 8): Promise<{ ativadas: number[] }> {
   const rows = await q<{ id: number; slug: string; n: number }>(
     `SELECT a.id, m.slug, (SELECT COUNT(*) FROM questions x WHERE x.map_id=m.id)::int n
-       FROM assessments a JOIN maps m ON m.id=a.map_id WHERE a.grade=$1 AND m.slug = ANY($2::text[])`, [grade, MAPAS.map((m) => m.slug)]);
+       FROM assessments a JOIN maps m ON m.id=a.map_id WHERE a.grade=$1 AND a.status<>'archived' AND m.slug = ANY($2::text[])`, [grade, MAPAS.map((m) => m.slug)]);
   const prontas = rows.filter((r) => r.n === 5).map((r) => r.id);
   if (prontas.length) await q("UPDATE assessments SET status='available' WHERE id = ANY($1::int[])", [prontas]);
   return { ativadas: prontas };

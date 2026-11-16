@@ -8,15 +8,18 @@ import { reacaoPorPontos } from "@/features/guia/motor";
 import { useGuia } from "@/features/guia/useGuia";
 
 
-type Question = { id: number; number: number; title: string; scene: string; scenario: string; dialog: string; prompt: string; options: { id: number; letter: string; text: string }[] };
+type Question = { id: number; number: number; title: string; scene: string; scenario: string; dialog: string; prompt: string; kind: "choice" | "multi" | "order"; hint: string | null; options: { id: number; letter: string; text: string }[] };
 type State = { map: { title: string; subtitle: string; sort?: number }; status: "not_started" | "in_progress" | "completed"; score: number; max: number; answered: number; total: number; question?: Question };
-type Result = { studentName: string; score: number; max: number; pct: number; medal: { key: string; title: string; msg: string } };
+type Result = { studentName: string; score: number; max: number; pct: number; medal: { key: string; title: string; msg: string }; dominio?: { key: string; label: string } };
 
 export default function AtividadeClient({ id }: { id: number }) {
   const [state, setState] = useState<State | null>(null);
   const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<number | null>(null);
+  const [multi, setMulti] = useState<number[]>([]);
+  const [order, setOrder] = useState<number[]>([]);
+  const [showHint, setShowHint] = useState(false);
   const [busy, setBusy] = useState(false);
   const [transition, setTransition] = useState(false);
   const guia = useGuia();
@@ -28,7 +31,8 @@ export default function AtividadeClient({ id }: { id: number }) {
     try {
       const s = await apiFetch<State>(`/api/game/${id}/state`);
       setState(s);
-      setSelected(null);
+      setSelected(null); setMulti([]); setShowHint(false);
+      setOrder(s.question?.options.map((o) => o.id) ?? []);
       if (s.status === "completed") setResult(await apiFetch<Result>(`/api/game/${id}/result`));
     } catch (e) { setError((e as Error).message); }
   }, [id]);
@@ -55,12 +59,16 @@ export default function AtividadeClient({ id }: { id: number }) {
   }
 
   async function confirm() {
-    if (!state?.question || selected === null || busy) return;
+    const qk = state?.question;
+    if (!qk || busy) return;
+    if (qk.kind === "choice" && selected === null) return;
+    if (qk.kind === "multi" && multi.length === 0) return;
     setBusy(true); setError(null);
     try {
-      const r = await apiFetch<{ score: number; completed: boolean }>(`/api/game/${id}/answer`, { method: "POST", body: { questionId: state.question.id, optionId: selected } });
+      const body = qk.kind === "choice" ? { optionId: selected } : qk.kind === "multi" ? { optionIds: multi } : { order };
+      const r = await apiFetch<{ score: number; completed: boolean; earned: number; questionMax: number }>(`/api/game/${id}/answer`, { method: "POST", body: { questionId: qk.id, usedHint: showHint, ...body } });
       const c = personagem.comportamento;
-      if (c.reagirAoResultado && !r.completed) guia.falar(reacaoPorPontos(r.score - state.score, c.minAcerto, c.minParcial));
+      if (c.reagirAoResultado && !r.completed) guia.falar(reacaoPorPontos((r.earned / Math.max(1, r.questionMax)) * 5, c.minAcerto, c.minParcial));
       setTransition(true);
       await new Promise((r) => setTimeout(r, 1700));
       setTransition(false);
@@ -98,6 +106,7 @@ export default function AtividadeClient({ id }: { id: number }) {
             <Stat label="Máximo" value={String(result.max)} />
             <Stat label="Aproveitamento" value={`${result.pct}%`} />
           </div>
+          {result.dominio && <p className="mx-auto mt-3 max-w-md rounded-2xl bg-indigo-50 p-2 text-base font-bold text-indigo-900">Nível de domínio neste tema: {result.dominio.label}</p>}
           <p className="mx-auto mt-4 max-w-md text-lg font-semibold">{result.medal.msg}</p>
           <p className="mx-auto mt-2 max-w-md text-xs text-slate-600">A classificação é apenas motivacional e não define o quanto você aprendeu.</p>
           <Link href="/jogo" className="btn btn-primary mt-5">Voltar aos mapas</Link>
@@ -156,29 +165,77 @@ export default function AtividadeClient({ id }: { id: number }) {
           <div className="relative aspect-[16/9] md:aspect-[2/1]"><SceneByKey k={q.scene} />
             <div className="absolute bottom-0 left-3 h-[58%]"><Alex pose="think" /></div>
           </div>
-          <p className="bg-sky-50 px-5 py-3 text-base font-bold text-sky-950 md:px-7"><span className="text-city-grape">Alex:</span> “{q.dialog}”</p>
+          {q.dialog && <p className="bg-sky-50 px-5 py-3 text-base font-bold text-sky-950 md:px-7"><span className="text-city-grape">Alex:</span> “{q.dialog}”</p>}
           <div className="p-5 md:p-7">
             <p className="text-sm font-extrabold uppercase tracking-wide text-city-grape">Desafio {q.number}</p>
             <h1 className="font-display text-3xl font-extrabold">{q.title}</h1>
             <p className="mt-1 text-sm font-semibold italic text-slate-600">{q.scenario}</p>
             <p className="mt-4 text-lg font-bold leading-snug" id="enunciado">{q.prompt}</p>
 
-            <div role="radiogroup" aria-labelledby="enunciado" className="mt-4 grid gap-3">
-              {q.options.map((o) => {
-                const on = selected === o.id;
-                return (
-                  <button key={o.id} type="button" role="radio" aria-checked={on} disabled={busy} onClick={() => setSelected(o.id)}
-                    className={`flex items-start gap-3 rounded-2xl border-2 p-3 text-left text-base font-semibold transition md:text-lg ${on ? "border-city-grape bg-violet-50 ring-2 ring-city-grape" : "border-indigo-100 bg-white hover:border-indigo-300 hover:bg-indigo-50"}`}>
-                    <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-display text-lg font-extrabold ${on ? "bg-city-grape text-white" : "bg-indigo-100 text-indigo-800"}`}>{o.letter}</span>
-                    <span className="pt-1">{o.text}</span>
-                  </button>
-                );
-              })}
-            </div>
+            {q.kind === "multi" && <p className="mt-1 text-sm font-bold text-city-grape">Marque todas as alternativas que se aplicam.</p>}
+            {q.kind === "order" && <p className="mt-1 text-sm font-bold text-city-grape">Use as setas para colocar as etapas na ordem mais adequada.</p>}
+
+            {q.kind === "choice" && (
+              <div role="radiogroup" aria-labelledby="enunciado" className="mt-4 grid gap-3">
+                {q.options.map((o) => {
+                  const on = selected === o.id;
+                  return (
+                    <button key={o.id} type="button" role="radio" aria-checked={on} disabled={busy} onClick={() => setSelected(o.id)}
+                      className={`flex items-start gap-3 rounded-2xl border-2 p-3 text-left text-base font-semibold transition md:text-lg ${on ? "border-city-grape bg-violet-50 ring-2 ring-city-grape" : "border-indigo-100 bg-white hover:border-indigo-300 hover:bg-indigo-50"}`}>
+                      <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-display text-lg font-extrabold ${on ? "bg-city-grape text-white" : "bg-indigo-100 text-indigo-800"}`}>{o.letter}</span>
+                      <span className="pt-1">{o.text}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+
+            {q.kind === "multi" && (
+              <div role="group" aria-labelledby="enunciado" className="mt-4 grid gap-3">
+                {q.options.map((o) => {
+                  const on = multi.includes(o.id);
+                  return (
+                    <button key={o.id} type="button" role="checkbox" aria-checked={on} disabled={busy}
+                      onClick={() => setMulti((m) => (m.includes(o.id) ? m.filter((x) => x !== o.id) : [...m, o.id]))}
+                      className={`flex items-start gap-3 rounded-2xl border-2 p-3 text-left text-base font-semibold transition md:text-lg ${on ? "border-city-grape bg-violet-50 ring-2 ring-city-grape" : "border-indigo-100 bg-white hover:border-indigo-300 hover:bg-indigo-50"}`}>
+                      <span aria-hidden="true" className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg font-display text-lg font-extrabold ${on ? "bg-city-grape text-white" : "bg-indigo-100 text-indigo-800"}`}>{on ? "✓" : o.letter}</span>
+                      <span className="pt-1">{o.text}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+
+            {q.kind === "order" && (
+              <ol aria-labelledby="enunciado" className="mt-4 grid gap-3">
+                {order.map((oid, i) => {
+                  const txt = q.options.find((o) => o.id === oid)?.text ?? "";
+                  const move = (d: number) => setOrder((arr) => { const n = [...arr]; const j = i + d; if (j < 0 || j >= n.length) return arr; [n[i], n[j]] = [n[j], n[i]]; return n; });
+                  return (
+                    <li key={oid} className="flex items-center gap-3 rounded-2xl border-2 border-indigo-100 bg-white p-3 text-base font-semibold md:text-lg">
+                      <span aria-hidden="true" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-100 font-display text-lg font-extrabold text-indigo-800">{i + 1}</span>
+                      <span className="flex-1">{txt}</span>
+                      <span className="flex shrink-0 flex-col gap-1">
+                        <button type="button" className="btn btn-ghost btn-sm" disabled={busy || i === 0} onClick={() => move(-1)} aria-label={`Subir: ${txt}`}>▲</button>
+                        <button type="button" className="btn btn-ghost btn-sm" disabled={busy || i === order.length - 1} onClick={() => move(1)} aria-label={`Descer: ${txt}`}>▼</button>
+                      </span>
+                    </li>
+                  );
+                })}
+              </ol>
+            )}
+
+            {q.hint && (
+              <div className="mt-4">
+                {!showHint
+                  ? <button type="button" className="btn btn-ghost btn-sm" onClick={() => setShowHint(true)}>💡 Preciso de uma dica</button>
+                  : <p role="note" className="rounded-2xl bg-amber-50 p-3 font-semibold text-amber-900">💡 Dica: {q.hint} <span className="block text-xs font-bold text-amber-800">A dica ajuda a pensar e não tira pontos.</span></p>}
+              </div>
+            )}
 
             {error && <div className="mt-4"><ErrorBox message={error} /></div>}
             <div className="mt-5 flex flex-wrap items-center gap-3">
-              <button className="btn btn-sun text-xl" onClick={confirm} disabled={selected === null || busy}>{busy ? "Enviando…" : "CONFIRMAR RESPOSTA"}</button>
+              <button className="btn btn-sun text-xl" onClick={confirm} disabled={busy || (q.kind === "choice" && selected === null) || (q.kind === "multi" && multi.length === 0)}>{busy ? "Enviando…" : "CONFIRMAR RESPOSTA"}</button>
               <span className="text-sm font-semibold text-slate-600">Depois de confirmar, não será possível alterar.</span>
             </div>
           </div>
