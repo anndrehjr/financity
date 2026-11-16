@@ -14,3 +14,7 @@ next-env.d.ts
 dist
 *.log
 !.env.production.example
+
+# voz da Nina: áudios de referência e chaves NUNCA vão para o repositório
+tools/nina-voz/referencia/
+tools/nina-voz/.env*
