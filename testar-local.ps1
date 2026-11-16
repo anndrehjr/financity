@@ -41,24 +41,27 @@ if ($state -eq "created") {
 }
 Pop-Location
 
-# 3) API (porta 8787) e telas (porta 3000)
-if (-not (Listening 8787)) {
-  $env:DATABASE_URL = "postgres://financity_dev:dev-local-only@127.0.0.1:54329/fc_local"; $env:PORT = "8787"; $env:HOST = "127.0.0.1"
-  $env:GATEWAY_SECRET = $secret; $env:ALLOWED_ORIGINS = "http://localhost:3000"
+# aluno de teste com PIN conhecido (so neste banco local)
+Push-Location $api; $env:DATABASE_URL = "postgres://financity_dev:dev-local-only@127.0.0.1:54329/fc_local"; npx tsx scripts/criar-aluno-teste.ts; Pop-Location
+
+# 3) API (porta 8788) e telas (porta 3300)
+if (-not (Listening 8788)) {
+  $env:DATABASE_URL = "postgres://financity_dev:dev-local-only@127.0.0.1:54329/fc_local"; $env:PORT = "8788"; $env:HOST = "127.0.0.1"
+  $env:GATEWAY_SECRET = $secret; $env:ALLOWED_ORIGINS = "http://localhost:3300"; $env:UNLOCK_ALL_MAPS = "1"
   $p = Start-Process node -ArgumentList "dist/server.js" -WorkingDirectory $api -PassThru -WindowStyle Hidden -RedirectStandardOutput "$root\.e2e\api-local.log" -RedirectStandardError "$root\.e2e\api-local.err"
   $pids.api = $p.Id
-  if (-not (Wait-Port 8787 30)) { throw "API não iniciou (veja .e2e\api-local.err)." }
+  if (-not (Wait-Port 8788 30)) { throw "API não iniciou (veja .e2e\api-local.err)." }
 }
-if (-not (Listening 3000)) {
-  $env:API_URL = "http://127.0.0.1:8787"; $env:GATEWAY_SECRET = $secret; $env:NEXT_TELEMETRY_DISABLED = "1"
-  $p = Start-Process node -ArgumentList "`"$root\node_modules\next\dist\bin\next`"", "start", "-p", "3000" -WorkingDirectory (Join-Path $root "apps\web") -PassThru -WindowStyle Hidden -RedirectStandardOutput "$root\.e2e\web-local.log" -RedirectStandardError "$root\.e2e\web-local.err"
+if (-not (Listening 3300)) {
+  $env:API_URL = "http://127.0.0.1:8788"; $env:GATEWAY_SECRET = $secret; $env:NEXT_TELEMETRY_DISABLED = "1"
+  $p = Start-Process node -ArgumentList "`"$root\node_modules\next\dist\bin\next`"", "start", "-p", "3300" -WorkingDirectory (Join-Path $root "apps\web") -PassThru -WindowStyle Hidden -RedirectStandardOutput "$root\.e2e\web-local.log" -RedirectStandardError "$root\.e2e\web-local.err"
   $pids.web = $p.Id
-  if (-not (Wait-Port 3000 40)) { throw "Telas não iniciaram (veja .e2e\web-local.err)." }
+  if (-not (Wait-Port 3300 40)) { throw "Telas não iniciaram (veja .e2e\web-local.err)." }
 }
 $pids | ConvertTo-Json | Set-Content $pidFile
 
 Write-Host ""
-Write-Host "PRONTO. Abra: http://localhost:3000" -ForegroundColor Green
+Write-Host "PRONTO. Abra: http://localhost:3300" -ForegroundColor Green
 Write-Host "Professor: usuário e senha estão em D:\Projetos Serios\Jogos Novos\financity\data\credenciais-professor.txt"
-Write-Host "Alunos: use o painel > Alunos > redefinir PIN (só afeta esta cópia local)."
+Write-Host "Aluno de teste: usuario e PIN 135790 aparecem acima. TODOS os mapas ficam desbloqueados neste ambiente (so aqui; a VPS continua em sequencia)."
 Write-Host "Para encerrar: .\parar-local.ps1"
