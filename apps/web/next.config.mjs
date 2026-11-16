@@ -1,7 +1,13 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 const isProd = process.env.NODE_ENV === "production";
+const raizDoRepo = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   distDir: process.env.NEXT_DIST_DIR || ".next",
+  // monorepo: o site usa packages/gateway-sign, que fica fora de apps/web; o rastreio de arquivos parte da raiz do repositório
+  outputFileTracingRoot: raizDoRepo,
   transpilePackages: ["@financity/gateway-sign"],
   poweredByHeader: false,
   async headers() {
