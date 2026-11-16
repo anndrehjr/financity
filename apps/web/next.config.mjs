@@ -1,8 +1,8 @@
 const isProd = process.env.NODE_ENV === "production";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  distDir: process.env.NEXT_DIST_DIR || ".next", // permite compilar em outra pasta sem afetar um servidor em execução
-  serverExternalPackages: ["better-sqlite3"],
+  distDir: process.env.NEXT_DIST_DIR || ".next",
+  transpilePackages: ["@financity/gateway-sign"],
   poweredByHeader: false,
   async headers() {
     const h = [

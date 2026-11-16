@@ -60,7 +60,12 @@ export function Notice({ kind = "info", children }: { kind?: "info" | "ok" | "wa
 }
 
 export const fmt = (v: number | null | undefined, suffix = "") => (v === null || v === undefined ? "—" : `${String(v).replace(".", ",")}${suffix}`);
-export const fmtDate = (s?: string | null) => (s ? new Date(s.replace(" ", "T") + "Z").toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }) : "—");
+// A API devolve datas ISO 8601 com fuso (ex.: 2026-11-15T22:56:00.000Z). Aceita também o formato antigo "AAAA-MM-DD HH:MM:SS" (UTC).
+export const fmtDate = (s?: string | null) => {
+  if (!s) return "—";
+  const d = new Date(/[zZ]$|[+-]\d\d:?\d\d$/.test(s) ? s : s.replace(" ", "T") + "Z");
+  return Number.isNaN(d.getTime()) ? "—" : d.toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
+};
 
 export async function doLogout() {
   try { await apiFetch("/api/auth/logout", { method: "POST" }); } finally { location.href = "/"; }

@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getSession } from "@/lib/auth";
+import { getSession } from "@/lib/session";
 import Mapa1Client from "./Mapa1Client";
 
 export const dynamic = "force-dynamic";
