@@ -1,0 +1,77 @@
+{
+  "origem": "ElevenLabs, voz sylphiette, gerado em 2026-11-16 (modelo multilingual v2, velocidade 0,96, estabilidade 57, similaridade 75, estilo 0 — nome do arquivo; confirmar)",
+  "geradoEm": "2026-11-16",
+  "versao": 1,
+  "falas": {
+    "tutorial.primeiros-passos.abertura-1": {
+      "audio": "tutorial.primeiros-passos.abertura-1.mp3",
+      "texto": "Oiê! Que alegria ter você aqui.",
+      "duracaoMs": 3100,
+      "contexto": "abertura do tutorial",
+      "animacao": "happy"
+    },
+    "tutorial.primeiros-passos.abertura-2": {
+      "audio": "tutorial.primeiros-passos.abertura-2.mp3",
+      "texto": "Eu sou a **Nina**, sua amiga e guia nesta incrível aventura pelo mundo da educação financeira.",
+      "duracaoMs": 6300,
+      "contexto": "apresentação",
+      "animacao": "explaining"
+    },
+    "tutorial.primeiros-passos.abertura-3": {
+      "audio": "tutorial.primeiros-passos.abertura-3.mp3",
+      "texto": "Seja muito bem-vindo ao **Financity**.",
+      "duracaoMs": 2820,
+      "contexto": "boas-vindas",
+      "animacao": "happy"
+    },
+    "tutorial.primeiros-passos.abertura-4": {
+      "audio": "tutorial.primeiros-passos.abertura-4.mp3",
+      "texto": "Você já parou para pensar em como pequenas decisões podem transformar o seu futuro?",
+      "duracaoMs": 5400,
+      "contexto": "educação financeira",
+      "animacao": "thinking"
+    },
+    "tutorial.primeiros-passos.abertura-5": {
+      "audio": "tutorial.primeiros-passos.abertura-5.mp3",
+      "texto": "Pois é. Às vezes, uma escolha que parece simples pode fazer uma diferença enorme na nossa vida. E é exatamente isso que vamos descobrir juntos.",
+      "duracaoMs": 10900,
+      "contexto": "educação financeira",
+      "animacao": "explaining"
+    },
+    "tutorial.primeiros-passos.abertura-6": {
+      "audio": "tutorial.primeiros-passos.abertura-6.mp3",
+      "texto": "Aqui no Financity, você vai aprender a cuidar do seu dinheiro, planejar seus sonhos, entender como funcionam os investimentos e descobrir os desafios de administrar uma empresa.",
+      "duracaoMs": 12900,
+      "contexto": "o que vamos aprender",
+      "animacao": "explaining"
+    },
+    "tutorial.primeiros-passos.abertura-7": {
+      "audio": "tutorial.primeiros-passos.abertura-7.mp3",
+      "texto": "Mas calma, não precisa saber tudo agora. Eu vou estar aqui para ajudar você em cada etapa dessa jornada.",
+      "duracaoMs": 8200,
+      "contexto": "incentivo",
+      "animacao": "happy"
+    },
+    "tutorial.primeiros-passos.abertura-8": {
+      "audio": "tutorial.primeiros-passos.abertura-8.mp3",
+      "texto": "Afinal, o mais importante não é acertar tudo de primeira, mas compreender o que estamos aprendendo. Agora me conta, você está preparado para começar essa aventura?",
+      "duracaoMs": 11300,
+      "contexto": "incentivo",
+      "animacao": "explaining"
+    },
+    "tutorial.primeiros-passos.abertura-9": {
+      "audio": "tutorial.primeiros-passos.abertura-9.mp3",
+      "texto": "Eu estou super animada. Então vamos lá. Respire fundo, prepare suas ideias e venha comigo explorar o incrível mundo da educação financeira.",
+      "duracaoMs": 10400,
+      "contexto": "convite para começar",
+      "animacao": "celebrating"
+    },
+    "tutorial.primeiros-passos.tchau": {
+      "audio": "tutorial.primeiros-passos.tchau.mp3",
+      "texto": "Eu sou a **Nina** e estarei ao seu lado nessa jornada. Até já, futuro empreendedor.",
+      "duracaoMs": 6700,
+      "contexto": "encerramento",
+      "animacao": "goodbye"
+    }
+  }
+}
