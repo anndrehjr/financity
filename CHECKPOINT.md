@@ -34,3 +34,11 @@ Sem senhas, PINs ou chaves neste arquivo.
 
 ## Como retomar
 `cd "D:\Projetos Serios\Jogos Novos\financity-pg"` e peça: "leia CHECKPOINT.md e docs/MIGRACAO-E-ROLLBACK.md e continue". Para testar: `npm run pg:dev` (PostgreSQL local), depois ver docs/OPERACAO.md.
+
+## Atualização 2026-11-16 (tarde): Mapas 2–4 ATIVOS
+- 15 questões novas (BNCC + Bloom) em `apps/api/src/content/mapa{2,3,4}.ts`; `npm`/`node dist/ativar-cli.js` cria o que falta e libera as avaliações do 8º ano (idempotente; não sobrescreve pontuações).
+- Jogo por ID (`/jogo/[id]`; `/jogo/mapa-1` redireciona), medalhas por mapa, painel com seletor de mapa e médias por mapa, cenas provisórias (ícones) até haver ilustrações próprias.
+- **VPS atualizada** (backup antes/depois, restauração testada): 20 questões, 100 alternativas; alunos (19), tentativa (1) e respostas (5) inalterados. Ainda sem acesso público (sem domínio/NPM/DNS).
+- Testes: e2e 106/106 e 29/29 de segurança; produção validada com login real (8/8 e 14/14).
+- Word com todas as questões: `docs/conteudo/Financity-Questoes-Mapas-1-a-4.docx`.
+- Pendente: GitHub (`gh auth login` necessário), domínio, Vercel, ilustrações dos 14 cenários novos, revisão pedagógica do conteúdo, decisão sobre o Mapa 1 (auditoria recomendou reconstruir).
