@@ -11,5 +11,6 @@ export type Momento = {
   falas: Fala[];
 };
 export type Falas = { versao: number; momentos: Record<string, Momento> };
-export type Aberta = { momento: string; falas: Fala[]; indice: number; protegida: boolean };
+/** `ids` = id estável de cada fala (ex.: "acerto.2"), usado para achar o áudio pré-gerado. */
+export type Aberta = { momento: string; falas: Fala[]; indice: number; protegida: boolean; ids?: string[] };
 export type Trecho = { texto: string; negrito: boolean };

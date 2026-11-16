@@ -4,6 +4,7 @@ import { Avatar } from "./Avatar";
 import { personagem } from "./config/personagem";
 import { parseNegrito } from "./motor";
 import { useTutorial } from "./tutorial/TutorialProvider";
+import { TUTORIAIS } from "./tutorial/registro";
 import type { EstadoNina } from "./tutorial/tipos";
 import type { Expressao } from "./tipos";
 import { useGuia } from "./useGuia";
@@ -44,14 +45,17 @@ function GuiaBase() {
   const [completo, setCompleto] = useState(false);
   const [digitando, setDigitando] = useState(false);
   const [, forcar] = useState(0);
+  const [bocaVoz, setBocaVoz] = useState<string | null>(null);
   useEffect(() => g.voz.onMudar(() => forcar((x) => x + 1)), [g.voz]);
+  useEffect(() => g.servico.onMudar(() => forcar((x) => x + 1)), [g.servico]);
+  useEffect(() => { const a = g.servico.on("boca", (f) => setBocaVoz(f)); const b = g.servico.on("fim", () => setBocaVoz(null)); return () => { a(); b(); }; }, [g.servico]);
 
   const s = tut.snapshot;
   const a = g.aberta;
   // Conteúdo exibido: o tutorial (se ativo) tem prioridade sobre as reações.
   const c = useMemo(() => {
-    if (s) return { chave: `t:${s.tutorialId}:${s.indice}:${s.fase}`, texto: s.texto, expressao: s.expressao, estado: s.estado, tutorial: true, total: s.total, indice: s.indice };
-    if (a) { const f = a.falas[a.indice]; return { chave: `r:${a.momento}:${a.indice}`, texto: f.texto, expressao: f.expressao, estado: ESTADO_DA_EXPRESSAO[f.expressao], tutorial: false, total: a.falas.length, indice: a.indice }; }
+    if (s) return { chave: `t:${s.tutorialId}:${s.indice}:${s.fase}`, vozId: `tutorial.${s.tutorialId}.${s.etapa?.id ?? ""}${s.fase === "confirmando" ? ".ok" : ""}`, proximoId: (() => { const n = TUTORIAIS[s.tutorialId]?.etapas[s.indice + 1]; return n ? `tutorial.${s.tutorialId}.${n.id}` : null; })(), texto: s.texto, expressao: s.expressao, estado: s.estado, tutorial: true, total: s.total, indice: s.indice };
+    if (a) { const f = a.falas[a.indice]; return { chave: `r:${a.momento}:${a.indice}`, vozId: a.ids?.[a.indice] ?? `${a.momento}.${a.indice + 1}`, proximoId: a.ids?.[a.indice + 1] ?? null, texto: f.texto, expressao: f.expressao, estado: ESTADO_DA_EXPRESSAO[f.expressao], tutorial: false, total: a.falas.length, indice: a.indice }; }
     return null;
   }, [s, a]);
 
@@ -59,11 +63,12 @@ function GuiaBase() {
   // Voz: fala o texto novo e cancela ao trocar de tela/etapa, pular ou esconder a Nina.
   useEffect(() => {
     if (!c || g.silenciada) return;
-    g.voz.falar(c.texto);
-    return () => g.voz.cancelar();
+    void g.servico.tocar(c.vozId, c.texto);          // áudio pré-gerado; plano B: voz do navegador; senão só legenda
+    if (c.proximoId) void g.servico.preCarregar(c.proximoId);
+    return () => g.servico.parar();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [c?.chave, g.silenciada]);
-  useEffect(() => { if (g.silenciada) g.voz.cancelar(); }, [g.silenciada, g.voz]);
+  useEffect(() => { if (g.silenciada) g.servico.parar(); }, [g.silenciada, g.servico]);
 
   if (!personagem.ativo) return null;
   const direita = personagem.visual.posicao === "inferior-direita";
@@ -91,11 +96,11 @@ function GuiaBase() {
   }
 
   const ultima = c.indice === c.total - 1;
-  const falando = digitando || g.voz.falando;
+  const falando = digitando || g.servico.falando || g.voz.falando;
   return (
     <div className={`pointer-events-none fixed bottom-0 ${Z} flex max-w-[calc(100vw-1.5rem)] flex-col gap-2 pb-2 ${lado}`}>
       <div key={c.chave} className="motion-safe:animate-pop shrink-0" style={{ width: "min(" + personagem.visual.tamanhoPx * 0.75 + "px, 28vw)" }}>
-        <Avatar estado={c.estado} falando={falando} tamanho={personagem.visual.tamanhoPx} />
+        <Avatar estado={c.estado} falando={falando} boca={bocaVoz} tamanho={personagem.visual.tamanhoPx} />
       </div>
       <div role="status" aria-live="polite" onClick={() => setCompleto(true)}
         className="pointer-events-auto mb-4 w-[min(92vw,26rem)] rounded-3xl border-4 bg-white p-4 shadow-xl" style={{ borderColor: personagem.visual.corDestaque }}>
@@ -124,13 +129,15 @@ function GuiaBase() {
         </div>
         <div className="mt-2 flex flex-wrap items-center gap-3">
           <button type="button" onClick={() => g.silenciar(true)} className="pointer-events-auto text-sm font-bold text-slate-600 underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-indigo-700">Esconder {personagem.nome}</button>
-          {g.voz.suportado && (
-            <button type="button" aria-pressed={g.voz.ativa} onClick={() => { g.voz.ligar(!g.voz.ativa); if (!g.voz.ativa) return; g.voz.falar(c.texto); }}
+          {(
+            <button type="button" aria-pressed={g.voz.ativa} onClick={() => { const ligar = !g.voz.ativa; g.servico.setAtivo(ligar); if (ligar) void g.servico.tocar(c.vozId, c.texto); }}
               className="pointer-events-auto text-sm font-bold text-slate-600 underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-indigo-700">{g.voz.ativa ? "🔊 Voz ligada" : "🔇 Ligar voz"}</button>
           )}
         </div>
-        {g.voz.suportado && g.voz.ativa && (
+        {g.voz.ativa && (
           <div className="mt-2 flex flex-wrap items-center gap-2 text-sm font-semibold text-slate-700">
+            <button type="button" className="pointer-events-auto underline" onClick={() => g.servico.repetir()}>🔁 Repetir fala</button>
+            <label>Volume <input type="range" min={0} max={1} step={0.1} defaultValue={g.servico.volume} onChange={(e) => g.servico.setVolume(Number(e.target.value))} aria-label="Volume da voz" /></label>
             <label>Velocidade <input type="range" min={0.7} max={1.5} step={0.1} defaultValue={g.voz.velocidade} onChange={(e) => g.voz.definirVelocidade(Number(e.target.value))} aria-label="Velocidade da voz" /></label>
             {g.voz.vozes().length > 1 && (
               <select aria-label="Escolher voz" defaultValue={g.voz.nome ?? ""} onChange={(e) => g.voz.definirVoz(e.target.value || null)} className="rounded border px-1">

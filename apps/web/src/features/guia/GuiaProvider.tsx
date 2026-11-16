@@ -5,6 +5,7 @@ import { personagem } from "./config/personagem";
 import { armazemDoNavegador, gravar, ler } from "./armazenamento";
 import { abrir, avancar as proxima } from "./motor";
 import { VozNina } from "./voz";
+import { NinaVoiceService } from "./voz-servico";
 import type { Aberta, Falas } from "./tipos";
 
 const falas = falasJson as Falas;
@@ -22,6 +23,7 @@ export type GuiaCtx = {
   /** Enquanto bloqueado (tutorial guiado ativo), reações como acerto/erro são descartadas. */
   bloquear: (b: boolean) => void;
   voz: VozNina;
+  servico: NinaVoiceService;
 };
 export const GuiaContexto = createContext<GuiaCtx | null>(null);
 
@@ -33,6 +35,8 @@ export function GuiaProvider({ children }: { children: React.ReactNode }) {
   const ultimo = useRef<Record<string, number>>({});
   const bloqueada = useRef(false);
   const voz = useMemo(() => new VozNina(), []);
+  const servico = useMemo(() => new NinaVoiceService(voz), [voz]);
+  useEffect(() => () => servico.destruir(), [servico]);
 
   const definir = useCallback((a: Aberta | null) => { abertaRef.current = a; setAberta(a); }, []);
   const terminou = useCallback((a: Aberta | null) => { if (a?.momento === "boas_vindas") gravar(armazemDoNavegador(), chaveTutorialVisto, true); }, []);
@@ -69,7 +73,7 @@ export function GuiaProvider({ children }: { children: React.ReactNode }) {
     if (!personagem.comportamento.tutorialGuiado && !ler(a, chaveTutorialVisto)) falar("boas_vindas");
   }, [falar]);
 
-  const valor = useMemo<GuiaCtx>(() => ({ aberta, silenciada, falar, avancar, fechar, pularTutorial: fechar, reverTutorial, silenciar, bloquear, voz }),
-    [aberta, silenciada, falar, avancar, fechar, reverTutorial, silenciar, bloquear, voz]);
+  const valor = useMemo<GuiaCtx>(() => ({ aberta, silenciada, falar, avancar, fechar, pularTutorial: fechar, reverTutorial, silenciar, bloquear, voz, servico }),
+    [aberta, silenciada, falar, avancar, fechar, reverTutorial, silenciar, bloquear, voz, servico]);
   return <GuiaContexto.Provider value={valor}>{children}</GuiaContexto.Provider>;
 }
