@@ -20,6 +20,8 @@ export const config = {
   allowedOrigins: (process.env.ALLOWED_ORIGINS || "http://localhost:3000").split(",").map((s) => s.trim()).filter(Boolean),
   /** Em desenvolvimento/testes pode-se dispensar a assinatura (nunca em produção). */
   requireSignature: isProd ? true : process.env.REQUIRE_SIGNATURE !== "0",
+  /** SÓ para testes locais: libera todos os mapas publicados para qualquer aluno. Ignorado (sempre falso) em produção. */
+  unlockAllMaps: isProd ? false : process.env.UNLOCK_ALL_MAPS === "1",
 };
 
 if (isProd && config.pinSecret.length < 32) throw new Error("FINANCITY_SECRET deve ter 32+ caracteres.");

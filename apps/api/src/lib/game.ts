@@ -1,3 +1,4 @@
+import { config } from "../config.js";
 import { one, q, tx } from "./db.js";
 import { HttpError } from "./auth.js";
 
@@ -51,6 +52,7 @@ async function assessmentOf(studentId: number, assessmentId: number): Promise<As
 /** Disponível E (se não for a primeira da série) com a anterior concluída pelo aluno. */
 async function unlocked(studentId: number, a: AssessmentRow): Promise<boolean> {
   if (a.status !== "available") return false;
+  if (config.unlockAllMaps) return true; // chave de teste local (nunca ativa em produção)
   const prev = await one<{ id: number }>("SELECT id FROM assessments WHERE grade=$1 AND sort<$2 ORDER BY sort DESC LIMIT 1", [a.grade, a.sort]);
   if (!prev) return true;
   return !!(await one("SELECT 1 FROM attempts WHERE student_id=$1 AND assessment_id=$2 AND status='completed'", [studentId, prev.id]));
