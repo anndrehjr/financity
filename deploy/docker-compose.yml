@@ -1,0 +1,67 @@
+# Financity na VPS: API + PostgreSQL 16, cada um com limites e sem porta publicada no host.
+#   cp .env.production.example .env.production   # preencher segredos (permissão 600)
+#   docker compose --env-file .env.production up -d --build
+#
+# Rede "internal": só a API enxerga o banco (o PostgreSQL NÃO está em nenhuma outra rede e não publica porta).
+# Rede "proxy": a mesma rede do Nginx Proxy Manager, usada só pela API (para receber HTTPS do proxy).
+name: financity
+
+services:
+  db:
+    image: postgres:16-bookworm
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: financity
+      POSTGRES_DB: financity
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8"
+    command: ["postgres", "-c", "max_connections=30", "-c", "shared_buffers=128MB", "-c", "log_min_duration_statement=2000", "-c", "log_statement=none"]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks: [internal]
+    mem_limit: 512m
+    cap_drop: [ALL]
+    cap_add: [CHOWN, SETUID, SETGID, FOWNER, DAC_READ_SEARCH]
+    security_opt: ["no-new-privileges:true"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U financity -d financity"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: ..
+      dockerfile: deploy/api/Dockerfile
+    image: financity-api:${API_TAG:-local}
+    restart: unless-stopped
+    depends_on:
+      db: { condition: service_healthy }
+    environment:
+      NODE_ENV: production
+      PORT: "8787"
+      DATABASE_URL: postgres://financity:${POSTGRES_PASSWORD}@db:5432/financity
+      FINANCITY_SECRET: ${FINANCITY_SECRET:?defina FINANCITY_SECRET}
+      GATEWAY_SECRET: ${GATEWAY_SECRET:?defina GATEWAY_SECRET}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:?defina ALLOWED_ORIGINS}
+    networks:
+      internal: {}
+      proxy:
+        # alias ÚNICO: a rede "proxy" é compartilhada com outros projetos; um nome genérico como "api" poderia colidir no DNS do Docker
+        aliases: [financity-api]
+    mem_limit: 384m
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    # sem "ports:": só o Nginx Proxy Manager alcança a API (http://financity-api:8787 dentro da rede proxy)
+
+networks:
+  internal:
+    internal: true
+  proxy:
+    external: true
+    name: ${PROXY_NETWORK:-docker_proxy}
+
+volumes:
+  pgdata:
