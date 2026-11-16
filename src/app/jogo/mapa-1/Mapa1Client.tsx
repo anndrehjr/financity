@@ -1,0 +1,167 @@
+"use client";
+import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
+import { Alex, Medal, SceneByKey, SceneMall } from "@/components/art";
+import { ErrorBox, Spinner, apiFetch } from "@/components/ui";
+
+const MAP_ID = 1;
+type Question = { id: number; number: number; title: string; scene: string; scenario: string; dialog: string; prompt: string; options: { id: number; letter: string; text: string }[] };
+type State = { map: { title: string; subtitle: string }; status: "not_started" | "in_progress" | "completed"; score: number; max: number; answered: number; total: number; question?: Question };
+type Result = { studentName: string; score: number; max: number; pct: number; medal: { key: string; title: string; msg: string } };
+
+export default function Mapa1Client() {
+  const [state, setState] = useState<State | null>(null);
+  const [result, setResult] = useState<Result | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [selected, setSelected] = useState<number | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [transition, setTransition] = useState(false);
+
+  const load = useCallback(async () => {
+    setError(null);
+    try {
+      const s = await apiFetch<State>(`/api/game/${MAP_ID}/state`);
+      setState(s);
+      setSelected(null);
+      if (s.status === "completed") setResult(await apiFetch<Result>(`/api/game/${MAP_ID}/result`));
+    } catch (e) { setError((e as Error).message); }
+  }, []);
+  useEffect(() => { void load(); }, [load]);
+
+  async function start() {
+    setBusy(true); setError(null);
+    try { setState(await apiFetch<State>(`/api/game/${MAP_ID}/start`, { method: "POST" })); } catch (e) { setError((e as Error).message); } finally { setBusy(false); }
+  }
+
+  async function confirm() {
+    if (!state?.question || selected === null || busy) return;
+    setBusy(true); setError(null);
+    try {
+      await apiFetch(`/api/game/${MAP_ID}/answer`, { method: "POST", body: { questionId: state.question.id, optionId: selected } });
+      setTransition(true);
+      await new Promise((r) => setTimeout(r, 1700));
+      setTransition(false);
+      await load();
+    } catch (e) {
+      setError((e as Error).message);
+      setTransition(false);
+      await load(); // ressincroniza (ex.: resposta já registrada)
+    } finally { setBusy(false); }
+  }
+
+  const Top = ({ score }: { score?: number }) => (
+    <header className="mx-auto flex max-w-4xl items-center justify-between gap-2 py-3">
+      <Link href="/jogo" className="btn btn-ghost btn-sm whitespace-nowrap">← Mapas</Link>
+      <span className="text-center font-display text-sm font-extrabold leading-tight text-city-grape sm:text-lg">A CIDADE DO CONSUMO</span>
+      {score !== undefined ? <span className="whitespace-nowrap rounded-2xl bg-white px-3 py-1 font-display text-lg font-extrabold text-amber-700 shadow" aria-live="polite">⭐ {score} pts</span> : <span />}
+    </header>
+  );
+
+  if (!state && !error) return <main className="game-bg"><Spinner label="Abrindo o mapa…" /></main>;
+  if (!state) return <main className="game-bg p-4"><div className="mx-auto max-w-xl pt-10"><ErrorBox message={error!} onRetry={load} /><Link href="/jogo" className="btn btn-ghost mt-4">Voltar aos mapas</Link></div></main>;
+
+  // ---------- Conclusão ----------
+  if (state.status === "completed" && result) {
+    return (
+      <main className="game-bg px-4 pb-10">
+        <Top />
+        <section className="card mx-auto mt-2 max-w-2xl animate-pop text-center">
+          <h1 className="font-display text-4xl font-extrabold text-city-grape md:text-5xl">MISSÃO CONCLUÍDA!</h1>
+          <p className="mt-1 text-lg font-bold">{result.studentName}</p>
+          <div className="mt-2 flex justify-center"><Medal k={result.medal.key} className="h-36 w-32 animate-floaty" /></div>
+          <p className="font-display text-2xl font-extrabold text-indigo-900">{result.medal.title}</p>
+          <div className="mx-auto mt-4 grid max-w-md grid-cols-3 gap-3">
+            <Stat label="Pontos" value={String(result.score)} />
+            <Stat label="Máximo" value={String(result.max)} />
+            <Stat label="Aproveitamento" value={`${result.pct}%`} />
+          </div>
+          <p className="mx-auto mt-4 max-w-md text-lg font-semibold">{result.medal.msg}</p>
+          <p className="mx-auto mt-2 max-w-md text-xs text-slate-600">A classificação é apenas motivacional e não define o quanto você aprendeu.</p>
+          <Link href="/jogo" className="btn btn-primary mt-5">Voltar aos mapas</Link>
+        </section>
+      </main>
+    );
+  }
+
+  // ---------- Introdução ----------
+  if (state.status === "not_started") {
+    return (
+      <main className="game-bg px-4 pb-10">
+        <Top />
+        <section className="mx-auto max-w-4xl overflow-hidden rounded-3xl bg-white shadow-xl animate-pop">
+          <div className="relative aspect-[16/9] md:aspect-[2/1]"><SceneMall className="h-full w-full" />
+            <div className="absolute bottom-0 left-4 h-[62%] animate-floaty"><Alex /></div></div>
+          <div className="p-6 md:p-8">
+            <h1 className="font-display text-3xl font-extrabold md:text-4xl">A CIDADE DO CONSUMO</h1>
+            <p className="mt-3 rounded-2xl bg-sky-50 p-4 text-lg font-semibold text-sky-900"><b>Alex:</b> “Oi! Eu sou o Alex. Hoje vamos passear pelo centro comercial e enfrentar {state.total} desafios do dia a dia. Pense com calma, escolha a atitude que você considera mais adequada e confirme. Vamos nessa?”</p>
+            <ul className="mt-3 list-disc space-y-1 pl-6 text-slate-700"><li>Responda uma situação de cada vez.</li><li>Depois de confirmar, a resposta não pode ser trocada.</li><li>Se fechar a página, você continua de onde parou.</li></ul>
+            {error && <div className="mt-3"><ErrorBox message={error} /></div>}
+            <button className="btn btn-sun mt-5 w-full text-xl md:w-auto" onClick={start} disabled={busy}>{busy ? "Preparando…" : "COMEÇAR AVENTURA"}</button>
+          </div>
+        </section>
+      </main>
+    );
+  }
+
+  // ---------- Transição ----------
+  if (transition) {
+    return (
+      <main className="game-bg flex min-h-screen flex-col items-center justify-center px-4 text-center" aria-live="polite">
+        <div className="h-56 animate-walk"><Alex pose="walk" /></div>
+        <p className="mt-4 font-display text-2xl font-extrabold text-indigo-900">Resposta registrada!</p>
+        <p className="font-semibold text-indigo-800">Alex segue para o próximo cenário…</p>
+      </main>
+    );
+  }
+
+  // ---------- Pergunta ----------
+  const q = state.question;
+  if (!q) return <main className="game-bg"><Spinner /></main>;
+  return (
+    <main className="game-bg px-4 pb-10">
+      <Top score={state.score} />
+      <div className="mx-auto max-w-4xl">
+        <div className="mb-3" role="progressbar" aria-valuemin={1} aria-valuemax={state.total} aria-valuenow={state.answered + 1} aria-label={`Desafio ${state.answered + 1} de ${state.total}`}>
+          <div className="mb-1 flex justify-between text-sm font-extrabold text-indigo-900"><span>Desafio {state.answered + 1} de {state.total}</span></div>
+          <div className="h-3 overflow-hidden rounded-full bg-white/80"><div className="h-full rounded-full bg-city-grape transition-all" style={{ width: `${(state.answered / state.total) * 100}%` }} /></div>
+        </div>
+
+        <section key={q.id} className="overflow-hidden rounded-3xl bg-white shadow-xl animate-pop">
+          <div className="relative aspect-[16/9] md:aspect-[2/1]"><SceneByKey k={q.scene} />
+            <div className="absolute bottom-0 left-3 h-[58%]"><Alex pose="think" /></div>
+          </div>
+          <p className="bg-sky-50 px-5 py-3 text-base font-bold text-sky-950 md:px-7"><span className="text-city-grape">Alex:</span> “{q.dialog}”</p>
+          <div className="p-5 md:p-7">
+            <p className="text-sm font-extrabold uppercase tracking-wide text-city-grape">Desafio {q.number}</p>
+            <h1 className="font-display text-3xl font-extrabold">{q.title}</h1>
+            <p className="mt-1 text-sm font-semibold italic text-slate-600">{q.scenario}</p>
+            <p className="mt-4 text-lg font-bold leading-snug" id="enunciado">{q.prompt}</p>
+
+            <div role="radiogroup" aria-labelledby="enunciado" className="mt-4 grid gap-3">
+              {q.options.map((o) => {
+                const on = selected === o.id;
+                return (
+                  <button key={o.id} type="button" role="radio" aria-checked={on} disabled={busy} onClick={() => setSelected(o.id)}
+                    className={`flex items-start gap-3 rounded-2xl border-2 p-3 text-left text-base font-semibold transition md:text-lg ${on ? "border-city-grape bg-violet-50 ring-2 ring-city-grape" : "border-indigo-100 bg-white hover:border-indigo-300 hover:bg-indigo-50"}`}>
+                    <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-display text-lg font-extrabold ${on ? "bg-city-grape text-white" : "bg-indigo-100 text-indigo-800"}`}>{o.letter}</span>
+                    <span className="pt-1">{o.text}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {error && <div className="mt-4"><ErrorBox message={error} /></div>}
+            <div className="mt-5 flex flex-wrap items-center gap-3">
+              <button className="btn btn-sun text-xl" onClick={confirm} disabled={selected === null || busy}>{busy ? "Enviando…" : "CONFIRMAR RESPOSTA"}</button>
+              <span className="text-sm font-semibold text-slate-600">Depois de confirmar, não será possível alterar.</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return <div className="rounded-2xl bg-indigo-50 p-3"><div className="font-display text-3xl font-extrabold text-city-grape">{value}</div><div className="text-xs font-bold text-slate-600">{label}</div></div>;
+}

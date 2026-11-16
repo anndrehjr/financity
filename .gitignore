@@ -1,0 +1,9 @@
+node_modules
+.next
+data/*
+!data/.gitkeep
+.env*
+!.env.example
+next-env.d.ts
+*.tsbuildinfo
+.next-audit
