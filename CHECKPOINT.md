@@ -42,3 +42,4 @@ Sem senhas, PINs ou chaves neste arquivo.
 - Testes: e2e 106/106 e 29/29 de segurança; produção validada com login real (8/8 e 14/14).
 - Word com todas as questões: `docs/conteudo/Financity-Questoes-Mapas-1-a-4.docx`.
 - Pendente: GitHub (`gh auth login` necessário), domínio, Vercel, ilustrações dos 14 cenários novos, revisão pedagógica do conteúdo, decisão sobre o Mapa 1 (auditoria recomendou reconstruir).
+- Commits passam a ser assinados com a conta do GitHub (e-mail noreply), exigido pela Vercel (plano gratuito) para liberar o deploy.
