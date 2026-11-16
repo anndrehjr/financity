@@ -1,27 +1,30 @@
-# Financity — ponto de retomada (2026-11-16)
+# Financity — ponto de retomada (2026-11-16, versão PostgreSQL)
 
 Sem senhas, PINs ou chaves neste arquivo.
 
-## Estado
-- App local em `D:\Projetos Serios\Jogos Novos\financity` (Next.js 15, TypeScript, Tailwind, Recharts, SQLite). Banco: `data/financity.db`.
-- Mapa 1 completo; mapas 2–4 bloqueados. Painel do professor, relatórios, ranking, cadastro, **Gerador Automático de PINs** prontos.
-- Banco real: 1 professor, 19 alunos (Andre + 18 do 8º ano cadastrados), 1 tentativa concluída. Backup antes do cadastro: `data/backup-antes-cadastro-20261115-230931.db`.
-- Testes: `npm run test:e2e` (77 verificações, rodam só em banco de teste isolado) + auditoria visual/acessibilidade (axe: 0 violações).
-- Auditoria pedagógica entregue (somente análise): recomendação **D — reconstruir as 5 questões** (pistas de tamanho e do "sem", chute = 56%, "pegar a mais longa" = 22/25). Nada de questões/pontuação foi alterado; aguarda aprovação do professor.
+## Onde está cada coisa
+- **Sistema atual (SQLite) — INTACTO**: `D:\Projetos Serios\Jogos Novos\financity` (branch `main`, tag `v0-sqlite-estavel`). É o caminho de retorno.
+- **Versão nova (PostgreSQL + API na VPS + web na Vercel)**: `D:\Projetos Serios\Jogos Novos\financity-pg` (branch `feat/postgres-api`, commits locais; **nada enviado ao GitHub**).
+- **Backups verificados**: `D:\Projetos Serios\Jogos Novos\financity-backups\<data-hora>\` (SQLite + código + cópia bruta; contém dados de alunos e `secret.key`).
+- Documentos: `docs/ARQUITETURA.md`, `docs/OPERACAO.md`, `docs/MIGRACAO-E-ROLLBACK.md`, `docs/relatorios/*.json`.
+
+## Concluído e verificado
+- Backup do SQLite (integrity ok, restauração testada) e do código (extração idêntica).
+- API Hono + PostgreSQL 16; migrações 001 (base) e 002 (séries, matérias, avaliações por série, vínculo professor↔turma).
+- Gateway Next (Vercel) → API fechada por assinatura HMAC; autorização por professor/turma/série.
+- Script de migração com verificação linha a linha: ensaio local e ensaio **na VPS** (pilha isolada, já removida) sem divergências.
+- Testes: e2e 87/87 (pela cadeia completa) e 29/29 de segurança. Backup/restauração testados na VPS.
+- VPS: ensaio descartável criado e **totalmente removido**; os 22 containers originais não foram afetados.
+
+## Não feito (aguarda aprovação) — ver `docs/MIGRACAO-E-ROLLBACK.md` §3
+- Troca definitiva, domínio/DNS/certificados, projeto na Vercel, pilha definitiva na VPS (`~/docker` é do root: precisa de `sudo`), push para GitHub.
 
 ## Pendências (ação do André)
-1. **Reiniciar o servidor local** para pegar o build final: parar (Ctrl+C), `npm run build`, `npm start`.
-2. Trocar a senha do professor em Configurações e apagar `data/credenciais-professor.txt`.
-3. Decidir sobre as questões do Mapa 1 (propor 1 questão-modelo antes de refazer as 5).
-4. VPS: aprovar o plano abaixo.
-
-## VPS (144.217.161.241, SSH porta 2222, usuário sombra, chave `~/.ssh/id_ed25519_vps`) — SOMENTE LEITURA até agora
-- Padrão: `~/docker/<app>`, compose, Postgres 16 por app, Nginx Proxy Manager (80/443; admin só em 127.0.0.1:81), ufw + fail2ban, backup da escola às 02:15 UTC com envio ao Google Drive (funcionando).
-- Recursos: 4 vCPU, ~3 GB RAM livres, sem swap, 21 GB de disco livres. Portas livres: 3003, 3007, 3008, 3010.
-- **Nenhuma alteração foi feita na VPS.** Não mexer em outros projetos.
-- Plano proposto (aguardando "sim"): `~/docker/financity` (Git), Dockerfile `node:22-bookworm-slim` multi-stage, compose na rede `proxy` sem porta no host, `cap_drop ALL`, limite ~384 MB, `/api/health` (criar), volume `data/`, `.env.production` 600, host no NPM com Let's Encrypt (ex.: `financity.andre-aguiar-jr.com.br`, DNS por conta do André), backup SQLite `.backup` + sha256 + rclone (copiando `escola-backup.sh`), doc operacional. Banco: SQLite agora; PostgreSQL só se multi-escola.
-- Perguntas em aberto: criar `~/docker/financity`? subdomínio? SQLite ou Postgres? compilar na VPS (fora do horário, memória limitada) ou fora?
-- Avisos na VPS: possível cópia de chave privada em `~/:USERPROFILE.sshid_ed25519_vps` (root, não aberta) — conferir/apagar; `sudo` sem senha; arquivos `escola_*.sql.gz` de root sem origem identificada.
+1. Informar o domínio comprado (não foi inventado nenhum).
+2. Decidir plano da Vercel (Hobby = uso pessoal/não comercial; Pro ≈ US$ 20/mês) e se o código vai para o GitHub (`anndrehjr`).
+3. Trocar a senha do professor e apagar `data/credenciais-professor.txt` (a senha desse arquivo ainda confere com o banco).
+4. Aprovar a reconstrução das 5 questões (trilha separada; nada foi alterado).
+5. Conteúdo/avaliações do 7º ano; seletor de série/avaliação na interface (a API já suporta).
 
 ## Como retomar
-Abra o terminal em `C:\Users\AndreJr` e rode `claude --continue` (última conversa) ou `claude --resume` (escolher). Ou comece nova sessão em `D:\Projetos Serios\Jogos Novos\financity` e peça: "leia CHECKPOINT.md e continue".
+`cd "D:\Projetos Serios\Jogos Novos\financity-pg"` e peça: "leia CHECKPOINT.md e docs/MIGRACAO-E-ROLLBACK.md e continue". Para testar: `npm run pg:dev` (PostgreSQL local), depois ver docs/OPERACAO.md.

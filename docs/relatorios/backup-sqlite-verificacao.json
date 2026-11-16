@@ -1,0 +1,22 @@
+{
+  "quando": "2026-11-16T14:47:15.137Z",
+  "integrity_check": "ok",
+  "foreign_key_violations": 0,
+  "contagens_iguais_origem_backup_restauracao": true,
+  "contagens": {
+    "admin_log": 4,
+    "answers": 5,
+    "attempts": 1,
+    "classes": 1,
+    "login_attempts": 3,
+    "maps": 4,
+    "options": 25,
+    "questions": 5,
+    "sessions": 1,
+    "settings": 0,
+    "students": 19,
+    "teachers": 1
+  },
+  "sha256_backup": "36217641fc0caaf443f745032f86d441feb4df3e3f4bf201c40c03e50fc46643",
+  "bytes": 106496
+}

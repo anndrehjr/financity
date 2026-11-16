@@ -1,0 +1,75 @@
+{
+  "quando": "2026-11-16T15:15:53.731Z",
+  "origem_sqlite": "financity.db",
+  "destino": "PostgreSQL (DATABASE_URL)",
+  "tabelas": {
+    "teachers": {
+      "linhas_sqlite": 1,
+      "linhas_postgres": 1,
+      "hash_sqlite": "7e1334b190afbfad8b3fc8017263be1645b25a4f23a33dfa497925c29c3d0994",
+      "hash_postgres": "7e1334b190afbfad8b3fc8017263be1645b25a4f23a33dfa497925c29c3d0994"
+    },
+    "classes": {
+      "linhas_sqlite": 1,
+      "linhas_postgres": 1,
+      "hash_sqlite": "b0c805c8ff7e3328bdb4184235af7beb5a67a63cd947b714720b8d08f3c5fe3e",
+      "hash_postgres": "b0c805c8ff7e3328bdb4184235af7beb5a67a63cd947b714720b8d08f3c5fe3e"
+    },
+    "students": {
+      "linhas_sqlite": 19,
+      "linhas_postgres": 19,
+      "hash_sqlite": "fd6b617ef1973ded12efcbf9b01d224a8c1b1421e1ede23d3e1b4bb0d994d3b0",
+      "hash_postgres": "fd6b617ef1973ded12efcbf9b01d224a8c1b1421e1ede23d3e1b4bb0d994d3b0"
+    },
+    "maps": {
+      "linhas_sqlite": 4,
+      "linhas_postgres": 4,
+      "hash_sqlite": "0fbf8dc7f50cb00e5e486da6426a13914ad3b97cd5a8e261f8f23c983f6fa605",
+      "hash_postgres": "0fbf8dc7f50cb00e5e486da6426a13914ad3b97cd5a8e261f8f23c983f6fa605"
+    },
+    "questions": {
+      "linhas_sqlite": 5,
+      "linhas_postgres": 5,
+      "hash_sqlite": "cb0be433cf0579b609ab7bc992ad70a365f4441197f1b9c1d30448c0cde5b616",
+      "hash_postgres": "cb0be433cf0579b609ab7bc992ad70a365f4441197f1b9c1d30448c0cde5b616"
+    },
+    "options": {
+      "linhas_sqlite": 25,
+      "linhas_postgres": 25,
+      "hash_sqlite": "20efa465b67a7d9661abd104bdfdc2f6400946c02147faff36bddfaa7914f5f5",
+      "hash_postgres": "20efa465b67a7d9661abd104bdfdc2f6400946c02147faff36bddfaa7914f5f5"
+    },
+    "attempts": {
+      "linhas_sqlite": 1,
+      "linhas_postgres": 1,
+      "hash_sqlite": "3aa7698f1fbf232b6bf5e683706b8666c9804ac59bb35d1cb0f233251cc8281a",
+      "hash_postgres": "3aa7698f1fbf232b6bf5e683706b8666c9804ac59bb35d1cb0f233251cc8281a"
+    },
+    "answers": {
+      "linhas_sqlite": 5,
+      "linhas_postgres": 5,
+      "hash_sqlite": "73d5be024b509cb7108a8608a88b9549a0db392d6f600167548c9e0cacf1baf4",
+      "hash_postgres": "73d5be024b509cb7108a8608a88b9549a0db392d6f600167548c9e0cacf1baf4"
+    },
+    "admin_log": {
+      "linhas_sqlite": 4,
+      "linhas_postgres": 4,
+      "hash_sqlite": "44a21b1cd49f6f6be5cfad3c422c157e4c4e8076101c60dcfd5814db090cdd3d",
+      "hash_postgres": "44a21b1cd49f6f6be5cfad3c422c157e4c4e8076101c60dcfd5814db090cdd3d"
+    },
+    "settings": {
+      "linhas_sqlite": 0,
+      "linhas_postgres": 0,
+      "hash_sqlite": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "hash_postgres": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    }
+  },
+  "turmas_sem_serie": 0,
+  "sequencias_ok": true,
+  "painel": {
+    "alunos": 19,
+    "concluidas": 1,
+    "media": 17
+  },
+  "falhas": 0
+}

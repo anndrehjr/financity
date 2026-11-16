@@ -8,7 +8,7 @@ import { signRequest } from "@financity/gateway-sign";
  */
 export function gatewayConfig() {
   const apiUrl = (process.env.API_URL || "").replace(/\/+$/, "");
-  const secret = process.env.GATEWAY_SECRET || "";
+  const secret = (process.env.GATEWAY_SECRET || "").trim(); // aparar evita erro de copiar/colar com quebra de linha
   if (!apiUrl || secret.length < 32) {
     console.error("Gateway mal configurado: defina API_URL e GATEWAY_SECRET (32+ caracteres) nas variáveis de ambiente do servidor.");
     return null;
