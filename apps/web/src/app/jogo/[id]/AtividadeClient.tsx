@@ -1,8 +1,11 @@
 "use client";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Alex, MapArt, Medal, SceneByKey } from "@/components/art";
 import { ErrorBox, Spinner, apiFetch } from "@/components/ui";
+import { personagem } from "@/features/guia/config/personagem";
+import { reacaoPorPontos } from "@/features/guia/motor";
+import { useGuia } from "@/features/guia/useGuia";
 
 
 type Question = { id: number; number: number; title: string; scene: string; scenario: string; dialog: string; prompt: string; options: { id: number; letter: string; text: string }[] };
@@ -16,6 +19,9 @@ export default function AtividadeClient({ id }: { id: number }) {
   const [selected, setSelected] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
   const [transition, setTransition] = useState(false);
+  const guia = useGuia();
+  const falouIntro = useRef<number | null>(null);
+  const falouFim = useRef(false);
 
   const load = useCallback(async () => {
     setError(null);
@@ -28,6 +34,21 @@ export default function AtividadeClient({ id }: { id: number }) {
   }, [id]);
   useEffect(() => { void load(); }, [load]);
 
+  // Nina: só fala; nunca altera o estado do jogo.
+  const sort = state?.map.sort ?? id;
+  useEffect(() => {
+    if (state?.status === "not_started" && falouIntro.current !== id) { falouIntro.current = id; guia.falar(`mapa_${sort}`); }
+  }, [state?.status, id, sort, guia]);
+  useEffect(() => {
+    if (state?.status === "completed" && result && !falouFim.current) { falouFim.current = true; guia.falar(sort >= 4 ? "vitoria" : "fase_concluida"); }
+  }, [state?.status, result, sort, guia]);
+  const perguntaId = state?.status === "in_progress" && !transition ? state.question?.id : undefined;
+  useEffect(() => {
+    if (perguntaId === undefined) return;
+    const t = setTimeout(() => guia.falar("parado"), personagem.comportamento.segundosParado * 1000);
+    return () => clearTimeout(t);
+  }, [perguntaId, guia]);
+
   async function start() {
     setBusy(true); setError(null);
     try { setState(await apiFetch<State>(`/api/game/${id}/start`, { method: "POST" })); } catch (e) { setError((e as Error).message); } finally { setBusy(false); }
@@ -37,7 +58,9 @@ export default function AtividadeClient({ id }: { id: number }) {
     if (!state?.question || selected === null || busy) return;
     setBusy(true); setError(null);
     try {
-      await apiFetch(`/api/game/${id}/answer`, { method: "POST", body: { questionId: state.question.id, optionId: selected } });
+      const r = await apiFetch<{ score: number; completed: boolean }>(`/api/game/${id}/answer`, { method: "POST", body: { questionId: state.question.id, optionId: selected } });
+      const c = personagem.comportamento;
+      if (c.reagirAoResultado && !r.completed) guia.falar(reacaoPorPontos(r.score - state.score, c.minAcerto, c.minParcial));
       setTransition(true);
       await new Promise((r) => setTimeout(r, 1700));
       setTransition(false);
@@ -96,7 +119,10 @@ export default function AtividadeClient({ id }: { id: number }) {
             <p className="mt-3 rounded-2xl bg-sky-50 p-4 text-lg font-semibold text-sky-900"><b>Alex:</b> “Oi! Eu sou o Alex. Hoje vamos passear pelo centro comercial e enfrentar {state.total} desafios do dia a dia. Pense com calma, escolha a atitude que você considera mais adequada e confirme. Vamos nessa?”</p>
             <ul className="mt-3 list-disc space-y-1 pl-6 text-slate-700"><li>Responda uma situação de cada vez.</li><li>Depois de confirmar, a resposta não pode ser trocada.</li><li>Se fechar a página, você continua de onde parou.</li></ul>
             {error && <div className="mt-3"><ErrorBox message={error} /></div>}
-            <button className="btn btn-sun mt-5 w-full text-xl md:w-auto" onClick={start} disabled={busy}>{busy ? "Preparando…" : "COMEÇAR AVENTURA"}</button>
+            <div className="mt-5 flex flex-wrap items-center gap-3">
+              <button className="btn btn-sun w-full text-xl md:w-auto" onClick={start} disabled={busy}>{busy ? "Preparando…" : "COMEÇAR AVENTURA"}</button>
+              <button type="button" className="btn btn-ghost" onClick={() => guia.reverTutorial()}>Ver tutorial com a {personagem.nome}</button>
+            </div>
           </div>
         </section>
       </main>

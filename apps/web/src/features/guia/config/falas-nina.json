@@ -1,0 +1,72 @@
+{
+  "versao": 1,
+  "regras": "Máx. 2 linhas por balão. Use **texto** para negrito. tipo: sequencia (em ordem, clique avança) | unica | sorteio (uma aleatória, sem repetir a anterior). Expressões: feliz, pensando, preocupada, comemorando.",
+  "momentos": {
+    "boas_vindas": {
+      "tipo": "sequencia",
+      "prioridade": "alta",
+      "quando": "Primeira vez que o aluno entra no jogo (depois só com o botão 'Ver tutorial').",
+      "falas": [
+        { "expressao": "feliz", "texto": "E aí! Eu sou a **Nina**, Guardiã Veterana. Vou te acompanhar nesta aventura." },
+        { "expressao": "pensando", "texto": "Em cada mapa você enfrenta **5 desafios** do dia a dia. Escolha a atitude mais adequada." },
+        { "expressao": "feliz", "texto": "Depois de confirmar, a resposta **não pode ser trocada**. Leia tudo com calma." },
+        { "expressao": "comemorando", "texto": "Respostas mais bem pensadas valem mais pontos. **Errar faz parte de aprender!**" },
+        { "expressao": "comemorando", "texto": "Se fechar a página, você continua de onde parou. Bora?" }
+      ]
+    },
+    "mapa_1": { "tipo": "unica", "quando": "Introdução do Mapa 1.", "falas": [{ "expressao": "feliz", "texto": "Mapa 1! Leia cada situação com atenção antes de escolher." }] },
+    "mapa_2": { "tipo": "unica", "quando": "Introdução do Mapa 2 — Economia e Decisões.", "falas": [{ "expressao": "pensando", "texto": "Mapa 2: **economia e decisões**. Nem todo desconto é vantagem. Confira as contas!" }] },
+    "mapa_3": { "tipo": "unica", "quando": "Introdução do Mapa 3 — Planejamento Financeiro.", "falas": [{ "expressao": "pensando", "texto": "Mapa 3: **planejamento**. Pense no que vem depois, não só no hoje." }] },
+    "mapa_4": { "tipo": "unica", "quando": "Introdução do Mapa 4 — Cidadania Financeira.", "falas": [{ "expressao": "feliz", "texto": "Mapa 4: **cidadania financeira**. Suas escolhas também afetam os outros." }] },
+    "acerto": {
+      "tipo": "sorteio",
+      "quando": "Resposta com pontuação alta (config minAcerto).",
+      "falas": [
+        { "expressao": "comemorando", "texto": "Mandou bem! Boa escolha." },
+        { "expressao": "comemorando", "texto": "Isso aí! Pensou com cuidado." },
+        { "expressao": "feliz", "texto": "Boa! Seguimos para o próximo." }
+      ]
+    },
+    "parcial": {
+      "tipo": "sorteio",
+      "quando": "Resposta com pontuação intermediária.",
+      "falas": [
+        { "expressao": "pensando", "texto": "Tem coisa boa aí! Dá para pensar ainda mais." },
+        { "expressao": "feliz", "texto": "Foi um bom caminho. Vamos ao próximo!" }
+      ]
+    },
+    "erro": {
+      "tipo": "sorteio",
+      "quando": "Resposta com pontuação baixa.",
+      "falas": [
+        { "expressao": "pensando", "texto": "Essa não foi a melhor. Sem problema, o próximo é uma nova chance." },
+        { "expressao": "preocupada", "texto": "Errar aqui é melhor que errar com **dinheiro de verdade**." }
+      ]
+    },
+    "parado": {
+      "tipo": "sorteio",
+      "somenteSeLivre": true,
+      "quando": "Aluno parado na mesma pergunta por segundosParado.",
+      "falas": [
+        { "expressao": "pensando", "texto": "Tá difícil? Respira e **releia o enunciado** com calma." },
+        { "expressao": "pensando", "texto": "Compare as opções uma a uma: qual cuida melhor do dinheiro?" }
+      ]
+    },
+    "fase_concluida": {
+      "tipo": "sorteio",
+      "quando": "Mapa concluído (tela de resultado).",
+      "falas": [
+        { "expressao": "comemorando", "texto": "Mapa completo! Que jornada!" },
+        { "expressao": "comemorando", "texto": "Missão cumprida! Bora para o próximo mapa?" }
+      ]
+    },
+    "vitoria": {
+      "tipo": "sequencia",
+      "quando": "Concluiu o último mapa (Mapa 4).",
+      "falas": [
+        { "expressao": "comemorando", "texto": "VOCÊ CHEGOU AO FIM! Todos os mapas concluídos!" },
+        { "expressao": "feliz", "texto": "Na vida real é igual: **pense antes de gastar** e cuide do seu dinheiro." }
+      ]
+    }
+  }
+}
