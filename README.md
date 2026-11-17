@@ -77,7 +77,7 @@ flowchart LR
 
 ## 👩‍🏫 Guia do professor
 
-Tudo é feito no **Painel do professor**. O menu no alto tem seis áreas:
+Tudo é feito no **Painel do professor**. O menu no alto tem sete áreas:
 
 | Área | Para que serve |
 |---|---|
@@ -85,6 +85,7 @@ Tudo é feito no **Painel do professor**. O menu no alto tem seis áreas:
 | 👥 **Alunos** | Cadastrar alunos, gerar senhas, redefinir, desativar ou excluir |
 | 🟢 **Presença** | Ver quem está **on-line agora**, a hora que entrou, a hora que saiu e quanto tempo ficou |
 | ❓ **Questões** | Ver cada desafio (de 1 a 8): quantos acertaram, o que escolheram e quem escolheu |
+| 🏆 **Ranking** | Classificação geral da turma: a soma de todos os temas concluídos, a colocação e a classificação de cada aluno (veja abaixo) |
 | 📄 **Relatórios** | Relatório da turma pronto para **imprimir ou salvar em PDF**, e planilhas por aluno e por questão |
 | ⚙️ **Configurações** | Nome da escola, nome do professor (aparecem nos relatórios) e troca de senha |
 
@@ -132,6 +133,27 @@ A tela se atualiza sozinha a cada 15 segundos.
 | **Apagar um aluno de vez** | **Alunos** → **Excluir**. O sistema pede que você digite `EXCLUIR` para confirmar. ⚠️ **Não dá para desfazer**: some o cadastro, as respostas e o histórico |
 | **Deixar um aluno jogar o tema de novo** | Abra o aluno e libere uma **nova tentativa**. A anterior fica guardada no histórico |
 | **Testar os gráficos sem usar alunos reais** | **Painel** → **Gerar dados de demonstração**. São dados fictícios e ficam separados dos reais |
+
+</details>
+
+<details>
+<summary><b>🏆 Entendendo o ranking geral</b></summary>
+
+Na aba **Ranking** aparece **um aluno por linha**, ordenado pelo total de pontos. Cada linha mostra a **colocação** (os três primeiros ganham 🥇🥈🥉), os pontos em cada tema, quantos temas foram concluídos, o total, o aproveitamento e a **classificação**:
+
+| Classificação | Aproveitamento |
+|---|:-:|
+| ● **Consolidado** | 80% ou mais |
+| ◆ **Adequado** | de 60% a 79% |
+| ▲ **Em desenvolvimento** | de 40% a 59% |
+| ■ **Em desenvolvimento inicial** | menos de 40% |
+
+Como funciona:
+- **Só conta tema concluído.** O tema que o aluno ainda está jogando aparece como "em andamento", mas não entra na soma.
+- **Empate** recebe a mesma colocação (dois alunos em 5º, o próximo é 7º). O tempo que o aluno levou **não** conta.
+- A classificação é calculada **sobre os temas que o aluno concluiu**. Por isso, quem ainda não terminou todos os temas pode estar mais abaixo na colocação e, mesmo assim, ter uma classificação alta.
+- Quem **ainda não concluiu nenhum tema** aparece no fim da lista, sem colocação.
+- Os botões **Exportar PDF** e **Baixar planilha (CSV)** levam o ranking para impressão ou para o Excel.
 
 </details>
 
