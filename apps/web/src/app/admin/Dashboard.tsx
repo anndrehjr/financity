@@ -85,7 +85,7 @@ export default function Dashboard() {
 
           <ChartCard title="Gráfico 3 — Média de pontos por questão">
             <ResponsiveContainer width="100%" height={260}>
-              <BarChart data={data.byQuestion}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="name" /><YAxis domain={[0, "dataMax"]} allowDecimals={false} /><Tooltip formatter={(v, _n, p) => [v === null ? "Sem respostas" : v, p.payload.theme]} />
+              <BarChart data={data.byQuestion}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="name" /><YAxis domain={[0, "auto"]} allowDecimals={false} /><Tooltip formatter={(v, _n, p) => [v === null ? "Sem respostas" : v, p.payload.theme]} />
                 <Bar dataKey="media" name="Média" fill="#34d399" radius={[8, 8, 0, 0]} /></BarChart>
             </ResponsiveContainer>
           </ChartCard>
@@ -116,7 +116,7 @@ export default function Dashboard() {
           <h2 className="font-display text-xl font-extrabold">Análise das questões</h2>
           <p className="text-sm text-slate-600">Clique na questão para ver alternativas, distribuição e alunos.</p>
           <table className="mt-2 w-full min-w-[680px]">
-            <thead><tr className="border-b"><th className="th">Questão</th><th className="th">Tema</th><th className="th">Respostas</th><th className="th">Média de pontos</th><th className="th">Índice de desempenho</th><th className="th">Respostas de 5 pts</th><th className="th">Respostas de 0 pts</th></tr></thead>
+            <thead><tr className="border-b"><th className="th">Questão</th><th className="th">Tema</th><th className="th">Respostas</th><th className="th">Média de pontos</th><th className="th">Índice de desempenho</th><th className="th">Pontuação máxima</th><th className="th">Zero ponto</th></tr></thead>
             <tbody>{data.questions.map((q) => (
               <tr key={q.number} className="border-b last:border-0 hover:bg-indigo-50">
                 <td className="td font-bold"><Link className="text-indigo-700 underline" href={`/admin/questoes/${q.number}`}>Q{q.number}</Link></td>
