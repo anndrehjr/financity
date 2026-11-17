@@ -1,0 +1,99 @@
+/* Tema visual dos RELATÓRIOS e GRÁFICOS do painel (Painel geral e Relatórios).
+   Só aparência: vale apenas dentro de .rt, só na tela (a impressão/PDF continua como era) e não muda dados.
+   Modo escuro = paleta do novo design; modo claro = a mesma identidade com fundos claros. */
+@media screen {
+  /* ── tokens ───────────────────────────────── */
+  .rt {
+    --bg: #f4f4f5; --panel: #ffffff; --panel-2: #f4f4f5; --border: #e4e4e7; --grid: #ececef;
+    --text: #18181b; --muted: #52525b; --dim: #71717a;
+    --accent: #10b981; --accent-text: #047857; --accent-soft: rgba(16, 185, 129, .12); --on-accent: #04120c;
+    --blue: #3b82f6; --violet: #8b5cf6; --amber: #f59e0b; --pink: #ec4899; --cyan: #06b6d4; --red: #ef4444;
+    --b-ok: #047857; --b-warn: #92400e; --b-bad: #b91c1c; --b-info: #1d4ed8;
+    --radius: 12px;
+    font-family: var(--font-inter), system-ui, sans-serif; font-size: 14px; color: var(--text);
+  }
+  .admin-root[data-theme="dark"] .rt {
+    --bg: #09090b; --panel: #111114; --panel-2: #18181b; --border: #27272a; --grid: #1f1f23;
+    --text: #fafafa; --muted: #a1a1aa; --dim: #71717a;
+    --accent-text: #10b981;
+    --b-ok: #10b981; --b-warn: #f59e0b; --b-bad: #ef4444; --b-info: #3b82f6;
+  }
+
+  /* fundo da página e margem interna (28px; 16px no celular) */
+  .admin-root:has(.rt) { background-color: #f4f4f5; }
+  .admin-root[data-theme="dark"]:has(.rt) { background-color: #09090b; }
+  html:has(.admin-root[data-theme="dark"] .rt) { background: #09090b; }
+  .admin-root main:has(> .rt) { padding-left: 16px; padding-right: 16px; }
+  @media (min-width: 640px) { .admin-root main:has(> .rt) { padding-left: 28px; padding-right: 28px; } }
+
+  /* o seletor repetido (.admin-root.admin-root) só serve para ganhar das regras do modo escuro antigo */
+  .admin-root.admin-root .rt :is(h1, h2, h3, .font-display) { font-family: inherit; }
+  .admin-root.admin-root .rt h1 { font-weight: 700; color: var(--text); }
+
+  /* ── cards ────────────────────────────────── */
+  .admin-root.admin-root .rt .card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: none; }
+  .admin-root.admin-root .rt .card-title { font-size: 16px; font-weight: 600; color: var(--text); margin: 0; }
+  .admin-root.admin-root .rt .card-subtitle { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .admin-root.admin-root .rt .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; }
+  .admin-root.admin-root .rt .rt-grid { display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr); }
+  .admin-root.admin-root .rt .rt-grid > * { min-width: 0; }
+  /* acima de 1100px: grade de 6 colunas (gráfico principal 4/6 + lateral 2/6; abaixo, dois cards lado a lado) */
+  @media (min-width: 1100px) {
+    .admin-root.admin-root .rt .rt-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .admin-root.admin-root .rt .rt-c2 { grid-column: span 2; }
+    .admin-root.admin-root .rt .rt-c3 { grid-column: span 3; }
+    .admin-root.admin-root .rt .rt-c4 { grid-column: span 4; }
+  }
+
+  /* ── indicadores (KPI) ────────────────────── */
+  .admin-root.admin-root .rt .kpi-grid { display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr); }
+  @media (min-width: 640px) { .admin-root.admin-root .rt .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 1100px) { .admin-root.admin-root .rt .kpi-grid { grid-template-columns: repeat(var(--kpi-cols, 3), minmax(0, 1fr)); } }
+  .admin-root.admin-root .rt .kpi { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+  .admin-root.admin-root .rt .kpi-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .admin-root.admin-root .rt .kpi-label { color: var(--muted); font-weight: 500; font-size: 13px; }
+  .admin-root.admin-root .rt .kpi-icon { width: 34px; height: 34px; flex: none; border-radius: 8px; background: var(--panel-2); color: var(--accent-text); display: grid; place-items: center; }
+  .admin-root.admin-root .rt .kpi-value { font-size: 28px; font-weight: 700; margin: 10px 0 0; color: var(--text); line-height: 1.15; }
+
+  /* ── textos de apoio, listas e caixas ─────── */
+  .admin-root.admin-root .rt :is(.text-slate-500, .text-slate-600, .text-slate-700) { color: var(--muted); }
+  .admin-root.admin-root .rt .text-slate-800 { color: var(--text); }
+  .admin-root.admin-root .rt .rt-box { background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); }
+  .admin-root.admin-root .rt .rt-box-ok { border-left: 3px solid var(--accent); }
+  .admin-root.admin-root .rt .rt-box-bad { border-left: 3px solid var(--red); }
+  .admin-root.admin-root .rt header.border-b, .admin-root.admin-root .rt footer.border-t { border-color: var(--border); }
+
+  /* ── tabelas ──────────────────────────────── */
+  .admin-root.admin-root .rt table { width: 100%; border-collapse: collapse; }
+  .admin-root.admin-root .rt .th { color: var(--muted); font-weight: 500; font-size: 12px; text-transform: none; letter-spacing: 0; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  .admin-root.admin-root .rt .td { padding: 12px; border-bottom: 1px solid var(--border); color: var(--text); }
+  .admin-root.admin-root .rt tr:last-child .td { border-bottom: 0; }
+  .admin-root.admin-root .rt tbody tr:hover .td { background: var(--panel-2); }
+  .admin-root.admin-root .rt thead tr, .admin-root.admin-root .rt tbody tr { border-color: var(--border); }
+  .admin-root.admin-root .rt .rt-link { color: var(--accent-text); text-decoration-color: color-mix(in srgb, var(--accent-text) 45%, transparent); }
+  .admin-root.admin-root .rt .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 99px; }
+  .admin-root.admin-root .rt .badge.warning { background: rgba(245, 158, 11, .15); color: var(--b-warn); }
+  .admin-root.admin-root .rt .badge.success { background: rgba(16, 185, 129, .15); color: var(--b-ok); }
+  .admin-root.admin-root .rt .badge.danger { background: rgba(239, 68, 68, .15); color: var(--b-bad); }
+  .admin-root.admin-root .rt .badge.info { background: rgba(59, 130, 246, .15); color: var(--b-info); }
+
+  /* ── botões, filtros e campos ─────────────── */
+  .admin-root.admin-root .rt .btn { font-family: inherit; font-size: 13px; font-weight: 500; border-radius: 8px; padding: 6px 12px; border: 1px solid var(--border); background: transparent; color: var(--muted); box-shadow: none; transform: none; }
+  .admin-root.admin-root .rt .btn:hover { color: var(--text); background: var(--panel-2); }
+  .admin-root.admin-root .rt .btn-primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 600; }
+  .admin-root.admin-root .rt .btn-primary:hover { background: var(--accent); color: var(--on-accent); filter: brightness(1.08); }
+  .admin-root.admin-root .rt select, .admin-root.admin-root .rt input { background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; color: var(--text); font-family: inherit; font-weight: 400; max-width: 100%; }
+  .admin-root.admin-root .rt label { color: var(--muted); font-weight: 500; max-width: 100%; }
+  .admin-root.admin-root .rt label > select.block { width: 100%; }
+  .admin-root.admin-root .rt :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .admin-root.admin-root .rt .rt-warn { background: rgba(245, 158, 11, .15); color: var(--b-warn); border-radius: 99px; font-weight: 600; }
+
+  /* ── gráficos (Recharts) ──────────────────── */
+  .admin-root.admin-root .rt .recharts-wrapper, .admin-root.admin-root .rt .recharts-surface { background: transparent; }
+  .admin-root.admin-root .rt .recharts-cartesian-grid line { stroke: var(--grid); }
+  .admin-root.admin-root .rt .recharts-cartesian-axis-line, .admin-root.admin-root .rt .recharts-cartesian-axis-tick-line { stroke: transparent; }
+  .admin-root.admin-root .rt :is(.recharts-text, .recharts-cartesian-axis-tick-value) { fill: var(--muted); font-size: 12px; font-family: var(--font-inter), system-ui, sans-serif; }
+  .admin-root.admin-root .rt .recharts-legend-item-text { color: var(--muted) !important; font-size: 12px; }
+  .admin-root.admin-root .rt .recharts-tooltip-cursor { fill: var(--panel-2); fill-opacity: .6; }
+  .admin-root.admin-root .rt .recharts-pie-label-text { fill: var(--text); }
+}
