@@ -58,14 +58,15 @@ async function assessmentOf(studentId: number, assessmentId: number): Promise<As
 async function unlocked(studentId: number, a: AssessmentRow): Promise<boolean> {
   if (a.status !== "available") return false;
   if (config.unlockAllMaps) return true; // chave de teste local (nunca ativa em produção)
-  const prev = await one<{ id: number }>("SELECT id FROM assessments WHERE grade=$1 AND sort<$2 ORDER BY sort DESC LIMIT 1", [a.grade, a.sort]);
+  // só contam temas visíveis para o aluno (publicados e com desafios): um rascunho ou tema vazio nunca trava a sequência
+  const prev = await one<{ id: number }>("SELECT a2.id FROM assessments a2 WHERE a2.grade=$1 AND a2.sort<$2 AND a2.status='available' AND EXISTS (SELECT 1 FROM questions x WHERE x.map_id=a2.map_id) ORDER BY a2.sort DESC LIMIT 1", [a.grade, a.sort]);
   if (!prev) return true;
   return !!(await one("SELECT 1 FROM attempts WHERE student_id=$1 AND assessment_id=$2 AND status='completed'", [studentId, prev.id]));
 }
 
 export async function listAssessments(studentId: number) {
   const grade = await studentGrade(studentId);
-  const rows = grade === null ? [] : await q<AssessmentRow>(`${ASSESSMENT_SQL} WHERE a.grade=$1 AND a.status<>'archived' ORDER BY a.sort`, [grade]);
+  const rows = grade === null ? [] : await q<AssessmentRow>(`${ASSESSMENT_SQL} WHERE a.grade=$1 AND a.status='available' AND EXISTS (SELECT 1 FROM questions x WHERE x.map_id=a.map_id) ORDER BY a.sort`, [grade]);
   const att = await q<{ assessment_id: number; status: string; total_points: number }>(
     "SELECT assessment_id,status,total_points FROM attempts WHERE student_id=$1 AND status<>'voided'", [studentId]);
   const byA = new Map(att.map((x) => [x.assessment_id, x]));
@@ -82,7 +83,7 @@ export async function listAssessments(studentId: number) {
   }
   // pontuação acumulada inclui parciais da tentativa em andamento
   const acc = att.reduce((s, x) => s + x.total_points, 0);
-  return { maps, totalPoints: acc || total };
+  return { serie: grade, maps, totalPoints: acc || total };
 }
 
 function mulberry32(a: number) {

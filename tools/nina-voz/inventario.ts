@@ -14,27 +14,28 @@ const manifesto = JSON.parse(fs.readFileSync(path.join(web, "public", "guia", "n
 const EMOCAO: Record<string, string> = { feliz: "alegria", pensando: "curiosidade", preocupada: "incentivo", comemorando: "comemoracao" };
 const ANIM: Record<string, string> = { feliz: "happy", pensando: "thinking", preocupada: "encouraging", comemorando: "celebrating" };
 const TELA: Record<string, string> = {
+  sem_temas: "Mapas — série sem temas publicados (\"Seus temas chegam em breve!\")",
   boas_vindas: "Tutorial antigo (INATIVO: o tutorial guiado o substituiu)",
   mapa_1: "Atividade — introdução do tema 1", mapa_2: "Atividade — introdução do tema 2", mapa_3: "Atividade — introdução do tema 3", mapa_4: "Atividade — introdução do tema 4",
   acerto: "Atividade — logo após confirmar (pontuação alta)", parcial: "Atividade — logo após confirmar (pontuação média)", erro: "Atividade — logo após confirmar (pontuação baixa)",
   parado: "Atividade — 30 s sem responder", fase_concluida: "Resultado do tema", vitoria: "Resultado do último tema",
 };
 
-type Fala = { id: string; tela: string; contexto: string; texto: string; emocao: string; animacao: string; grupo?: string; sorteio?: boolean; inativa?: boolean };
+type Fala = { id: string; publico: string; tela: string; contexto: string; texto: string; emocao: string; animacao: string; grupo?: string; sorteio?: boolean; inativa?: boolean };
 const catalogo: Fala[] = [];
 for (const [momento, m] of Object.entries((falas as any).momentos as Record<string, any>))
   m.falas.forEach((f: any, i: number) => catalogo.push({
-    id: `${momento}.${i + 1}`, tela: TELA[momento] ?? momento, contexto: m.quando ?? momento, texto: f.texto,
+    id: `${momento}.${i + 1}`, publico: m.publico ?? "geral", tela: TELA[momento] ?? momento, contexto: m.quando ?? momento, texto: f.texto,
     emocao: EMOCAO[f.expressao] ?? "alegria", animacao: ANIM[f.expressao] ?? "happy", grupo: momento, sorteio: m.tipo === "sorteio", inativa: momento === "boas_vindas",
   }));
 for (const t of Object.values(TUTORIAIS))
   for (const e of t.etapas) {
     const id = `tutorial.${t.id}.${e.id}`;
     const em = (x?: string) => EMOCAO[x ?? "feliz"] ?? "alegria";
-    catalogo.push({ id, tela: "Tutorial (mapas e atividade)", contexto: `etapa "${e.id}"`, texto: e.texto, emocao: e.estado === "explaining" || e.estado === "pointing" ? "explicacao" : em(e.expressao), animacao: e.estado ?? "explaining" });
-    if (e.aoConcluir) catalogo.push({ id: `${id}.ok`, tela: "Tutorial (mapas e atividade)", contexto: `reação depois da ação (etapa "${e.id}")`, texto: e.aoConcluir.texto, emocao: em(e.aoConcluir.expressao), animacao: e.aoConcluir.estado ?? "happy" });
+    catalogo.push({ id, publico: "geral", tela: "Tutorial (mapas e atividade)", contexto: `etapa "${e.id}"`, texto: e.texto, emocao: e.estado === "explaining" || e.estado === "pointing" ? "explicacao" : em(e.expressao), animacao: e.estado ?? "explaining" });
+    if (e.aoConcluir) catalogo.push({ id: `${id}.ok`, publico: "geral", tela: "Tutorial (mapas e atividade)", contexto: `reação depois da ação (etapa "${e.id}")`, texto: e.aoConcluir.texto, emocao: em(e.aoConcluir.expressao), animacao: e.aoConcluir.estado ?? "happy" });
   }
-catalogo.push({ id: "guia.sem-pressa", tela: "Tutorial — plano B (tempo-limite)", contexto: "aparece se o aluno demora numa etapa que espera uma ação", texto: "Sem pressa! Se quiser, pode continuar sem fazer isso agora.", emocao: "incentivo", animacao: "encouraging" });
+catalogo.push({ id: "guia.sem-pressa", publico: "geral", tela: "Tutorial — plano B (tempo-limite)", contexto: "aparece se o aluno demora numa etapa que espera uma ação", texto: "Sem pressa! Se quiser, pode continuar sem fazer isso agora.", emocao: "incentivo", animacao: "encouraging" });
 const ids = catalogo.map((f) => f.id);
 if (new Set(ids).size !== ids.length) throw new Error("IDs duplicados");
 
@@ -52,7 +53,7 @@ const obs = (f: Fala): string => {
   if (!tem(f.id) && f.texto.length > 160) o.push("longa: dividir em ≤2 frases");
   return o.join("; ") || "—";
 };
-const linhas = catalogo.map((f) => `| ${f.id} | ${f.tela} | ${f.texto.replace(/\|/g, "/")} | ${tem(f.id) ? "**sim (original)**" : f.inativa ? "não (inativa)" : "não"} | ${enviado(f.texto).length} | ${obs(f)} |`);
+const linhas = catalogo.map((f) => `| ${f.id} | ${f.publico} | ${f.tela} | ${f.texto.replace(/\|/g, "/")} | ${tem(f.id) ? "**sim (original)**" : f.inativa ? "não (inativa)" : "não"} | ${enviado(f.texto).length} | ${obs(f)} |`);
 const ativas = catalogo.filter((f) => !f.inativa);
 const faltam = ativas.filter((f) => !tem(f.id));
 const chars = faltam.reduce((s, f) => s + enviado(f.texto).length, 0);
@@ -69,8 +70,8 @@ Gerado por \`npx tsx tools/nina-voz/inventario.ts\`. Catálogo único: \`apps/we
 
 ## Tabela
 
-| id | tela | texto | já tem áudio? | caracteres | observação |
-|---|---|---|---|---|---|
+| id | público | tela | texto | já tem áudio? | caracteres | observação |
+|---|---|---|---|---|---|---|
 ${linhas.join("\n")}
 `;
 fs.writeFileSync(path.join(raiz, "INVENTARIO.md"), md);

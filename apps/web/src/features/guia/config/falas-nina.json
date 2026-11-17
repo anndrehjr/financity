@@ -1,6 +1,6 @@
 {
   "versao": 1,
-  "regras": "Máx. 2 linhas por balão. Use **texto** para negrito. tipo: sequencia (em ordem, clique avança) | unica | sorteio (uma aleatória, sem repetir a anterior). Expressões: feliz, pensando, preocupada, comemorando.",
+  "regras": "Máx. 2 linhas por balão. Use **texto** para negrito. tipo: sequencia (em ordem, clique avança) | unica | sorteio (uma aleatória, sem repetir a anterior). Expressões: feliz, pensando, preocupada, comemorando. publico: geral (padrão) | 7 | 8. Versão específica de uma série: momento \"s7.nome\" ou \"s8.nome\"; sem versão da série, usa a fala geral; fala de outra série nunca é usada.",
   "momentos": {
     "mapa_1": {
       "tipo": "unica",
@@ -10,7 +10,8 @@
           "expressao": "feliz",
           "texto": "Tema 1: **cidadania financeira**. Direitos, deveres e escolhas que afetam todos."
         }
-      ]
+      ],
+      "publico": "8"
     },
     "mapa_2": {
       "tipo": "unica",
@@ -20,7 +21,8 @@
           "expressao": "pensando",
           "texto": "Tema 2: **ética financeira**. Honestidade vale mais que qualquer lucro."
         }
-      ]
+      ],
+      "publico": "8"
     },
     "mapa_3": {
       "tipo": "unica",
@@ -30,7 +32,8 @@
           "expressao": "preocupada",
           "texto": "Tema 3: **segurança digital**. Desconfie de pressa, links e pedidos de código."
         }
-      ]
+      ],
+      "publico": "8"
     },
     "mapa_4": {
       "tipo": "unica",
@@ -40,7 +43,8 @@
           "expressao": "pensando",
           "texto": "Tema 4: **consumo consciente**. Faça as contas antes de se empolgar com promoção."
         }
-      ]
+      ],
+      "publico": "8"
     },
     "acerto": {
       "tipo": "sorteio",
@@ -128,6 +132,16 @@
         {
           "expressao": "feliz",
           "texto": "Na vida real é igual: **pense antes de gastar** e cuide do seu dinheiro."
+        }
+      ]
+    },
+    "sem_temas": {
+      "tipo": "unica",
+      "quando": "Aluno cuja série ainda não tem temas publicados (tela 'Seus temas chegam em breve').",
+      "falas": [
+        {
+          "expressao": "feliz",
+          "texto": "Seus temas chegam em breve! Quando estiverem prontos, eles aparecem aqui."
         }
       ]
     }

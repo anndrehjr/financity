@@ -1,9 +1,0 @@
-Mandou bem! Boa escolha. <break time="1.5s" />
-Isso aí! Pensou com cuidado. <break time="1.5s" />
-Boa! Seguimos para o próximo. <break time="1.5s" />
-Tem coisa boa aí! Dá para pensar ainda mais. <break time="1.5s" />
-Foi um bom caminho. Vamos ao próximo! <break time="1.5s" />
-Essa não foi a melhor. Sem problema, o próximo é uma nova chance. <break time="1.5s" />
-Errar aqui é melhor que errar com dinheiro de verdade. <break time="1.5s" />
-Tá difícil? Respira e releia o enunciado com calma. <break time="1.5s" />
-Compare as opções uma a uma: qual cuida melhor do dinheiro?
