@@ -11,7 +11,7 @@ A voz da Nina são **somente gravações suas**, tocadas como arquivos. O site *
    tools/nina-voz/.venv/Scripts/python tools/nina-voz/cortar.py
    ```
    Saída: `apps/web/public/guia/nina/audio/*.mp3` (mono, 24 kHz, 64 kbps, fade de 10 ms, ~-16 LUFS) e `manifest.json`. Avisa se o total passar de ~5 MB.
-4. `npx tsx tools/nina-voz/para-gravar.ts` gera `PARA-GRAVAR.md` com as falas que ainda não têm áudio.
+4. `npx tsx tools/nina-voz/inventario.ts` atualiza o catálogo (`apps/web/src/data/nina/falas.json`) e o `INVENTARIO.md` (todas as falas, tela, status de áudio e caracteres a gerar).
 5. Opcional, para conferir cortes novos: `transcrever.py` (faster-whisper local) gera `trabalho/CORTES-PARA-REVISAO.md`.
 
 ## No site

@@ -45,7 +45,7 @@ export function TutorialProvider({ children, repositorio }: { children: React.Re
   // Primeira visita: inicia sozinho (ou retoma da etapa salva depois de recarregar a página).
   const iniciouSozinho = useRef(false);
   useEffect(() => {
-    if (iniciouSozinho.current || !personagem.comportamento.tutorialGuiado || !personagem.ativo) return;
+    if (iniciouSozinho.current || !personagem.ativo) return;
     iniciouSozinho.current = true;
     const p = pontoDeRetomada(repo.current.ler(TUTORIAL_INICIAL));
     if (p.iniciar) iniciar(TUTORIAL_INICIAL, p.desde);

@@ -3,20 +3,15 @@
 Gerado por `npx tsx tools/nina-voz/inventario.ts`. Catálogo único: `apps/web/src/data/nina/falas.json`.
 
 ## Resumo
-- Falas no catálogo: **42** (ativas: 37; inativas/código morto: 5).
+- Falas no catálogo: **37** (ativas: 37; inativas/código morto: 0).
 - Com áudio da gravação original: **10**.
-- **Sem áudio (ativas): 27**, somando **1373 caracteres** a gerar (1738 se contar as inativas).
+- **Sem áudio (ativas): 27**, somando **1373 caracteres** a gerar (1373 se contar as inativas).
 - Plano gratuito da ElevenLabs: ~10.000 créditos/mês (1 crédito ≈ 1 caractere no multilingual v2). 1373 caracteres cabem com folga; refazer falas ruins gasta créditos de novo.
 
 ## Tabela
 
 | id | tela | texto | já tem áudio? | caracteres | observação |
 |---|---|---|---|---|---|
-| boas_vindas.1 | Tutorial antigo (INATIVO: o tutorial guiado o substituiu) | E aí! Eu sou a **Nina**, Guardiã Veterana. Vou te acompanhar nesta aventura. | não (inativa) | 72 | **código morto**: nunca é falada hoje; sugiro remover |
-| boas_vindas.2 | Tutorial antigo (INATIVO: o tutorial guiado o substituiu) | São **4 temas** com **8 desafios** cada. Escolha a melhor atitude, marque várias ou ordene etapas. | não (inativa) | 90 | **código morto**: nunca é falada hoje; sugiro remover; número fixo no texto (4 temas / 8 desafios): vira falso se o nº mudar |
-| boas_vindas.3 | Tutorial antigo (INATIVO: o tutorial guiado o substituiu) | Depois de confirmar, a resposta **não pode ser trocada**. Leia tudo com calma. | não (inativa) | 74 | **código morto**: nunca é falada hoje; sugiro remover |
-| boas_vindas.4 | Tutorial antigo (INATIVO: o tutorial guiado o substituiu) | Respostas mais bem pensadas valem mais pontos. **Errar faz parte de aprender!** | não (inativa) | 75 | **código morto**: nunca é falada hoje; sugiro remover |
-| boas_vindas.5 | Tutorial antigo (INATIVO: o tutorial guiado o substituiu) | Se fechar a página, você continua de onde parou. Bora? | não (inativa) | 54 | **código morto**: nunca é falada hoje; sugiro remover |
 | mapa_1.1 | Atividade — introdução do tema 1 | Tema 1: **cidadania financeira**. Direitos, deveres e escolhas que afetam todos. | não | 76 | número fixo no texto (4 temas / 8 desafios): vira falso se o nº mudar |
 | mapa_2.1 | Atividade — introdução do tema 2 | Tema 2: **ética financeira**. Honestidade vale mais que qualquer lucro. | não | 67 | número fixo no texto (4 temas / 8 desafios): vira falso se o nº mudar |
 | mapa_3.1 | Atividade — introdução do tema 3 | Tema 3: **segurança digital**. Desconfie de pressa, links e pedidos de código. | não | 74 | número fixo no texto (4 temas / 8 desafios): vira falso se o nº mudar |

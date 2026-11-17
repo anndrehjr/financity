@@ -96,7 +96,7 @@ function GuiaBase() {
   }
 
   const ultima = c.indice === c.total - 1;
-  const falando = digitando || g.servico.falando || g.voz.falando;
+  const falando = digitando || g.servico.falando;
   return (
     <div className={`pointer-events-none fixed bottom-0 ${Z} flex max-w-[calc(100vw-1.5rem)] flex-col gap-2 pb-2 ${lado}`}>
       <div key={c.chave} className="motion-safe:animate-pop shrink-0" style={{ width: "min(" + personagem.visual.tamanhoPx * 0.75 + "px, 28vw)" }}>
