@@ -58,5 +58,5 @@ Sem senhas, PINs ou chaves neste arquivo.
 - **No ar (financity-eta.vercel.app + VPS):** Culminância 8º ano, Nina com tutorial guiado e **37 falas com voz**, importador (somente código).
 - **NÃO publicado: PR #12** (estrutura por série 7º/8º; migração 004). Banco da VPS na migração 003. **Para publicar:** o André roda o backup (`~/docker/financity/src/deploy/backup/backup-financity.sh`) e diz "pode publicar" → ver `docs/PUBLICACAO-E-REVERSAO.md`. Recomendado fazer ANTES da entrega das senhas do 8º (que ficam iguais).
 - **Documentos:** `docs/HISTORICO.md` (tudo que foi feito, PRs, decisões, pendências), `docs/PUBLICACAO-E-REVERSAO.md` (como publicar e reverter), `docs/CONTEUDO-7-ANO.md` (preencher/validar/publicar o 7º), `tools/nina-voz/README.md` (voz), `docs/nina/ASSETS-NECESSARIOS.md` (arte).
-- **Lista do 7º ano:** `D:\Projetos Serios\Jogos Novos\dados-alunosano.csv` (fora do git; 14 alunos). Importar só com autorização, simulação primeiro.
+- **Lista do 7º ano:** `D:\Projetos Serios\Jogos Novos\dados-alunos\7ano.csv` (fora do git; 14 alunos). Importar só com autorização, simulação primeiro.
 - **Próximos passos (tarde):** preencher temas do 7º → validar → falas/áudios do 7º → backup → publicar → importar → imprimir credenciais → apagar CSV/HTML.
