@@ -1,67 +1,40 @@
-// MODO MANUAL (sem chave, sem API): gera UM ÚNICO texto com todas as falas que ainda não têm áudio, para colar de uma vez
-// no site da ElevenLabs (como na gravação original). Depois as falas são cortadas do áudio longo (ver cortar-geradas).
+// MODO MANUAL (sem chave, sem API): monta os 3 blocos de texto para colar no site da ElevenLabs, a partir de blocos.json.
 //   npx tsx tools/nina-voz/gerar.ts
-// Saída: PARA-GERAR-UNICO.txt (colar), PARA-GERAR-UNICO-sem-pausas.txt (reserva), PARA-GERAR.md (instruções + ordem) e ordem-geracao.json.
+// Saída: blocos/nina-bloco-N.txt (colar), PARA-GERAR.md (instruções + mapa bloco/posição → id → legenda).
+// Confere que os blocos cobrem EXATAMENTE as falas ativas sem áudio do catálogo (nenhuma sobra, nenhuma faltando).
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const raiz = path.dirname(fileURLToPath(import.meta.url));
 const web = path.join(raiz, "..", "..", "apps", "web");
-const catalogo = JSON.parse(fs.readFileSync(path.join(web, "src", "data", "nina", "falas.json"), "utf8")).falas as { id: string; tela: string; texto: string; emocao: string; inativa?: boolean }[];
+const catalogo = JSON.parse(fs.readFileSync(path.join(web, "src", "data", "nina", "falas.json"), "utf8")).falas as { id: string; tela: string; texto: string; inativa?: boolean }[];
 const manifesto = JSON.parse(fs.readFileSync(path.join(web, "public", "guia", "nina", "audio", "manifest.json"), "utf8"));
-const pron = JSON.parse(fs.readFileSync(path.join(raiz, "pronuncia.json"), "utf8")) as { substituicoes: { de: string; para: string }[] };
-const LIMITE = 2500; // caracteres por geração no site
+const cfg = JSON.parse(fs.readFileSync(path.join(raiz, "blocos.json"), "utf8")) as { pausa: string; config: string; blocos: { arquivo: string; titulo: string; falas: { id: string; falado: string }[] }[] };
 
-/** Texto enviado à voz: sem **negrito**, sem emojis, com as correções de pronúncia. A legenda não muda. */
-export function prepararTexto(t: string): string {
-  let r = t.replace(/\*\*/g, "").replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, "");
-  for (const s of pron.substituicoes) r = r.split(s.de).join(s.para);
-  return r.replace(/\s+/g, " ").trim();
-}
+const pendentes = catalogo.filter((f) => !f.inativa && !manifesto.falas[f.id]).map((f) => f.id).sort();
+const nosBlocos = cfg.blocos.flatMap((b) => b.falas.map((f) => f.id));
+const sobram = nosBlocos.filter((i) => !catalogo.some((c) => c.id === i));
+const faltam = pendentes.filter((i) => !nosBlocos.includes(i));
+const repetidas = nosBlocos.filter((i, k) => nosBlocos.indexOf(i) !== k);
+if (sobram.length || faltam.length || repetidas.length) { console.error("blocos.json inconsistente:", { idsInexistentes: sobram, faltamNosBlocos: faltam, repetidas }); process.exit(1); }
+for (const b of cfg.blocos) if (b.falas.length > 10) { console.error(`${b.arquivo}: mais de 10 falas`); process.exit(1); }
 
-const faltam = catalogo.filter((f) => !f.inativa && !manifesto.falas[f.id]).map((f) => ({ id: f.id, tela: f.tela, emocao: f.emocao, envio: prepararTexto(f.texto) }));
-const PAUSA = ' <break time="1.0s" />';
-const comPausas = faltam.map((f) => f.envio + PAUSA).join("\n\n");
-const semPausas = faltam.map((f) => f.envio).join("\n\n");
-const total = faltam.reduce((s, f) => s + f.envio.length, 0);
-
-// divide em blocos de no máximo LIMITE caracteres (sem partir uma fala ao meio)
-const blocos: typeof faltam[] = [[]];
-for (const f of faltam) {
-  const atual = blocos[blocos.length - 1];
-  const tam = atual.reduce((s, x) => s + x.envio.length + PAUSA.length + 2, 0) + f.envio.length + PAUSA.length;
-  if (tam > LIMITE && atual.length) blocos.push([f]); else atual.push(f);
-}
-if (blocos.length === 1) {
-  fs.writeFileSync(path.join(raiz, "PARA-GERAR-UNICO.txt"), comPausas + "\n");
-  fs.writeFileSync(path.join(raiz, "PARA-GERAR-UNICO-sem-pausas.txt"), semPausas + "\n");
-}
-for (const f of fs.readdirSync(raiz)) if (/^PARA-GERAR-PARTE-/.test(f)) fs.rmSync(path.join(raiz, f));
-if (blocos.length > 1) blocos.forEach((b, i) => fs.writeFileSync(path.join(raiz, `PARA-GERAR-PARTE-${i + 1}.txt`), b.map((f) => f.envio + PAUSA).join("\n\n") + "\n"));
-fs.writeFileSync(path.join(raiz, "ordem-geracao.json"), JSON.stringify({ blocos: blocos.map((b) => b.map((f) => ({ id: f.id, texto: f.envio, emocao: f.emocao }))) }, null, 2) + "\n");
+const PAUSA = ` <break time="${cfg.pausa}" />`;
+fs.mkdirSync(path.join(raiz, "blocos"), { recursive: true });
 fs.mkdirSync(path.join(raiz, "origem", "geradas"), { recursive: true });
+for (const f of fs.readdirSync(raiz)) if (/^PARA-GERAR-(UNICO|PARTE)/.test(f)) fs.rmSync(path.join(raiz, f));
+fs.rmSync(path.join(raiz, "ordem-geracao.json"), { force: true });
 
-const arquivos = blocos.length === 1 ? "`PARA-GERAR-UNICO.txt`" : blocos.map((_, i) => `\`PARA-GERAR-PARTE-${i + 1}.txt\``).join(", ");
-const md = `# Falas para gerar na ElevenLabs — arquivo único (modo manual)
-
-Gerado por \`npx tsx tools/nina-voz/gerar.ts\`. O site **não** chama a ElevenLabs.
-
-## Configuração (igual à gravação original)
-Modelo **Eleven Multilingual v2** · Voz **sylphiette** · Velocidade **0,96** · Estabilidade **57** · Similaridade **75** · Exagero de estilo **0** · Speaker boost **ligado**
-
-## Como fazer (1 geração só)
-1. Abra o arquivo ${arquivos} (nesta pasta) e **copie todo o texto**.
-2. No *Text to Speech* da ElevenLabs, com a configuração acima, **cole tudo** e clique em *Generate*. (${total} caracteres; o limite por geração é ${LIMITE}.)
-3. Ouça. Se a voz **ler em voz alta** as marcas \`<break ... />\`, use o arquivo \`PARA-GERAR-UNICO-sem-pausas.txt\` no lugar.
-4. Baixe o MP3 e salve em \`tools/nina-voz/origem/geradas/\` com o nome \`todas.mp3\`${blocos.length > 1 ? " (partes: `todas-1.mp3`, `todas-2.mp3`...)" : ""}.
-5. Me avise. Eu transcrevo, corto cada fala no lugar certo, normalizo o volume e mostro uma tabela (fala × trecho) para você aprovar antes de publicar.
-
-## Ordem das falas dentro do áudio (${faltam.length} falas, ${total} caracteres)
-| # | id | tela | texto |
-|---|---|---|---|
-${faltam.map((f, i) => `| ${i + 1} | ${f.id} | ${f.tela} | ${f.envio} |`).join("\n")}
-`;
+let md = `# Falas para gerar na ElevenLabs — 3 blocos (modo manual)\n\nGerado por \`npx tsx tools/nina-voz/gerar.ts\` a partir de \`blocos.json\`. O site **não** chama a ElevenLabs.\n\n## Configuração\n${cfg.config}\n\n## Como fazer\n1. Para cada bloco, copie **todo** o arquivo \`blocos/nina-bloco-N.txt\` e gere **um** áudio.\n2. Salve em \`tools/nina-voz/origem/geradas/\` com o nome **\`nina-bloco-N.mp3\`**.\n3. Ouça. Se alguma frase sair estranha, gere **só aquele bloco** de novo.\n4. Rode \`tools/nina-voz/.venv/Scripts/python tools/nina-voz/cortar-blocos.py --conferir\` (ou me avise): corta nas pausas de ${cfg.pausa}, confere o que a voz falou e gera um MP3 por fala.\n\nSe a voz **ler em voz alta** a marca \`<break ... />\`, me avise.\n`;
+let total = 0;
+for (const [i, b] of cfg.blocos.entries()) {
+  const texto = b.falas.map((f, k) => f.falado + (k < b.falas.length - 1 ? PAUSA : "")).join("\n");
+  fs.writeFileSync(path.join(raiz, "blocos", `nina-bloco-${i + 1}.txt`), texto + "\n");
+  total += b.falas.reduce((s, f) => s + f.falado.length, 0);
+  md += `\n## Bloco ${i + 1} — ${b.titulo} → \`${b.arquivo}\` (${b.falas.length} falas, ${b.falas.reduce((s, f) => s + f.falado.length, 0)} caracteres)\n\n| posição | id (arquivo final) | texto falado | legenda no site |\n|---|---|---|---|\n`;
+  b.falas.forEach((f, k) => { md += `| ${k + 1} | ${f.id} | ${f.falado} | ${catalogo.find((c) => c.id === f.id)!.texto.replace(/\*\*/g, "")} |\n`; });
+}
+md += `\nTotal: ${nosBlocos.length} falas, ${total} caracteres (plano gratuito ≈ 10.000 créditos/mês).\n`;
 fs.writeFileSync(path.join(raiz, "PARA-GERAR.md"), md);
-for (const velho of ["PARA-GERAR.csv"]) fs.rmSync(path.join(raiz, velho), { force: true });
-console.log(`${faltam.length} falas, ${total} caracteres, ${blocos.length} bloco(s) -> ${blocos.length === 1 ? "PARA-GERAR-UNICO.txt" : "PARA-GERAR-PARTE-N.txt"}`);
+console.log(`${nosBlocos.length} falas em ${cfg.blocos.length} blocos, ${total} caracteres -> tools/nina-voz/blocos/ e PARA-GERAR.md`);
