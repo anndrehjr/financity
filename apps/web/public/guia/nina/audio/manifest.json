@@ -1,5 +1,5 @@
 {
-  "origem": "ElevenLabs, voz sylphiette, gerado em 2026-11-16 (modelo multilingual v2, velocidade 0,96, estabilidade 57, similaridade 75, estilo 0 — nome do arquivo; confirmar)",
+  "origem": "ElevenLabs, voz sylphiette (gravação original de 2026-11-16 + 27.mp3 gerado em 2026-11-16, cortado por alinhamento); modelo multilingual v2, velocidade 0,96, estabilidade 57, similaridade 75, estilo 0",
   "geradoEm": "2026-11-16",
   "versao": 1,
   "falas": {
@@ -72,6 +72,249 @@
       "duracaoMs": 6700,
       "contexto": "encerramento",
       "animacao": "goodbye"
+    },
+    "mapa_1.1": {
+      "audio": "mapa_1.1.mp3",
+      "texto": "Tema 1: **cidadania financeira**. Direitos, deveres e escolhas que afetam todos.",
+      "duracaoMs": 6200,
+      "contexto": "Atividade — introdução do tema 1",
+      "animacao": "happy",
+      "falado": "Tema um: cidadania financeira. Direitos, deveres e escolhas que afetam todos.",
+      "geradoEm": "2026-11-16"
+    },
+    "mapa_2.1": {
+      "audio": "mapa_2.1.mp3",
+      "texto": "Tema 2: **ética financeira**. Honestidade vale mais que qualquer lucro.",
+      "duracaoMs": 5200,
+      "contexto": "Atividade — introdução do tema 2",
+      "animacao": "thinking",
+      "falado": "Tema dois: ética financeira. Honestidade vale mais que qualquer lucro.",
+      "geradoEm": "2026-11-16"
+    },
+    "mapa_3.1": {
+      "audio": "mapa_3.1.mp3",
+      "texto": "Tema 3: **segurança digital**. Desconfie de pressa, links e pedidos de código.",
+      "duracaoMs": 6100,
+      "contexto": "Atividade — introdução do tema 3",
+      "animacao": "encouraging",
+      "falado": "Tema três: segurança digital. Desconfie de pressa, links e pedidos de código.",
+      "geradoEm": "2026-11-16"
+    },
+    "mapa_4.1": {
+      "audio": "mapa_4.1.mp3",
+      "texto": "Tema 4: **consumo consciente**. Faça as contas antes de se empolgar com promoção.",
+      "duracaoMs": 5900,
+      "contexto": "Atividade — introdução do tema 4",
+      "animacao": "thinking",
+      "falado": "Tema quatro: consumo consciente. Faça as contas antes de se empolgar com promoção.",
+      "geradoEm": "2026-11-16"
+    },
+    "acerto.1": {
+      "audio": "acerto.1.mp3",
+      "texto": "Mandou bem! Boa escolha.",
+      "duracaoMs": 1900,
+      "contexto": "Atividade — logo após confirmar (pontuação alta)",
+      "animacao": "celebrating",
+      "falado": "Mandou bem! Boa escolha.",
+      "geradoEm": "2026-11-16"
+    },
+    "acerto.2": {
+      "audio": "acerto.2.mp3",
+      "texto": "Isso aí! Pensou com cuidado.",
+      "duracaoMs": 2290,
+      "contexto": "Atividade — logo após confirmar (pontuação alta)",
+      "animacao": "celebrating",
+      "falado": "Isso aí! Pensou com cuidado.",
+      "geradoEm": "2026-11-16"
+    },
+    "acerto.3": {
+      "audio": "acerto.3.mp3",
+      "texto": "Boa! Seguimos para o próximo.",
+      "duracaoMs": 2600,
+      "contexto": "Atividade — logo após confirmar (pontuação alta)",
+      "animacao": "happy",
+      "falado": "Boa! Seguimos para o próximo.",
+      "geradoEm": "2026-11-16"
+    },
+    "parcial.1": {
+      "audio": "parcial.1.mp3",
+      "texto": "Tem coisa boa aí! Dá para pensar ainda mais.",
+      "duracaoMs": 3100,
+      "contexto": "Atividade — logo após confirmar (pontuação média)",
+      "animacao": "thinking",
+      "falado": "Tem coisa boa aí! Dá para pensar ainda mais.",
+      "geradoEm": "2026-11-16"
+    },
+    "parcial.2": {
+      "audio": "parcial.2.mp3",
+      "texto": "Foi um bom caminho. Vamos ao próximo!",
+      "duracaoMs": 2550,
+      "contexto": "Atividade — logo após confirmar (pontuação média)",
+      "animacao": "happy",
+      "falado": "Foi um bom caminho. Vamos ao próximo!",
+      "geradoEm": "2026-11-16"
+    },
+    "erro.1": {
+      "audio": "erro.1.mp3",
+      "texto": "Essa não foi a melhor. Sem problema, o próximo é uma nova chance.",
+      "duracaoMs": 4400,
+      "contexto": "Atividade — logo após confirmar (pontuação baixa)",
+      "animacao": "thinking",
+      "falado": "Essa não foi a melhor. Sem problema, o próximo é uma nova chance.",
+      "geradoEm": "2026-11-16"
+    },
+    "erro.2": {
+      "audio": "erro.2.mp3",
+      "texto": "Errar aqui é melhor que errar com **dinheiro de verdade**.",
+      "duracaoMs": 3300,
+      "contexto": "Atividade — logo após confirmar (pontuação baixa)",
+      "animacao": "encouraging",
+      "falado": "Errar aqui é melhor que errar com dinheiro de verdade.",
+      "geradoEm": "2026-11-16"
+    },
+    "parado.1": {
+      "audio": "parado.1.mp3",
+      "texto": "Tá difícil? Respira e **releia o enunciado** com calma.",
+      "duracaoMs": 4100,
+      "contexto": "Atividade — 30 s sem responder",
+      "animacao": "thinking",
+      "falado": "Tá difícil? Respira e releia o enunciado com calma.",
+      "geradoEm": "2026-11-16"
+    },
+    "parado.2": {
+      "audio": "parado.2.mp3",
+      "texto": "Compare as opções uma a uma: qual cuida melhor do dinheiro?",
+      "duracaoMs": 4600,
+      "contexto": "Atividade — 30 s sem responder",
+      "animacao": "thinking",
+      "falado": "Compare as opções uma a uma: qual cuida melhor do dinheiro?",
+      "geradoEm": "2026-11-16"
+    },
+    "fase_concluida.1": {
+      "audio": "fase_concluida.1.mp3",
+      "texto": "Tema concluído! Que jornada!",
+      "duracaoMs": 2410,
+      "contexto": "Resultado do tema",
+      "animacao": "celebrating",
+      "falado": "Tema concluído! Que jornada!",
+      "geradoEm": "2026-11-16"
+    },
+    "fase_concluida.2": {
+      "audio": "fase_concluida.2.mp3",
+      "texto": "Missão cumprida! Bora para o próximo tema?",
+      "duracaoMs": 3400,
+      "contexto": "Resultado do tema",
+      "animacao": "celebrating",
+      "falado": "Missão cumprida! Bora para o próximo tema?",
+      "geradoEm": "2026-11-16"
+    },
+    "vitoria.1": {
+      "audio": "vitoria.1.mp3",
+      "texto": "VOCÊ CHEGOU AO FIM! Todos os temas concluídos!",
+      "duracaoMs": 3500,
+      "contexto": "Resultado do último tema",
+      "animacao": "celebrating",
+      "falado": "Você chegou ao fim! Todos os temas concluídos!",
+      "geradoEm": "2026-11-16"
+    },
+    "vitoria.2": {
+      "audio": "vitoria.2.mp3",
+      "texto": "Na vida real é igual: **pense antes de gastar** e cuide do seu dinheiro.",
+      "duracaoMs": 4500,
+      "contexto": "Resultado do último tema",
+      "animacao": "happy",
+      "falado": "Na vida real é igual: pense antes de gastar e cuide do seu dinheiro.",
+      "geradoEm": "2026-11-16"
+    },
+    "tutorial.primeiros-passos.mapas": {
+      "audio": "tutorial.primeiros-passos.mapas.mp3",
+      "texto": "São **4 temas**, com 8 desafios cada. Eles abrem um de cada vez, em ordem.",
+      "duracaoMs": 6100,
+      "contexto": "Tutorial (mapas e atividade)",
+      "animacao": "explaining",
+      "falado": "São quatro temas, com oito desafios cada. Eles abrem um de cada vez, em ordem.",
+      "geradoEm": "2026-11-16"
+    },
+    "tutorial.primeiros-passos.entrar": {
+      "audio": "tutorial.primeiros-passos.entrar.mp3",
+      "texto": "Vamos começar? **Clique** em entrar no tema 1.",
+      "duracaoMs": 3300,
+      "contexto": "Tutorial (mapas e atividade)",
+      "animacao": "pointing",
+      "falado": "Vamos começar? Clique em entrar no tema um.",
+      "geradoEm": "2026-11-16"
+    },
+    "tutorial.primeiros-passos.entrar.ok": {
+      "audio": "tutorial.primeiros-passos.entrar.ok.mp3",
+      "texto": "Boa! Agora vamos para o desafio.",
+      "duracaoMs": 2730,
+      "contexto": "Tutorial (mapas e atividade)",
+      "animacao": "happy",
+      "falado": "Boa! Agora vamos para o desafio.",
+      "geradoEm": "2026-11-16"
+    },
+    "tutorial.primeiros-passos.comecar": {
+      "audio": "tutorial.primeiros-passos.comecar.mp3",
+      "texto": "Leia a introdução e clique em **Começar aventura**.",
+      "duracaoMs": 3500,
+      "contexto": "Tutorial (mapas e atividade)",
+      "animacao": "pointing",
+      "falado": "Leia a introdução e clique em Começar aventura.",
+      "geradoEm": "2026-11-16"
+    },
+    "tutorial.primeiros-passos.comecar.ok": {
+      "audio": "tutorial.primeiros-passos.comecar.ok.mp3",
+      "texto": "Isso! Primeiro desafio na tela.",
+      "duracaoMs": 2620,
+      "contexto": "Tutorial (mapas e atividade)",
+      "animacao": "happy",
+      "falado": "Isso! Primeiro desafio na tela.",
+      "geradoEm": "2026-11-16"
+    },
+    "tutorial.primeiros-passos.opcoes": {
+      "audio": "tutorial.primeiros-passos.opcoes.mp3",
+      "texto": "Leia a situação e **escolha** a alternativa que você acha mais adequada.",
+      "duracaoMs": 4400,
+      "contexto": "Tutorial (mapas e atividade)",
+      "animacao": "thinking",
+      "falado": "Leia a situação e escolha a alternativa que você acha mais adequada.",
+      "geradoEm": "2026-11-16"
+    },
+    "tutorial.primeiros-passos.opcoes.ok": {
+      "audio": "tutorial.primeiros-passos.opcoes.ok.mp3",
+      "texto": "Ótimo! Você pode mudar de ideia até confirmar.",
+      "duracaoMs": 3500,
+      "contexto": "Tutorial (mapas e atividade)",
+      "animacao": "happy",
+      "falado": "Ótimo! Você pode mudar de ideia até confirmar.",
+      "geradoEm": "2026-11-16"
+    },
+    "tutorial.primeiros-passos.confirmar": {
+      "audio": "tutorial.primeiros-passos.confirmar.mp3",
+      "texto": "Quando tiver certeza, **confirme**. Depois disso a resposta não muda.",
+      "duracaoMs": 4800,
+      "contexto": "Tutorial (mapas e atividade)",
+      "animacao": "pointing",
+      "falado": "Quando tiver certeza, confirme. Depois disso a resposta não muda.",
+      "geradoEm": "2026-11-16"
+    },
+    "tutorial.primeiros-passos.confirmar.ok": {
+      "audio": "tutorial.primeiros-passos.confirmar.ok.mp3",
+      "texto": "Resposta registrada! Você já sabe o caminho.",
+      "duracaoMs": 3300,
+      "contexto": "Tutorial (mapas e atividade)",
+      "animacao": "celebrating",
+      "falado": "Resposta registrada! Você já sabe o caminho.",
+      "geradoEm": "2026-11-16"
+    },
+    "guia.sem-pressa": {
+      "audio": "guia.sem-pressa.mp3",
+      "texto": "Sem pressa! Se quiser, pode continuar sem fazer isso agora.",
+      "duracaoMs": 4400,
+      "contexto": "Tutorial — plano B (tempo-limite)",
+      "animacao": "encouraging",
+      "falado": "Sem pressa! Se quiser, pode continuar sem fazer isso agora.",
+      "geradoEm": "2026-11-16"
     }
   }
 }
