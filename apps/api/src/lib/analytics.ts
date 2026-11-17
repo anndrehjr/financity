@@ -90,7 +90,7 @@ export async function questionStats(f: Filter, cx: Ctx) {
     const letters = Object.fromEntries("ABCDE".split("").map((l) => [l, rs.filter((r) => r.letter === l).length])) as Record<string, number>;
     return {
       id: qq.id, number: qq.number, title: qq.title, theme: qq.theme, retake: qq.retake, n, max,
-      avg: n ? round1(sum / n * 100) / 100 : null as number | null,
+      avg: n ? Math.round(sum / n * 1000) / 1000 : null as number | null, // 3 casas, sem o ruído de ponto flutuante (11,267000000000001)
       index: n ? round1((sum / (n * max)) * 100) : null as number | null, // índice de desempenho (%)
       excellent: rs.filter((r) => r.points === max).length,
       inadequate: rs.filter((r) => r.points === 0).length,
