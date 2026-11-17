@@ -4,6 +4,7 @@ import type { Context } from "hono";
 import { getCookie, setCookie, deleteCookie } from "hono/cookie";
 import { config } from "../config.js";
 import { one, q, type Q } from "./db.js";
+import { presenceEnd, presenceEndStudent, presenceStart } from "./presence.js";
 
 export class HttpError extends Error {
   constructor(public status: number, message: string) { super(message); }
@@ -75,13 +76,14 @@ export async function login(c: C, username: string, secretValue: string): Promis
   const ttl = user.role === "teacher" ? 4 * 3600_000 : 8 * 3600_000;
   await q("DELETE FROM sessions WHERE expires_at < $1", [Date.now()]);
   await q("INSERT INTO sessions(token_hash,role,user_id,expires_at) VALUES($1,$2,$3,$4)", [sha(token), user.role, user.id, Date.now() + ttl]);
+  if (user.role === "student") await presenceStart(user.id, sha(token)); // hora de entrada
   setCookie(c, COOKIE, token, { httpOnly: true, sameSite: "Lax", secure: config.isProd, path: "/", maxAge: ttl / 1000 });
   return user;
 }
 
 export async function logout(c: C) {
   const t = getCookie(c, COOKIE);
-  if (t) await q("DELETE FROM sessions WHERE token_hash=$1", [sha(t)]);
+  if (t) { await presenceEnd(sha(t)); await q("DELETE FROM sessions WHERE token_hash=$1", [sha(t)]); } // hora de saída
   deleteCookie(c, COOKIE, { path: "/" });
 }
 
@@ -105,6 +107,10 @@ export async function requireRole(c: C, role: "student" | "teacher"): Promise<Se
   return s;
 }
 
+/** Identificador (hash) da sessão atual, para ligar a presença à sessão sem expor o token. */
+export const currentTokenHash = (c: C): string | null => { const t = getCookie(c, COOKIE); return t ? sha(t) : null; };
+
 export async function invalidateStudentSessions(studentId: number, c?: Q) {
+  await presenceEndStudent(studentId, "conta desativada", c);
   await q("DELETE FROM sessions WHERE role='student' AND user_id=$1", [studentId], c);
 }

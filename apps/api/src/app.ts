@@ -4,13 +4,14 @@ import { HEADERS, verifyRequest } from "@financity/gateway-sign";
 import bcrypt from "bcryptjs";
 import { z, ZodError } from "zod";
 import { config } from "./config.js";
-import { HttpError, getSession, isStrongPassword, login, logout, requireRole, type Env } from "./lib/auth.js";
+import { HttpError, currentTokenHash, getSession, isStrongPassword, login, logout, requireRole, type Env } from "./lib/auth.js";
 import { getPool, getSetting, one, q, setSetting, tx } from "./lib/db.js";
 import { assessmentResult, assessmentState, listAssessments, startAttempt, submitAnswer } from "./lib/game.js";
 import { assessmentsForTeacher, classReport, dashboard, parseScope, questionDetail, questionIdFor, studentReport, studentsCsvRows, type Filter } from "./lib/analytics.js";
 import { countPendingPins, createStudents, deleteStudents, generatePinsBatch, listStudents, log, releaseNewAttempt, resetPin, setActive, type BatchMode, type NewStudent } from "./lib/students.js";
 import { removeDemo, seedDemo } from "./lib/demo.js";
 import { csvResponse, toId } from "./lib/http.js";
+import { listPresence, presencePing, studentPresence } from "./lib/presence.js";
 
 export const app = new Hono<Env>();
 
@@ -103,6 +104,13 @@ app.get("/api/me", async (c) => {
   const u = await requireRole(c, "student");
   return c.json({ name: u.name, ...(await listAssessments(u.id)) });
 });
+/** Sinal de vida do aluno (o site envia a cada 30 s): alimenta "on-line agora" e o tempo na plataforma. */
+app.post("/api/presence/ping", async (c) => {
+  const u = await requireRole(c, "student");
+  const h = currentTokenHash(c);
+  if (h) await presencePing(u.id, h);
+  return c.json({ ok: true });
+});
 app.post("/api/game/:id/start", async (c) => { const u = await requireRole(c, "student"); return c.json(await startAttempt(u.id, pid(c, "id"))); });
 app.get("/api/game/:id/state", async (c) => { const u = await requireRole(c, "student"); return c.json(await assessmentState(u.id, pid(c, "id"))); });
 app.get("/api/game/:id/result", async (c) => { const u = await requireRole(c, "student"); return c.json(await assessmentResult(u.id, pid(c, "id"), u.name)); });
@@ -194,6 +202,14 @@ app.put("/api/admin/settings", async (c) => {
   return c.json({ ok: true });
 });
 
+app.get("/api/admin/presence", async (c) => {
+  const t = await requireRole(c, "teacher");
+  return c.json(await listPresence(t.id, { classId: toId(c.req.query("class")) || null, serie: toId(c.req.query("serie")) || null, scope: parseScope(c.req.query("scope")) }));
+});
+app.get("/api/admin/presence/:id", async (c) => {
+  const t = await requireRole(c, "teacher");
+  return c.json(await studentPresence(t.id, pid(c, "id")));
+});
 app.get("/api/admin/students", async (c) => {
   const t = await requireRole(c, "teacher");
   return c.json(await listStudents(t.id, (c.req.query("q") || "").trim().slice(0, 60), toId(c.req.query("class")) || null, parseScope(c.req.query("scope")), toId(c.req.query("serie")) || null));
