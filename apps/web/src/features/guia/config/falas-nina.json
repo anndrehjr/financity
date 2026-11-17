@@ -2,33 +2,6 @@
   "versao": 1,
   "regras": "Máx. 2 linhas por balão. Use **texto** para negrito. tipo: sequencia (em ordem, clique avança) | unica | sorteio (uma aleatória, sem repetir a anterior). Expressões: feliz, pensando, preocupada, comemorando.",
   "momentos": {
-    "boas_vindas": {
-      "tipo": "sequencia",
-      "prioridade": "alta",
-      "quando": "Primeira vez que o aluno entra no jogo (depois só com o botão 'Ver tutorial').",
-      "falas": [
-        {
-          "expressao": "feliz",
-          "texto": "E aí! Eu sou a **Nina**, Guardiã Veterana. Vou te acompanhar nesta aventura."
-        },
-        {
-          "expressao": "pensando",
-          "texto": "São **4 temas** com **8 desafios** cada. Escolha a melhor atitude, marque várias ou ordene etapas."
-        },
-        {
-          "expressao": "feliz",
-          "texto": "Depois de confirmar, a resposta **não pode ser trocada**. Leia tudo com calma."
-        },
-        {
-          "expressao": "comemorando",
-          "texto": "Respostas mais bem pensadas valem mais pontos. **Errar faz parte de aprender!**"
-        },
-        {
-          "expressao": "comemorando",
-          "texto": "Se fechar a página, você continua de onde parou. Bora?"
-        }
-      ]
-    },
     "mapa_1": {
       "tipo": "unica",
       "quando": "Introdução do Tema 1 — Cidadania Financeira.",

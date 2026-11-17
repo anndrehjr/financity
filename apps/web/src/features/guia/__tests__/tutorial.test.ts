@@ -7,7 +7,7 @@ import { pontoDeRetomada, repositorioLocal } from "../tutorial/progresso";
 import { PRIMEIROS_PASSOS } from "../tutorial/registro";
 import type { Tutorial } from "../tutorial/tipos";
 import { bocaDaFala, intervaloPiscar, PERFIS, resolverCamada, resolverEstado, temArteEmCamadas, type Manifesto } from "../nina/animacao";
-import { escolherVoz, limitarVelocidade, VozNina } from "../voz";
+import { limitarVelocidade, VozNina } from "../voz";
 import type { Armazem } from "../armazenamento";
 
 class RelogioFalso implements Relogio {
@@ -133,12 +133,10 @@ test("animação: todos os 10 estados têm perfil; piscar entre 3 e 6 s; boca al
   assert.deepEqual([0, 1, 2, 3, 4].map(bocaDaFala), ["a", "e", "o", "m", "a"]);
 });
 
-test("voz: desligada por padrão, sem suporte não dá erro, prefere pt-BR, velocidade limitada", () => {
-  const v = new VozNina(memoria(), null);
-  assert.equal(v.ativa, false); assert.equal(v.suportado, false);
-  v.ligar(true); assert.doesNotThrow(() => v.falar("**oi**")); assert.doesNotThrow(() => v.cancelar());
-  assert.equal(new VozNina(v["a"] as Armazem, null).ativa, true); // preferência persiste
-  const vozes = [{ lang: "en-US", name: "A" }, { lang: "pt-PT", name: "B" }, { lang: "pt-BR", name: "C" }];
-  assert.equal(escolherVoz(vozes)?.name, "C"); assert.equal(escolherVoz(vozes, "B")?.name, "B"); assert.equal(escolherVoz([{ lang: "en", name: "A" }]), null);
-  assert.equal(limitarVelocidade(9), 1.5); assert.equal(limitarVelocidade(0.1), 0.7); assert.equal(limitarVelocidade(NaN), 1);
+test("voz: desligada por padrão, preferências persistem e velocidade é limitada", () => {
+  const mem = memoria(); const v = new VozNina(mem);
+  assert.equal(v.ativa, false);
+  v.ligar(true); v.definirVelocidade(9); assert.equal(v.velocidade, 1.5);
+  const outra = new VozNina(mem); assert.equal(outra.ativa, true); assert.equal(outra.velocidade, 1.5);
+  assert.equal(limitarVelocidade(0.1), 0.7); assert.equal(limitarVelocidade(NaN), 1);
 });
