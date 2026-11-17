@@ -83,9 +83,9 @@ export default function Dashboard() {
             </ResponsiveContainer>
           </ChartCard>
 
-          <ChartCard title="Gráfico 3 — Média de pontos por questão (0 a 5)">
+          <ChartCard title="Gráfico 3 — Média de pontos por questão">
             <ResponsiveContainer width="100%" height={260}>
-              <BarChart data={data.byQuestion}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="name" /><YAxis domain={[0, 5]} ticks={[0, 1, 2, 3, 4, 5]} /><Tooltip formatter={(v, _n, p) => [v === null ? "Sem respostas" : v, p.payload.theme]} />
+              <BarChart data={data.byQuestion}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="name" /><YAxis domain={[0, "dataMax"]} allowDecimals={false} /><Tooltip formatter={(v, _n, p) => [v === null ? "Sem respostas" : v, p.payload.theme]} />
                 <Bar dataKey="media" name="Média" fill="#34d399" radius={[8, 8, 0, 0]} /></BarChart>
             </ResponsiveContainer>
           </ChartCard>
