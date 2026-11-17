@@ -1,0 +1,53 @@
+Tema 1: cidadania financeira. Direitos, deveres e escolhas que afetam todos. <break time="1.0s" />
+
+Tema 2: ética financeira. Honestidade vale mais que qualquer lucro. <break time="1.0s" />
+
+Tema 3: segurança digital. Desconfie de pressa, links e pedidos de código. <break time="1.0s" />
+
+Tema 4: consumo consciente. Faça as contas antes de se empolgar com promoção. <break time="1.0s" />
+
+Mandou bem! Boa escolha. <break time="1.0s" />
+
+Isso aí! Pensou com cuidado. <break time="1.0s" />
+
+Boa! Seguimos para o próximo. <break time="1.0s" />
+
+Tem coisa boa aí! Dá para pensar ainda mais. <break time="1.0s" />
+
+Foi um bom caminho. Vamos ao próximo! <break time="1.0s" />
+
+Essa não foi a melhor. Sem problema, o próximo é uma nova chance. <break time="1.0s" />
+
+Errar aqui é melhor que errar com dinheiro de verdade. <break time="1.0s" />
+
+Tá difícil? Respira e releia o enunciado com calma. <break time="1.0s" />
+
+Compare as opções uma a uma: qual cuida melhor do dinheiro? <break time="1.0s" />
+
+Tema concluído! Que jornada! <break time="1.0s" />
+
+Missão cumprida! Bora para o próximo tema? <break time="1.0s" />
+
+VOCÊ CHEGOU AO FIM! Todos os temas concluídos! <break time="1.0s" />
+
+Na vida real é igual: pense antes de gastar e cuide do seu dinheiro. <break time="1.0s" />
+
+São 4 temas, com 8 desafios cada. Eles abrem um de cada vez, em ordem. <break time="1.0s" />
+
+Vamos começar? Clique em entrar no tema 1. <break time="1.0s" />
+
+Boa! Agora vamos para o desafio. <break time="1.0s" />
+
+Leia a introdução e clique em Começar aventura. <break time="1.0s" />
+
+Isso! Primeiro desafio na tela. <break time="1.0s" />
+
+Leia a situação e escolha a alternativa que você acha mais adequada. <break time="1.0s" />
+
+Ótimo! Você pode mudar de ideia até confirmar. <break time="1.0s" />
+
+Quando tiver certeza, confirme. Depois disso a resposta não muda. <break time="1.0s" />
+
+Resposta registrada! Você já sabe o caminho. <break time="1.0s" />
+
+Sem pressa! Se quiser, pode continuar sem fazer isso agora. <break time="1.0s" />
