@@ -43,3 +43,12 @@ Sem senhas, PINs ou chaves neste arquivo.
 - Word com todas as questões: `docs/conteudo/Financity-Questoes-Mapas-1-a-4.docx`.
 - Pendente: GitHub (`gh auth login` necessário), domínio, Vercel, ilustrações dos 14 cenários novos, revisão pedagógica do conteúdo, decisão sobre o Mapa 1 (auditoria recomendou reconstruir).
 - Commits passam a ser assinados com a conta do GitHub (e-mail noreply), exigido pela Vercel (plano gratuito) para liberar o deploy.
+
+
+## Atualização 2026-11-16 (noite): produção, Culminância, Nina e voz
+- **Produção:** https://financity-eta.vercel.app (Vercel, branch main). API/PostgreSQL na VPS (https://api.144-217-161-241.sslip.io). Publicação: merge na main.
+- **Culminância (8º ano):** 4 temas × 8 questões (960 pts), tipos escolha/multisseleção/ordenação, dica sem penalidade. Mapas antigos arquivados (sem apagar). Conteúdo: apps/api/src/content/culminancia.ts.
+- **Nina Anime 2.0:** tutorial guiado por eventos (Driver.js), personagem com imagem de referência (arte em camadas pendente; Phaser só carrega quando houver arte), catálogo de falas em apps/web/src/data/nina/falas.json (37 falas), inventário em tools/nina-voz/INVENTARIO.md.
+- **Voz:** 10 falas com a gravação original (ElevenLabs "sylphiette") no ar. O site só toca MP3 estáticos; sem API, sem voz substituta (sem áudio = só legenda). Créditos ElevenLabs ligados em config/personagem.ts até confirmar plano pago.
+- **PRÓXIMO PASSO (amanhã):** gerar os 3 blocos na ElevenLabs (tools/nina-voz/blocos/nina-bloco-1..3.txt, config: multilingual v2, vel. 0,96, estab. 57, simil. 75, estilo 0), salvar em tools/nina-voz/origem/geradas/ como nina-bloco-N.mp3 e rodar `tools/nina-voz/.venv/Scripts/python tools/nina-voz/cortar-blocos.py --conferir`; ouvir, aprovar e publicar. (.venv: python -m venv + pip install imageio-ffmpeg faster-whisper.)
+- **Pendências do André:** trocar a senha do professor e apagar credenciais-professor.txt; informar se o plano da ElevenLabs é pago; revisar o conteúdo da Culminância e testar com aluno (PC e celular); decidir sobre o Alex (personagem antigo) e textos com número fixo ("4 temas / 8 desafios"); aprovar SQL tutorial_progress (progresso por aluno no servidor); arte da Nina em camadas (docs/nina/ASSETS-NECESSARIOS.md).
