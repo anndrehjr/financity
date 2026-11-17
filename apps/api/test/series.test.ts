@@ -64,7 +64,12 @@ describe("estrutura por série", () => {
     await startAttempt(id, (await q<{ id: number }>("SELECT a.id FROM assessments a WHERE a.grade=8 AND a.status='available' ORDER BY a.sort LIMIT 1"))[0].id);
     const aid = (await q<{ id: number }>("SELECT id FROM assessments WHERE grade=8 AND status='available' ORDER BY sort LIMIT 1"))[0].id;
     const st: any = await assessmentState(id, aid);
-    await submitAnswer(id, aid, st.question.id, { optionId: st.question.options[0].id });
+    // resposta gravada direto no banco antigo (o código atual de jogo já espera as colunas das migrações novas, que só existem depois do migrate())
+    const opt = st.question.options[0].id;
+    const tent = (await one<{ id: number }>("SELECT id FROM attempts WHERE student_id=$1", [id]))!.id;
+    const pts = (await one<{ points: number }>("SELECT points FROM options WHERE id=$1", [opt]))!.points;
+    await q("INSERT INTO answers(attempt_id,question_id,option_id,points,display_pos,response,used_hint) VALUES($1,$2,$3,$4,1,$5::jsonb,false)", [tent, st.question.id, opt, pts, JSON.stringify({ optionId: opt })]);
+    await q("UPDATE attempts SET total_points = total_points + $1 WHERE id=$2", [pts, tent]);
     const ps = await one<{ pin_hash: string }>("SELECT pin_hash FROM students WHERE id=$1", [id]);
     antes = {
       alunoId: id, hash: ps!.pin_hash, username,
