@@ -8,7 +8,7 @@ import { HttpError, getSession, isStrongPassword, login, logout, requireRole, ty
 import { getPool, getSetting, one, q, setSetting, tx } from "./lib/db.js";
 import { assessmentResult, assessmentState, listAssessments, startAttempt, submitAnswer } from "./lib/game.js";
 import { assessmentsForTeacher, classReport, dashboard, parseScope, questionDetail, questionIdFor, studentReport, studentsCsvRows, type Filter } from "./lib/analytics.js";
-import { countPendingPins, createStudents, generatePinsBatch, listStudents, log, releaseNewAttempt, resetPin, setActive, type BatchMode, type NewStudent } from "./lib/students.js";
+import { countPendingPins, createStudents, deleteStudents, generatePinsBatch, listStudents, log, releaseNewAttempt, resetPin, setActive, type BatchMode, type NewStudent } from "./lib/students.js";
 import { removeDemo, seedDemo } from "./lib/demo.js";
 import { csvResponse, toId } from "./lib/http.js";
 
@@ -204,6 +204,13 @@ app.post("/api/admin/students", async (c) => {
   if (!rows.length) throw new HttpError(400, "Nenhum aluno informado.");
   return c.json(await createStudents(rows as NewStudent[], t.id));
 });
+/** Exclusão em lote (até 200). Definitiva; exige confirmação explícita. */
+app.post("/api/admin/students/delete", async (c) => {
+  const t = await requireRole(c, "teacher");
+  const b = await json(c, z.object({ ids: z.array(z.number().int()).min(1).max(200), confirm: z.boolean() }));
+  if (!b.confirm) throw new HttpError(400, "Confirmação necessária.");
+  return c.json(await deleteStudents(b.ids, t.id));
+});
 app.patch("/api/admin/students/:id", async (c) => {
   const t = await requireRole(c, "teacher");
   const id = pid(c, "id");
@@ -211,6 +218,10 @@ app.patch("/api/admin/students/:id", async (c) => {
   if (b.action === "reset_pin") return c.json({ pin: await resetPin(id, t.id, b.pin) });
   if (b.action === "deactivate") { await setActive(id, false, t.id); return c.json({ ok: true }); }
   if (b.action === "activate") { await setActive(id, true, t.id); return c.json({ ok: true }); }
+  if (b.action === "delete") {
+    if (!b.confirm) throw new HttpError(400, "Confirmação necessária.");
+    return c.json(await deleteStudents([id], t.id));
+  }
   if (b.action === "new_attempt") {
     if (!b.confirm) throw new HttpError(400, "Confirmação necessária.");
     await releaseNewAttempt(id, t.id, String(b.reason || ""), b.assessment);
