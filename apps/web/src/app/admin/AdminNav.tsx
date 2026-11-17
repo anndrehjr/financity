@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { doLogout } from "@/components/ui";
+import ThemeToggle from "./ThemeToggle";
 
 const ITEMS = [
   { href: "/admin", label: "Painel" },
@@ -25,6 +26,7 @@ export default function AdminNav({ name }: { name: string }) {
           })}
         </nav>
         <span className="text-sm text-indigo-200">{name}</span>
+        <ThemeToggle />
         <button className="rounded-xl bg-indigo-800 px-3 py-1.5 text-sm font-bold hover:bg-indigo-700" onClick={doLogout}>Sair</button>
       </div>
     </header>

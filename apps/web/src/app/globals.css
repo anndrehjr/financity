@@ -29,3 +29,75 @@ h1, h2, h3, .font-display { font-family: var(--font-display), system-ui, sans-se
   .card { box-shadow: none !important; border: 1px solid #e2e8f0; break-inside: avoid; }
   @page { margin: 14mm; }
 }
+
+/* ───────── Painel do professor: modo escuro ─────────
+   Vale só dentro de .admin-root[data-theme="dark"] e só na tela (a impressão dos relatórios continua clara).
+   Em vez de repetir "dark:" em cada tela, as classes de cor já usadas no painel são remapeadas aqui. */
+@media screen {
+  html:has(.admin-root[data-theme="dark"]) { color-scheme: dark; background: #0b1020; }
+  .admin-root[data-theme="dark"] {
+    color-scheme: dark;
+    --d-bg: #0b1020; --d-surface: #151b2e; --d-raised: #1a2138; --d-raised2: #1e2640; --d-raised3: #2a3350;
+    --d-line: #2c3553; --d-line2: #64709c; --d-text: #e5e9f5; --d-text2: #c9d1e6; --d-muted: #aab4d0;
+    background-color: var(--d-bg); color: var(--d-text);
+  }
+  .admin-root[data-theme="dark"] :where(*) { border-color: var(--d-line); }
+  .admin-root[data-theme="dark"] ::placeholder { color: #8892b0; opacity: 1; }
+  .admin-root[data-theme="dark"] :focus-visible { outline-color: #a78bfa; }
+
+  /* superfícies */
+  .admin-root[data-theme="dark"] :is(.bg-white, .card, .input, .btn-ghost) { background-color: var(--d-surface); }
+  .admin-root[data-theme="dark"] .card { border: 1px solid var(--d-line); }
+  .admin-root[data-theme="dark"] .bg-slate-50 { background-color: var(--d-raised); }
+  .admin-root[data-theme="dark"] .bg-slate-100 { background-color: var(--d-raised2); }
+  .admin-root[data-theme="dark"] .bg-slate-200 { background-color: var(--d-raised3); }
+  .admin-root[data-theme="dark"] .bg-indigo-50 { background-color: #1e2547; }
+  .admin-root[data-theme="dark"] .bg-violet-50 { background-color: #2a2150; }
+  .admin-root[data-theme="dark"] .bg-emerald-50 { background-color: #0f2a22; }
+  .admin-root[data-theme="dark"] .bg-emerald-100 { background-color: #123a2d; }
+  .admin-root[data-theme="dark"] .bg-amber-50 { background-color: #2b2209; }
+  .admin-root[data-theme="dark"] .bg-amber-100 { background-color: #3b2f0b; }
+  .admin-root[data-theme="dark"] .bg-rose-50 { background-color: #331820; }
+  .admin-root[data-theme="dark"] .bg-sky-50 { background-color: #0e2a3b; }
+
+  /* realces ao passar o mouse */
+  .admin-root[data-theme="dark"] :is(.hover\:bg-slate-50, .hover\:bg-indigo-50, .btn-ghost):hover { background-color: var(--d-raised2); }
+
+  /* textos */
+  .admin-root[data-theme="dark"] :is(.text-ink, .text-indigo-950, .text-slate-800, .btn-ghost) { color: var(--d-text); }
+  .admin-root[data-theme="dark"] .text-slate-700 { color: var(--d-text2); }
+  .admin-root[data-theme="dark"] :is(.text-slate-600, .text-slate-500, .th) { color: var(--d-muted); }
+  .admin-root[data-theme="dark"] .text-indigo-700 { color: #a5b4fc; }
+  .admin-root[data-theme="dark"] .text-city-grape { color: #c4b5fd; }
+  .admin-root[data-theme="dark"] .text-emerald-700 { color: #6ee7b7; }
+  .admin-root[data-theme="dark"] .text-emerald-900 { color: #a7f3d0; }
+  .admin-root[data-theme="dark"] :is(.text-rose-700, .text-rose-800, .text-red-700) { color: #fda4af; }
+  .admin-root[data-theme="dark"] :is(.text-amber-800, .text-amber-900) { color: #fcd34d; }
+  .admin-root[data-theme="dark"] .text-sky-900 { color: #bae6fd; }
+  /* cabeçalho do painel: o item ativo do menu continua "claro" sobre o fundo índigo */
+  .admin-root[data-theme="dark"] header .bg-white { background-color: #e0e7ff; }
+  .admin-root[data-theme="dark"] header .text-indigo-950 { color: #1e1b4b; }
+  /* botões coloridos mantêm texto escuro/claro próprio */
+  .admin-root[data-theme="dark"] :is(.btn-sun, .bg-city-sun) { color: #1e1b4b; }
+  .admin-root[data-theme="dark"] :is(.btn-primary, .bg-city-grape) { color: #fff; }
+
+  /* bordas e anéis */
+  .admin-root[data-theme="dark"] .border-slate-200 { border-color: var(--d-line); }
+  .admin-root[data-theme="dark"] :is(.border-slate-300, .border-indigo-200) { border-color: var(--d-line2); }
+  .admin-root[data-theme="dark"] .ring-indigo-200 { --tw-ring-color: var(--d-line2); }
+  .admin-root[data-theme="dark"] :is(.border-city-grape, .focus\:border-city-grape:focus) { border-color: #a78bfa; }
+  .admin-root[data-theme="dark"] .border-amber-300 { border-color: #7a5b12; }
+  .admin-root[data-theme="dark"] .border-rose-300 { border-color: #8a3347; }
+  .admin-root[data-theme="dark"] .border-sky-300 { border-color: #1f6a8c; }
+  .admin-root[data-theme="dark"] .border-emerald-300 { border-color: #1f7a5c; }
+
+  /* gráficos (Recharts) */
+  .admin-root[data-theme="dark"] .recharts-cartesian-grid line { stroke: var(--d-line); }
+  .admin-root[data-theme="dark"] :is(.recharts-cartesian-axis-line, .recharts-cartesian-axis-tick-line) { stroke: #4a5578; }
+  .admin-root[data-theme="dark"] :is(.recharts-text, .recharts-cartesian-axis-tick-value) { fill: var(--d-text2); }
+  .admin-root[data-theme="dark"] .recharts-legend-item-text { color: var(--d-text2) !important; }
+  .admin-root[data-theme="dark"] .recharts-default-tooltip { background-color: var(--d-raised2) !important; border-color: var(--d-line2) !important; }
+  .admin-root[data-theme="dark"] :is(.recharts-tooltip-label, .recharts-tooltip-item) { color: var(--d-text) !important; }
+  .admin-root[data-theme="dark"] .recharts-tooltip-cursor { fill: rgba(148, 163, 184, .14); }
+  .admin-root[data-theme="dark"] .recharts-bar-rectangle path[fill="#7c3aed"] { fill: #a78bfa; }
+}
