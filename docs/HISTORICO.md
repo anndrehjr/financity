@@ -20,7 +20,7 @@ Sem senhas, PINs, chaves nem dados de alunos neste arquivo.
 | #9 | Checkpoint |
 | #10 | As 27 falas restantes (`27.mp3` alinhado por Whisper) → **37 falas com voz** |
 | #11 | Importador de alunos por CSV (somente código) |
-| #12 | **Estrutura por série (7º e 8º)** — **ABERTO, não publicado** (ver abaixo) |
+| #12, #15 | **Estrutura por série (7º e 8º)** + **excluir alunos** — **PUBLICADOS em 2026-11-17** (backup `financity-20261117-024145Z.dump`; migração 004 aplicada; dados do 8º idênticos: 19 alunos, 4 tentativas, 19 respostas, 113 pontos, mesmo hash) |
 
 ### Culminância (8º ano) — no ar
 4 temas × 8 desafios (960 pontos): Cidadania, Ética, Segurança Digital e Consumo/Matemática. Tipos escolha única, multisseleção e ordenação; dica sem penalidade; pontuação calculada no servidor (`apps/api/src/lib/grading.ts`). Conteúdo em `apps/api/src/content/culminancia.ts`. Os 4 mapas antigos foram **arquivados** (avaliações com `sort` 101–104, `status='archived'`), sem apagar tentativas ou respostas. Migração 003.
@@ -34,14 +34,15 @@ Sem senhas, PINs, chaves nem dados de alunos neste arquivo.
 ### Importação de alunos
 `apps/api/src/importar-cli.ts` (roda dentro do container, CSV pela entrada padrão, credenciais pela saída padrão) e `tools/alunos/importar.ts` (recusa CSV dentro do repositório; simulação por padrão; gera `credenciais-<série>ano.html` na pasta do CSV; só contagens no terminal). A lista do 7º ano está em `D:\Projetos Serios\Jogos Novos\dados-alunos\7ano.csv` (**fora do git**).
 
-## PR #12 — estrutura por série (aguardando "pode publicar" e backup)
+## PR #12 — estrutura por série (PUBLICADO)
 - Migração aditiva `004_series.sql`: `students.serie` e `maps.serie` (padrão 8) + gatilho que acompanha a série da turma. Nada apagado/alterado; login, senhas e progresso do 8º não são tocados.
 - O aluno só vê tema **publicado e com desafios** (rascunho/arquivado/vazio não aparece e não trava o desbloqueio). Tela "Seus temas chegam em breve!".
 - Professor: filtro por série; visão padrão continua no 8º ano.
 - Nina por série: campo `publico` (geral/7/8); `s7.<momento>` tem prioridade; falas de tema do 8º nunca vão para o 7º.
 - Molde do 7º (`apps/api/src/content/serie7.ts`, 4 temas em rascunho), validação e carga tudo-ou-nada (`serie-cli.ts`); guia `docs/CONTEUDO-7-ANO.md`.
 - Testes: API 52, web 44, importador 7. Cenário "8º ano em uso antes da migração" testado com dados fictícios.
-- **Não publicado:** o banco da VPS está na migração 003. Última verificação: PR aberto, site com a versão anterior.
+- **Publicado:** banco da VPS na migração 004. Excluir aluno: botão "Excluir" no painel (confirmação digitando EXCLUIR; apaga cadastro, tentativas, respostas, sessões e histórico; só alunos do professor).
+- **Incidente corrigido:** o backup automático (cron 02:40) falhava por falta de permissão de execução após o `git archive`; corrigido com `chmod +x` e documentado em `PUBLICACAO-E-REVERSAO.md`.
 
 ## Decisões e regras combinadas
 - Publicar **direto em produção** (merge na `main`) é permitido, porque o site ainda não está aberto ao público. **Exceção:** a estrutura por série só publica com o "pode publicar" e **depois do backup** (entrega de senhas do 8º ano na manhã seguinte).
