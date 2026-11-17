@@ -11,7 +11,7 @@ test("estrutura: 4 temas × 8 questões = 32; 240 pontos por tema; 960 no total"
   for (const t of CULMINANCIA) {
     assert.equal(t.questions.length, 8, t.slug);
     assert.equal(t.questions.reduce((s, q) => s + q.max, 0), 240, t.slug);
-    assert.deepEqual(t.questions.map((q) => q.max), [20, 20, 30, 30, 30, 30, 40, 40], t.slug);
+    assert.deepEqual(t.questions.map((q) => q.max), [30, 30, 30, 30, 30, 30, 30, 30], t.slug); // padrão único: toda questão vale 30
     assert.deepEqual(t.questions.map((q) => q.number), [1, 2, 3, 4, 5, 6, 7, 8]);
   }
   assert.equal(todas.reduce((s, q) => s + q.max, 0), 960);
@@ -26,6 +26,7 @@ test("cada questão: 4 alternativas, textos únicos, pontuação coerente com o 
       assert.equal(Math.max(...q.options.map((o) => o.points)), q.max, `${q.code}: a melhor alternativa vale o máximo`);
       assert.equal(q.options.filter((o) => o.points === q.max).length, 1, `${q.code}: uma única alternativa integral`);
       assert.ok(q.options.every((o) => Number.isInteger(o.points) && o.points >= 0 && o.points <= q.max), q.code);
+      assert.ok(q.options.every((o) => [0, 10, 20, 30].includes(o.points)), `${q.code}: escala padrão das alternativas = 30 / 20 / 10 / 0`);
     }
     if (q.kind === "multi") assert.ok(q.options.some((o) => o.correct) && q.options.some((o) => !o.correct), q.code);
     if (q.kind === "order") assert.deepEqual(q.options.map((o) => o.seq), [1, 2, 3, 4], q.code);
@@ -38,7 +39,7 @@ test("cada questão: 4 alternativas, textos únicos, pontuação coerente com o 
 test("escolha: pontos da alternativa, nunca acima do máximo", () => {
   const c04 = todas.find((q) => q.code === "C04")!;
   assert.equal(grade("choice", 30, og(c04), { optionId: 2 }).points, 30);
-  assert.equal(grade("choice", 30, og(c04), { optionId: 1 }).points, 9);
+  assert.equal(grade("choice", 30, og(c04), { optionId: 1 }).points, 10);
   assert.throws(() => grade("choice", 30, og(c04), { optionId: 99 }), RespostaInvalida);
   assert.throws(() => grade("choice", 30, og(c04), {}), RespostaInvalida);
 });
