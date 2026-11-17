@@ -10,6 +10,7 @@ import type { Expressao } from "./tipos";
 import { useGuia } from "./useGuia";
 
 const { velocidadeDigitacaoMs } = personagem.comportamento;
+const SEM_PRESSA = "Sem pressa! Se quiser, pode continuar sem fazer isso agora."; // id de áudio: guia.sem-pressa
 const reduzMovimento = () => { try { return window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch { return false; } };
 const ESTADO_DA_EXPRESSAO: Record<Expressao, EstadoNina> = { feliz: "happy", pensando: "thinking", preocupada: "encouraging", comemorando: "celebrating" };
 
@@ -69,6 +70,14 @@ function GuiaBase() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [c?.chave, g.silenciada]);
   useEffect(() => { if (g.silenciada) g.servico.parar(); }, [g.silenciada, g.servico]);
+  // Plano B do tutorial: aviso "sem pressa" quando o tempo-limite de uma ação libera o aluno (tem áudio próprio: guia.sem-pressa).
+  const semPressa = !!s && s.tempoEsgotado && s.fase === "aguardando";
+  useEffect(() => {
+    if (!semPressa || g.silenciada) return;
+    void g.servico.tocar("guia.sem-pressa", SEM_PRESSA);
+    return () => g.servico.parar();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [semPressa, g.silenciada]);
 
   if (!personagem.ativo) return null;
   const direita = personagem.visual.posicao === "inferior-direita";
@@ -108,7 +117,7 @@ function GuiaBase() {
           <span className="sr-only">{personagem.nome}: </span>
           <Texto texto={c.texto} completo={completo} onFim={setDigitando} />
         </p>
-        {s?.tempoEsgotado && s.fase === "aguardando" && <p className="mt-1 text-sm font-semibold text-slate-600">Sem pressa! Se quiser, pode continuar sem fazer isso agora.</p>}
+        {s?.tempoEsgotado && s.fase === "aguardando" && <p className="mt-1 text-sm font-semibold text-slate-600">{SEM_PRESSA}</p>}
         <div className="mt-3 flex flex-wrap items-center gap-2">
           {!c.tutorial && c.total > 1 && (
             <span className="flex gap-1" aria-hidden="true">

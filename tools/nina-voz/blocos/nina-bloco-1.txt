@@ -1,0 +1,8 @@
+Tema um: cidadania financeira. Direitos, deveres e escolhas que afetam todos. <break time="1.5s" />
+Tema dois: ética financeira. Honestidade vale mais que qualquer lucro. <break time="1.5s" />
+Tema três: segurança digital. Desconfie de pressa, links e pedidos de código. <break time="1.5s" />
+Tema quatro: consumo consciente. Faça as contas antes de se empolgar com promoção. <break time="1.5s" />
+Tema concluído! Que jornada! <break time="1.5s" />
+Missão cumprida! Bora para o próximo tema? <break time="1.5s" />
+Você chegou ao fim! Todos os temas concluídos! <break time="1.5s" />
+Na vida real é igual: pense antes de gastar e cuide do seu dinheiro.
