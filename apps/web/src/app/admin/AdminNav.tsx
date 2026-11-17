@@ -6,6 +6,7 @@ import { doLogout } from "@/components/ui";
 const ITEMS = [
   { href: "/admin", label: "Painel" },
   { href: "/admin/alunos", label: "Alunos" },
+  { href: "/admin/presenca", label: "Presença" },
   { href: "/admin/questoes/1", label: "Questões" },
   { href: "/admin/relatorios", label: "Relatórios" },
   { href: "/admin/config", label: "Configurações" },
