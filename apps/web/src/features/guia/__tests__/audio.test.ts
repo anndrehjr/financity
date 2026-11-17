@@ -39,13 +39,13 @@ test("todo áudio do manifesto é usado por alguma etapa (sem arquivo órfão) e
   assert.ok(total < 5 * 1048576, `áudios somam ${(total / 1048576).toFixed(2)} MB`);
 });
 
-test("o site não depende de serviço externo de voz: nada no código do site chama a ElevenLabs", () => {
+test("o site não depende de serviço externo de voz: nada no código chama a ElevenLabs nem usa a voz do navegador", () => {
   const raiz = path.join(process.cwd(), "src");
   const achados: string[] = [];
   const varrer = (d: string) => { for (const n of fs.readdirSync(d, { withFileTypes: true })) {
     const p = path.join(d, n.name);
     if (n.isDirectory()) varrer(p);
-    else if (/\.(ts|tsx)$/.test(n.name) && !p.includes("__tests__") && /api\.elevenlabs|xi-api-key|speechSynthesis|SpeechSynthesisUtterance/.test(fs.readFileSync(p, "utf8")) && !p.endsWith("voz.ts")) achados.push(p);
+    else if (/\.(ts|tsx)$/.test(n.name) && !p.includes("__tests__") && /api\.elevenlabs|xi-api-key|speechSynthesis|SpeechSynthesisUtterance/.test(fs.readFileSync(p, "utf8")) ) achados.push(p);
   } };
   varrer(raiz);
   assert.deepEqual(achados, []);

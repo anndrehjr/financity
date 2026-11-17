@@ -3,61 +3,6 @@
   "comentario": "Catálogo único das falas da Nina. Pendente: componentes passarem a buscar por id (após aprovação do inventário).",
   "falas": [
     {
-      "id": "boas_vindas.1",
-      "tela": "Tutorial antigo (INATIVO: o tutorial guiado o substituiu)",
-      "contexto": "Primeira vez que o aluno entra no jogo (depois só com o botão 'Ver tutorial').",
-      "texto": "E aí! Eu sou a **Nina**, Guardiã Veterana. Vou te acompanhar nesta aventura.",
-      "emocao": "alegria",
-      "animacao": "happy",
-      "grupo": "boas_vindas",
-      "sorteio": false,
-      "inativa": true
-    },
-    {
-      "id": "boas_vindas.2",
-      "tela": "Tutorial antigo (INATIVO: o tutorial guiado o substituiu)",
-      "contexto": "Primeira vez que o aluno entra no jogo (depois só com o botão 'Ver tutorial').",
-      "texto": "São **4 temas** com **8 desafios** cada. Escolha a melhor atitude, marque várias ou ordene etapas.",
-      "emocao": "curiosidade",
-      "animacao": "thinking",
-      "grupo": "boas_vindas",
-      "sorteio": false,
-      "inativa": true
-    },
-    {
-      "id": "boas_vindas.3",
-      "tela": "Tutorial antigo (INATIVO: o tutorial guiado o substituiu)",
-      "contexto": "Primeira vez que o aluno entra no jogo (depois só com o botão 'Ver tutorial').",
-      "texto": "Depois de confirmar, a resposta **não pode ser trocada**. Leia tudo com calma.",
-      "emocao": "alegria",
-      "animacao": "happy",
-      "grupo": "boas_vindas",
-      "sorteio": false,
-      "inativa": true
-    },
-    {
-      "id": "boas_vindas.4",
-      "tela": "Tutorial antigo (INATIVO: o tutorial guiado o substituiu)",
-      "contexto": "Primeira vez que o aluno entra no jogo (depois só com o botão 'Ver tutorial').",
-      "texto": "Respostas mais bem pensadas valem mais pontos. **Errar faz parte de aprender!**",
-      "emocao": "comemoracao",
-      "animacao": "celebrating",
-      "grupo": "boas_vindas",
-      "sorteio": false,
-      "inativa": true
-    },
-    {
-      "id": "boas_vindas.5",
-      "tela": "Tutorial antigo (INATIVO: o tutorial guiado o substituiu)",
-      "contexto": "Primeira vez que o aluno entra no jogo (depois só com o botão 'Ver tutorial').",
-      "texto": "Se fechar a página, você continua de onde parou. Bora?",
-      "emocao": "comemoracao",
-      "animacao": "celebrating",
-      "grupo": "boas_vindas",
-      "sorteio": false,
-      "inativa": true
-    },
-    {
       "id": "mapa_1.1",
       "tela": "Atividade — introdução do tema 1",
       "contexto": "Introdução do Tema 1 — Cidadania Financeira.",
