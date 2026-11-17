@@ -12,6 +12,7 @@ import { countPendingPins, createStudents, deleteStudents, generatePinsBatch, li
 import { removeDemo, seedDemo } from "./lib/demo.js";
 import { csvResponse, toId } from "./lib/http.js";
 import { listPresence, presencePing, studentPresence } from "./lib/presence.js";
+import { generalRanking } from "./lib/ranking.js";
 
 export const app = new Hono<Env>();
 
@@ -134,6 +135,11 @@ app.get("/api/admin/classes", async (c) => {
 app.get("/api/admin/assessments", async (c) => { const t = await requireRole(c, "teacher"); return c.json(await assessmentsForTeacher(t.id)); });
 app.get("/api/admin/dashboard", async (c) => { const t = await requireRole(c, "teacher"); return c.json(await dashboard(filterOf(c, t.id))); });
 app.get("/api/admin/report", async (c) => { const t = await requireRole(c, "teacher"); return c.json(await classReport(filterOf(c, t.id))); });
+/** Ranking geral: soma dos temas concluídos de cada aluno + classificação. */
+app.get("/api/admin/ranking", async (c) => {
+  const t = await requireRole(c, "teacher");
+  return c.json(await generalRanking(t.id, { classId: toId(c.req.query("class")) || null, serie: toId(c.req.query("serie")) || null, scope: parseScope(c.req.query("scope")) }));
+});
 app.post("/api/admin/demo", async (c) => { const t = await requireRole(c, "teacher"); return c.json(await seedDemo(t.id)); });
 app.delete("/api/admin/demo", async (c) => { await requireRole(c, "teacher"); await removeDemo(); return c.json({ ok: true }); });
 
