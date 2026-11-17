@@ -1,0 +1,408 @@
+{
+  "versao": 1,
+  "comentario": "Catálogo único das falas da Nina. Pendente: componentes passarem a buscar por id (após aprovação do inventário).",
+  "falas": [
+    {
+      "id": "boas_vindas.1",
+      "tela": "Tutorial antigo (INATIVO: o tutorial guiado o substituiu)",
+      "contexto": "Primeira vez que o aluno entra no jogo (depois só com o botão 'Ver tutorial').",
+      "texto": "E aí! Eu sou a **Nina**, Guardiã Veterana. Vou te acompanhar nesta aventura.",
+      "emocao": "alegria",
+      "animacao": "happy",
+      "grupo": "boas_vindas",
+      "sorteio": false,
+      "inativa": true
+    },
+    {
+      "id": "boas_vindas.2",
+      "tela": "Tutorial antigo (INATIVO: o tutorial guiado o substituiu)",
+      "contexto": "Primeira vez que o aluno entra no jogo (depois só com o botão 'Ver tutorial').",
+      "texto": "São **4 temas** com **8 desafios** cada. Escolha a melhor atitude, marque várias ou ordene etapas.",
+      "emocao": "curiosidade",
+      "animacao": "thinking",
+      "grupo": "boas_vindas",
+      "sorteio": false,
+      "inativa": true
+    },
+    {
+      "id": "boas_vindas.3",
+      "tela": "Tutorial antigo (INATIVO: o tutorial guiado o substituiu)",
+      "contexto": "Primeira vez que o aluno entra no jogo (depois só com o botão 'Ver tutorial').",
+      "texto": "Depois de confirmar, a resposta **não pode ser trocada**. Leia tudo com calma.",
+      "emocao": "alegria",
+      "animacao": "happy",
+      "grupo": "boas_vindas",
+      "sorteio": false,
+      "inativa": true
+    },
+    {
+      "id": "boas_vindas.4",
+      "tela": "Tutorial antigo (INATIVO: o tutorial guiado o substituiu)",
+      "contexto": "Primeira vez que o aluno entra no jogo (depois só com o botão 'Ver tutorial').",
+      "texto": "Respostas mais bem pensadas valem mais pontos. **Errar faz parte de aprender!**",
+      "emocao": "comemoracao",
+      "animacao": "celebrating",
+      "grupo": "boas_vindas",
+      "sorteio": false,
+      "inativa": true
+    },
+    {
+      "id": "boas_vindas.5",
+      "tela": "Tutorial antigo (INATIVO: o tutorial guiado o substituiu)",
+      "contexto": "Primeira vez que o aluno entra no jogo (depois só com o botão 'Ver tutorial').",
+      "texto": "Se fechar a página, você continua de onde parou. Bora?",
+      "emocao": "comemoracao",
+      "animacao": "celebrating",
+      "grupo": "boas_vindas",
+      "sorteio": false,
+      "inativa": true
+    },
+    {
+      "id": "mapa_1.1",
+      "tela": "Atividade — introdução do tema 1",
+      "contexto": "Introdução do Tema 1 — Cidadania Financeira.",
+      "texto": "Tema 1: **cidadania financeira**. Direitos, deveres e escolhas que afetam todos.",
+      "emocao": "alegria",
+      "animacao": "happy",
+      "grupo": "mapa_1",
+      "sorteio": false,
+      "inativa": false
+    },
+    {
+      "id": "mapa_2.1",
+      "tela": "Atividade — introdução do tema 2",
+      "contexto": "Introdução do Tema 2 — Ética Financeira.",
+      "texto": "Tema 2: **ética financeira**. Honestidade vale mais que qualquer lucro.",
+      "emocao": "curiosidade",
+      "animacao": "thinking",
+      "grupo": "mapa_2",
+      "sorteio": false,
+      "inativa": false
+    },
+    {
+      "id": "mapa_3.1",
+      "tela": "Atividade — introdução do tema 3",
+      "contexto": "Introdução do Tema 3 — Segurança Digital e Privacidade.",
+      "texto": "Tema 3: **segurança digital**. Desconfie de pressa, links e pedidos de código.",
+      "emocao": "incentivo",
+      "animacao": "encouraging",
+      "grupo": "mapa_3",
+      "sorteio": false,
+      "inativa": false
+    },
+    {
+      "id": "mapa_4.1",
+      "tela": "Atividade — introdução do tema 4",
+      "contexto": "Introdução do Tema 4 — Consumo Consciente e Matemática.",
+      "texto": "Tema 4: **consumo consciente**. Faça as contas antes de se empolgar com promoção.",
+      "emocao": "curiosidade",
+      "animacao": "thinking",
+      "grupo": "mapa_4",
+      "sorteio": false,
+      "inativa": false
+    },
+    {
+      "id": "acerto.1",
+      "tela": "Atividade — logo após confirmar (pontuação alta)",
+      "contexto": "Resposta com pontuação alta (config minAcerto).",
+      "texto": "Mandou bem! Boa escolha.",
+      "emocao": "comemoracao",
+      "animacao": "celebrating",
+      "grupo": "acerto",
+      "sorteio": true,
+      "inativa": false
+    },
+    {
+      "id": "acerto.2",
+      "tela": "Atividade — logo após confirmar (pontuação alta)",
+      "contexto": "Resposta com pontuação alta (config minAcerto).",
+      "texto": "Isso aí! Pensou com cuidado.",
+      "emocao": "comemoracao",
+      "animacao": "celebrating",
+      "grupo": "acerto",
+      "sorteio": true,
+      "inativa": false
+    },
+    {
+      "id": "acerto.3",
+      "tela": "Atividade — logo após confirmar (pontuação alta)",
+      "contexto": "Resposta com pontuação alta (config minAcerto).",
+      "texto": "Boa! Seguimos para o próximo.",
+      "emocao": "alegria",
+      "animacao": "happy",
+      "grupo": "acerto",
+      "sorteio": true,
+      "inativa": false
+    },
+    {
+      "id": "parcial.1",
+      "tela": "Atividade — logo após confirmar (pontuação média)",
+      "contexto": "Resposta com pontuação intermediária.",
+      "texto": "Tem coisa boa aí! Dá para pensar ainda mais.",
+      "emocao": "curiosidade",
+      "animacao": "thinking",
+      "grupo": "parcial",
+      "sorteio": true,
+      "inativa": false
+    },
+    {
+      "id": "parcial.2",
+      "tela": "Atividade — logo após confirmar (pontuação média)",
+      "contexto": "Resposta com pontuação intermediária.",
+      "texto": "Foi um bom caminho. Vamos ao próximo!",
+      "emocao": "alegria",
+      "animacao": "happy",
+      "grupo": "parcial",
+      "sorteio": true,
+      "inativa": false
+    },
+    {
+      "id": "erro.1",
+      "tela": "Atividade — logo após confirmar (pontuação baixa)",
+      "contexto": "Resposta com pontuação baixa.",
+      "texto": "Essa não foi a melhor. Sem problema, o próximo é uma nova chance.",
+      "emocao": "curiosidade",
+      "animacao": "thinking",
+      "grupo": "erro",
+      "sorteio": true,
+      "inativa": false
+    },
+    {
+      "id": "erro.2",
+      "tela": "Atividade — logo após confirmar (pontuação baixa)",
+      "contexto": "Resposta com pontuação baixa.",
+      "texto": "Errar aqui é melhor que errar com **dinheiro de verdade**.",
+      "emocao": "incentivo",
+      "animacao": "encouraging",
+      "grupo": "erro",
+      "sorteio": true,
+      "inativa": false
+    },
+    {
+      "id": "parado.1",
+      "tela": "Atividade — 30 s sem responder",
+      "contexto": "Aluno parado na mesma pergunta por segundosParado.",
+      "texto": "Tá difícil? Respira e **releia o enunciado** com calma.",
+      "emocao": "curiosidade",
+      "animacao": "thinking",
+      "grupo": "parado",
+      "sorteio": true,
+      "inativa": false
+    },
+    {
+      "id": "parado.2",
+      "tela": "Atividade — 30 s sem responder",
+      "contexto": "Aluno parado na mesma pergunta por segundosParado.",
+      "texto": "Compare as opções uma a uma: qual cuida melhor do dinheiro?",
+      "emocao": "curiosidade",
+      "animacao": "thinking",
+      "grupo": "parado",
+      "sorteio": true,
+      "inativa": false
+    },
+    {
+      "id": "fase_concluida.1",
+      "tela": "Resultado do tema",
+      "contexto": "Mapa concluído (tela de resultado).",
+      "texto": "Tema concluído! Que jornada!",
+      "emocao": "comemoracao",
+      "animacao": "celebrating",
+      "grupo": "fase_concluida",
+      "sorteio": true,
+      "inativa": false
+    },
+    {
+      "id": "fase_concluida.2",
+      "tela": "Resultado do tema",
+      "contexto": "Mapa concluído (tela de resultado).",
+      "texto": "Missão cumprida! Bora para o próximo tema?",
+      "emocao": "comemoracao",
+      "animacao": "celebrating",
+      "grupo": "fase_concluida",
+      "sorteio": true,
+      "inativa": false
+    },
+    {
+      "id": "vitoria.1",
+      "tela": "Resultado do último tema",
+      "contexto": "Concluiu o último mapa (Mapa 4).",
+      "texto": "VOCÊ CHEGOU AO FIM! Todos os temas concluídos!",
+      "emocao": "comemoracao",
+      "animacao": "celebrating",
+      "grupo": "vitoria",
+      "sorteio": false,
+      "inativa": false
+    },
+    {
+      "id": "vitoria.2",
+      "tela": "Resultado do último tema",
+      "contexto": "Concluiu o último mapa (Mapa 4).",
+      "texto": "Na vida real é igual: **pense antes de gastar** e cuide do seu dinheiro.",
+      "emocao": "alegria",
+      "animacao": "happy",
+      "grupo": "vitoria",
+      "sorteio": false,
+      "inativa": false
+    },
+    {
+      "id": "tutorial.primeiros-passos.abertura-1",
+      "tela": "Tutorial (mapas e atividade)",
+      "contexto": "etapa \"abertura-1\"",
+      "texto": "Oiê! Que alegria ter você aqui.",
+      "emocao": "alegria",
+      "animacao": "happy"
+    },
+    {
+      "id": "tutorial.primeiros-passos.abertura-2",
+      "tela": "Tutorial (mapas e atividade)",
+      "contexto": "etapa \"abertura-2\"",
+      "texto": "Eu sou a **Nina**, sua amiga e guia nesta incrível aventura pelo mundo da educação financeira.",
+      "emocao": "explicacao",
+      "animacao": "explaining"
+    },
+    {
+      "id": "tutorial.primeiros-passos.abertura-3",
+      "tela": "Tutorial (mapas e atividade)",
+      "contexto": "etapa \"abertura-3\"",
+      "texto": "Seja muito bem-vindo ao **Financity**.",
+      "emocao": "comemoracao",
+      "animacao": "happy"
+    },
+    {
+      "id": "tutorial.primeiros-passos.abertura-4",
+      "tela": "Tutorial (mapas e atividade)",
+      "contexto": "etapa \"abertura-4\"",
+      "texto": "Você já parou para pensar em como pequenas decisões podem transformar o seu futuro?",
+      "emocao": "curiosidade",
+      "animacao": "thinking"
+    },
+    {
+      "id": "tutorial.primeiros-passos.abertura-5",
+      "tela": "Tutorial (mapas e atividade)",
+      "contexto": "etapa \"abertura-5\"",
+      "texto": "Pois é. Às vezes, uma escolha que parece simples pode fazer uma diferença enorme na nossa vida. E é exatamente isso que vamos descobrir juntos.",
+      "emocao": "explicacao",
+      "animacao": "explaining"
+    },
+    {
+      "id": "tutorial.primeiros-passos.abertura-6",
+      "tela": "Tutorial (mapas e atividade)",
+      "contexto": "etapa \"abertura-6\"",
+      "texto": "Aqui no Financity, você vai aprender a cuidar do seu dinheiro, planejar seus sonhos, entender como funcionam os investimentos e descobrir os desafios de administrar uma empresa.",
+      "emocao": "explicacao",
+      "animacao": "explaining"
+    },
+    {
+      "id": "tutorial.primeiros-passos.abertura-7",
+      "tela": "Tutorial (mapas e atividade)",
+      "contexto": "etapa \"abertura-7\"",
+      "texto": "Mas calma, não precisa saber tudo agora. Eu vou estar aqui para ajudar você em cada etapa dessa jornada.",
+      "emocao": "alegria",
+      "animacao": "happy"
+    },
+    {
+      "id": "tutorial.primeiros-passos.abertura-8",
+      "tela": "Tutorial (mapas e atividade)",
+      "contexto": "etapa \"abertura-8\"",
+      "texto": "Afinal, o mais importante não é acertar tudo de primeira, mas compreender o que estamos aprendendo. Agora me conta, você está preparado para começar essa aventura?",
+      "emocao": "explicacao",
+      "animacao": "explaining"
+    },
+    {
+      "id": "tutorial.primeiros-passos.abertura-9",
+      "tela": "Tutorial (mapas e atividade)",
+      "contexto": "etapa \"abertura-9\"",
+      "texto": "Eu estou super animada. Então vamos lá. Respire fundo, prepare suas ideias e venha comigo explorar o incrível mundo da educação financeira.",
+      "emocao": "comemoracao",
+      "animacao": "celebrating"
+    },
+    {
+      "id": "tutorial.primeiros-passos.mapas",
+      "tela": "Tutorial (mapas e atividade)",
+      "contexto": "etapa \"mapas\"",
+      "texto": "São **4 temas**, com 8 desafios cada. Eles abrem um de cada vez, em ordem.",
+      "emocao": "explicacao",
+      "animacao": "explaining"
+    },
+    {
+      "id": "tutorial.primeiros-passos.entrar",
+      "tela": "Tutorial (mapas e atividade)",
+      "contexto": "etapa \"entrar\"",
+      "texto": "Vamos começar? **Clique** em entrar no tema 1.",
+      "emocao": "explicacao",
+      "animacao": "pointing"
+    },
+    {
+      "id": "tutorial.primeiros-passos.entrar.ok",
+      "tela": "Tutorial (mapas e atividade)",
+      "contexto": "reação depois da ação (etapa \"entrar\")",
+      "texto": "Boa! Agora vamos para o desafio.",
+      "emocao": "comemoracao",
+      "animacao": "happy"
+    },
+    {
+      "id": "tutorial.primeiros-passos.comecar",
+      "tela": "Tutorial (mapas e atividade)",
+      "contexto": "etapa \"comecar\"",
+      "texto": "Leia a introdução e clique em **Começar aventura**.",
+      "emocao": "explicacao",
+      "animacao": "pointing"
+    },
+    {
+      "id": "tutorial.primeiros-passos.comecar.ok",
+      "tela": "Tutorial (mapas e atividade)",
+      "contexto": "reação depois da ação (etapa \"comecar\")",
+      "texto": "Isso! Primeiro desafio na tela.",
+      "emocao": "comemoracao",
+      "animacao": "happy"
+    },
+    {
+      "id": "tutorial.primeiros-passos.opcoes",
+      "tela": "Tutorial (mapas e atividade)",
+      "contexto": "etapa \"opcoes\"",
+      "texto": "Leia a situação e **escolha** a alternativa que você acha mais adequada.",
+      "emocao": "curiosidade",
+      "animacao": "thinking"
+    },
+    {
+      "id": "tutorial.primeiros-passos.opcoes.ok",
+      "tela": "Tutorial (mapas e atividade)",
+      "contexto": "reação depois da ação (etapa \"opcoes\")",
+      "texto": "Ótimo! Você pode mudar de ideia até confirmar.",
+      "emocao": "alegria",
+      "animacao": "happy"
+    },
+    {
+      "id": "tutorial.primeiros-passos.confirmar",
+      "tela": "Tutorial (mapas e atividade)",
+      "contexto": "etapa \"confirmar\"",
+      "texto": "Quando tiver certeza, **confirme**. Depois disso a resposta não muda.",
+      "emocao": "explicacao",
+      "animacao": "pointing"
+    },
+    {
+      "id": "tutorial.primeiros-passos.confirmar.ok",
+      "tela": "Tutorial (mapas e atividade)",
+      "contexto": "reação depois da ação (etapa \"confirmar\")",
+      "texto": "Resposta registrada! Você já sabe o caminho.",
+      "emocao": "comemoracao",
+      "animacao": "celebrating"
+    },
+    {
+      "id": "tutorial.primeiros-passos.tchau",
+      "tela": "Tutorial (mapas e atividade)",
+      "contexto": "etapa \"tchau\"",
+      "texto": "Eu sou a **Nina** e estarei ao seu lado nessa jornada. Até já, futuro empreendedor.",
+      "emocao": "comemoracao",
+      "animacao": "goodbye"
+    },
+    {
+      "id": "guia.sem-pressa",
+      "tela": "Tutorial — plano B (tempo-limite)",
+      "contexto": "aparece se o aluno demora numa etapa que espera uma ação",
+      "texto": "Sem pressa! Se quiser, pode continuar sem fazer isso agora.",
+      "emocao": "incentivo",
+      "animacao": "encouraging"
+    }
+  ]
+}
