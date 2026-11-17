@@ -52,3 +52,11 @@ Sem senhas, PINs ou chaves neste arquivo.
 - **Voz:** 10 falas com a gravação original (ElevenLabs "sylphiette") no ar. O site só toca MP3 estáticos; sem API, sem voz substituta (sem áudio = só legenda). Créditos ElevenLabs ligados em config/personagem.ts até confirmar plano pago.
 - **PRÓXIMO PASSO (amanhã):** gerar os 3 blocos na ElevenLabs (tools/nina-voz/blocos/nina-bloco-1..3.txt, config: multilingual v2, vel. 0,96, estab. 57, simil. 75, estilo 0), salvar em tools/nina-voz/origem/geradas/ como nina-bloco-N.mp3 e rodar `tools/nina-voz/.venv/Scripts/python tools/nina-voz/cortar-blocos.py --conferir`; ouvir, aprovar e publicar. (.venv: python -m venv + pip install imageio-ffmpeg faster-whisper.)
 - **Pendências do André:** trocar a senha do professor e apagar credenciais-professor.txt; informar se o plano da ElevenLabs é pago; revisar o conteúdo da Culminância e testar com aluno (PC e celular); decidir sobre o Alex (personagem antigo) e textos com número fixo ("4 temas / 8 desafios"); aprovar SQL tutorial_progress (progresso por aluno no servidor); arte da Nina em camadas (docs/nina/ASSETS-NECESSARIOS.md).
+
+
+## Atualização 2026-11-17 (madrugada): ESTADO ATUAL — leia primeiro
+- **No ar (financity-eta.vercel.app + VPS):** Culminância 8º ano, Nina com tutorial guiado e **37 falas com voz**, importador (somente código).
+- **NÃO publicado: PR #12** (estrutura por série 7º/8º; migração 004). Banco da VPS na migração 003. **Para publicar:** o André roda o backup (`~/docker/financity/src/deploy/backup/backup-financity.sh`) e diz "pode publicar" → ver `docs/PUBLICACAO-E-REVERSAO.md`. Recomendado fazer ANTES da entrega das senhas do 8º (que ficam iguais).
+- **Documentos:** `docs/HISTORICO.md` (tudo que foi feito, PRs, decisões, pendências), `docs/PUBLICACAO-E-REVERSAO.md` (como publicar e reverter), `docs/CONTEUDO-7-ANO.md` (preencher/validar/publicar o 7º), `tools/nina-voz/README.md` (voz), `docs/nina/ASSETS-NECESSARIOS.md` (arte).
+- **Lista do 7º ano:** `D:\Projetos Serios\Jogos Novos\dados-alunosano.csv` (fora do git; 14 alunos). Importar só com autorização, simulação primeiro.
+- **Próximos passos (tarde):** preencher temas do 7º → validar → falas/áudios do 7º → backup → publicar → importar → imprimir credenciais → apagar CSV/HTML.
