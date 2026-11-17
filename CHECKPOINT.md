@@ -60,3 +60,9 @@ Sem senhas, PINs ou chaves neste arquivo.
 - **Documentos:** `docs/HISTORICO.md` (tudo que foi feito, PRs, decisões, pendências), `docs/PUBLICACAO-E-REVERSAO.md` (como publicar e reverter), `docs/CONTEUDO-7-ANO.md` (preencher/validar/publicar o 7º), `tools/nina-voz/README.md` (voz), `docs/nina/ASSETS-NECESSARIOS.md` (arte).
 - **Lista do 7º ano:** `D:\Projetos Serios\Jogos Novos\dados-alunos\7ano.csv` (fora do git; 14 alunos). Importar só com autorização, simulação primeiro.
 - **Próximos passos (tarde):** preencher temas do 7º → validar → falas/áudios do 7º → backup → publicar → importar → imprimir credenciais → apagar CSV/HTML.
+
+## Atualização 2026-11-17 (madrugada, depois): PR #12 e #15 PUBLICADOS
+- Backup feito e verificado antes (`financity-20261117-024145Z.dump`). Migração 004 aplicada na VPS; dados do 8º idênticos (contagens e hash conferidos). Site e API no ar; login falso 401; `/jogo` e `/admin` sem login redirecionam; excluir sem login 401.
+- Novo: série 7º/8º (aluno só vê temas da sua série; "Seus temas chegam em breve!" para série sem temas), filtro de série no painel, Nina por série, molde do 7º, importador, **botão Excluir aluno** no painel.
+- Incidente: backup automático falhava (permissão de execução perdida no deploy). Corrigido; após cada deploy rodar `chmod +x deploy/backup/*.sh`.
+- Próximo: conteúdo do 7º (docs/CONTEUDO-7-ANO.md), importar os 14 alunos (simulação primeiro, com autorização), testar o painel (Excluir) com aluno de teste.
