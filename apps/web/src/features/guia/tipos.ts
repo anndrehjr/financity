@@ -6,6 +6,8 @@ export type Momento = {
   quando?: string;
   /** Só dispara se não houver nenhuma fala aberta (ex.: "parado"). */
   somenteSeLivre?: boolean;
+  /** Para quem é a fala: "geral" (padrão), "7" ou "8". Versão específica da série = momento "s7.<nome>" / "s8.<nome>". */
+  publico?: "geral" | "7" | "8";
   falas: Fala[];
 };
 export type Falas = { versao: number; momentos: Record<string, Momento> };

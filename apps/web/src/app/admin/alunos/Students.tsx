@@ -27,8 +27,9 @@ const csvEsc = (v: string) => { const s = /^[=+\-@\t\r]/.test(v) ? "'" + v : v; 
 export default function Students() {
   const [scope, setScope] = useState<Scope>("real");
   const [cls, setCls] = useState("");
+  const [serie, setSerie] = useState("");
   const [q, setQ] = useState("");
-  const { data, error, loading, reload } = useApi<Row[]>(`/api/admin/students?${qs(scope, cls)}&q=${encodeURIComponent(q)}`);
+  const { data, error, loading, reload } = useApi<Row[]>(`/api/admin/students?${qs(scope, cls)}${serie ? `&serie=${serie}` : ""}&q=${encodeURIComponent(q)}`);
   const { data: classes, reload: reloadClasses } = useApi<{ id: number; name: string; demo?: number }[]>("/api/admin/classes");
   const { data: pend, reload: reloadPend } = useApi<{ pending: number }>("/api/admin/pins");
 
@@ -74,7 +75,7 @@ export default function Students() {
   const [formErr, setFormErr] = useState<string | null>(null);
   const [creds, setCreds] = useState<Cred[] | null>(null);
   const [skipped, setSkipped] = useState<CreateResult["skipped"]>([]);
-  const [dlg, setDlg] = useState<{ kind: "pin" | "attempt"; row: Row } | null>(null);
+  const [dlg, setDlg] = useState<{ kind: "pin" | "attempt" | "delete"; row: Row } | null>(null);
   const [dlgVal, setDlgVal] = useState(""); const [dlgOk, setDlgOk] = useState(false); const [dlgErr, setDlgErr] = useState<string | null>(null);
 
   async function create(rows: { name: string; className: string; pin?: string; noPin?: boolean }[]) {
@@ -106,7 +107,7 @@ export default function Students() {
   async function act(r: Row, action: "deactivate" | "activate") {
     try { await apiFetch(`/api/admin/students/${r.id}`, { method: "PATCH", body: { action } }); reload(); } catch (e) { setMsg({ kind: "warn", text: (e as Error).message }); }
   }
-  function openDlg(kind: "pin" | "attempt", row: Row) { setDlg({ kind, row }); setDlgVal(""); setDlgOk(false); setDlgErr(null); }
+  function openDlg(kind: "pin" | "attempt" | "delete", row: Row) { setDlg({ kind, row }); setDlgVal(""); setDlgOk(false); setDlgErr(null); }
   async function runDlg() {
     if (!dlg) return;
     setDlgErr(null);
@@ -115,6 +116,9 @@ export default function Students() {
         const r = await apiFetch<{ pin: string }>(`/api/admin/students/${dlg.row.id}`, { method: "PATCH", body: { action: "reset_pin", pin: dlgVal || undefined } });
         setCreds([{ id: dlg.row.id, name: dlg.row.name, className: dlg.row.className ?? "Sem turma", username: dlg.row.username, pin: r.pin }]); setSkipped([]);
         setMsg({ kind: "ok", text: `PIN de ${dlg.row.name} redefinido. Anote-o agora: ele não poderá ser consultado depois.` });
+      } else if (dlg.kind === "delete") {
+        await apiFetch(`/api/admin/students/${dlg.row.id}`, { method: "PATCH", body: { action: "delete", confirm: true } });
+        setMsg({ kind: "ok", text: `${dlg.row.name} foi excluído definitivamente (cadastro, tentativas e respostas).` });
       } else {
         await apiFetch(`/api/admin/students/${dlg.row.id}`, { method: "PATCH", body: { action: "new_attempt", confirm: true, reason: dlgVal } });
         setMsg({ kind: "ok", text: `Nova tentativa liberada para ${dlg.row.name}. A tentativa anterior foi preservada no histórico.` });
@@ -175,7 +179,7 @@ export default function Students() {
           <h2 className="font-display text-xl font-extrabold">Alunos cadastrados</h2>
           <div className="flex flex-wrap items-end gap-3">
             <label className="text-sm font-bold">Buscar<input className="mt-1 block rounded-xl border-2 border-slate-300 px-3 py-2" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Nome ou usuário" /></label>
-            <FilterBar scope={scope} setScope={setScope} cls={cls} setCls={setCls} />
+            <FilterBar scope={scope} setScope={setScope} cls={cls} setCls={setCls} serie={serie} setSerie={setSerie} />
           </div>
         </div>
         {loading && !data && <Spinner />}
@@ -191,6 +195,7 @@ export default function Students() {
                 <td className="td"><div className="flex flex-wrap gap-1">
                   {!r.demo && <button className="btn btn-ghost btn-sm" onClick={() => openDlg("pin", r)}>Redefinir PIN</button>}
                   {r.status && <button className="btn btn-ghost btn-sm" onClick={() => openDlg("attempt", r)}>Nova tentativa</button>}
+                  <button className="btn btn-ghost btn-sm text-red-700" onClick={() => openDlg("delete", r)}>Excluir</button>
                   <button className="btn btn-ghost btn-sm" onClick={() => act(r, r.active ? "deactivate" : "activate")}>{r.active ? "Desativar" : "Reativar"}</button>
                 </div></td>
               </tr>))}</tbody></table></div>))}
@@ -199,16 +204,19 @@ export default function Students() {
       {dlg && (
         <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="dlg-t">
           <div className="card w-full max-w-md space-y-3">
-            <h2 id="dlg-t" className="font-display text-xl font-extrabold">{dlg.kind === "pin" ? "Redefinir PIN" : "Liberar nova tentativa"} — {dlg.row.name}</h2>
+            <h2 id="dlg-t" className="font-display text-xl font-extrabold">{dlg.kind === "pin" ? "Redefinir PIN" : dlg.kind === "delete" ? "Excluir aluno" : "Liberar nova tentativa"} — {dlg.row.name}</h2>
             {dlg.kind === "pin" ? (
               <label className="block text-sm font-bold">Novo PIN (opcional — vazio gera automaticamente)<input autoFocus className="input mt-1 font-mono" inputMode="numeric" maxLength={6} value={dlgVal} onChange={(e) => setDlgVal(e.target.value.replace(/\D/g, ""))} /></label>
-            ) : (<>
+            ) : dlg.kind === "delete" ? (<>
+              <Notice kind="warn">Isto apaga <b>para sempre</b> o aluno, as tentativas e as respostas dele. <b>Não dá para desfazer.</b> Se você só quer impedir o acesso por um tempo, use &quot;Desativar&quot;.</Notice>
+              <label className="block text-sm font-bold">Para confirmar, digite EXCLUIR<input autoFocus className="input mt-1 font-mono" value={dlgVal} onChange={(e) => setDlgVal(e.target.value)} autoComplete="off" /></label>
+            </>) : (<>
               <Notice kind="warn">A tentativa atual ({statusLabel(dlg.row.status)}, {dlg.row.points ?? 0} pts) será arquivada no histórico e o aluno poderá refazer o mapa. Esta ação é registrada.</Notice>
               <label className="block text-sm font-bold">Motivo (opcional)<input className="input mt-1" value={dlgVal} onChange={(e) => setDlgVal(e.target.value)} maxLength={200} /></label>
               <label className="flex items-center gap-2 text-sm font-bold"><input type="checkbox" checked={dlgOk} onChange={(e) => setDlgOk(e.target.checked)} className="h-5 w-5" /> Confirmo que quero liberar uma nova tentativa.</label>
             </>)}
             {dlgErr && <ErrorBox message={dlgErr} />}
-            <div className="flex justify-end gap-2"><button className="btn btn-ghost btn-sm" onClick={() => setDlg(null)}>Cancelar</button><button className="btn btn-primary btn-sm" disabled={dlg.kind === "attempt" && !dlgOk} onClick={runDlg}>Confirmar</button></div>
+            <div className="flex justify-end gap-2"><button className="btn btn-ghost btn-sm" onClick={() => setDlg(null)}>Cancelar</button><button className="btn btn-primary btn-sm" disabled={(dlg.kind === "attempt" && !dlgOk) || (dlg.kind === "delete" && dlgVal.trim().toUpperCase() !== "EXCLUIR")} onClick={runDlg}>{dlg.kind === "delete" ? "Excluir definitivamente" : "Confirmar"}</button></div>
           </div>
         </div>
       )}

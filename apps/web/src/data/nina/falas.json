@@ -4,6 +4,7 @@
   "falas": [
     {
       "id": "mapa_1.1",
+      "publico": "8",
       "tela": "Atividade — introdução do tema 1",
       "contexto": "Introdução do Tema 1 — Cidadania Financeira.",
       "texto": "Tema 1: **cidadania financeira**. Direitos, deveres e escolhas que afetam todos.",
@@ -15,6 +16,7 @@
     },
     {
       "id": "mapa_2.1",
+      "publico": "8",
       "tela": "Atividade — introdução do tema 2",
       "contexto": "Introdução do Tema 2 — Ética Financeira.",
       "texto": "Tema 2: **ética financeira**. Honestidade vale mais que qualquer lucro.",
@@ -26,6 +28,7 @@
     },
     {
       "id": "mapa_3.1",
+      "publico": "8",
       "tela": "Atividade — introdução do tema 3",
       "contexto": "Introdução do Tema 3 — Segurança Digital e Privacidade.",
       "texto": "Tema 3: **segurança digital**. Desconfie de pressa, links e pedidos de código.",
@@ -37,6 +40,7 @@
     },
     {
       "id": "mapa_4.1",
+      "publico": "8",
       "tela": "Atividade — introdução do tema 4",
       "contexto": "Introdução do Tema 4 — Consumo Consciente e Matemática.",
       "texto": "Tema 4: **consumo consciente**. Faça as contas antes de se empolgar com promoção.",
@@ -48,6 +52,7 @@
     },
     {
       "id": "acerto.1",
+      "publico": "geral",
       "tela": "Atividade — logo após confirmar (pontuação alta)",
       "contexto": "Resposta com pontuação alta (config minAcerto).",
       "texto": "Mandou bem! Boa escolha.",
@@ -59,6 +64,7 @@
     },
     {
       "id": "acerto.2",
+      "publico": "geral",
       "tela": "Atividade — logo após confirmar (pontuação alta)",
       "contexto": "Resposta com pontuação alta (config minAcerto).",
       "texto": "Isso aí! Pensou com cuidado.",
@@ -70,6 +76,7 @@
     },
     {
       "id": "acerto.3",
+      "publico": "geral",
       "tela": "Atividade — logo após confirmar (pontuação alta)",
       "contexto": "Resposta com pontuação alta (config minAcerto).",
       "texto": "Boa! Seguimos para o próximo.",
@@ -81,6 +88,7 @@
     },
     {
       "id": "parcial.1",
+      "publico": "geral",
       "tela": "Atividade — logo após confirmar (pontuação média)",
       "contexto": "Resposta com pontuação intermediária.",
       "texto": "Tem coisa boa aí! Dá para pensar ainda mais.",
@@ -92,6 +100,7 @@
     },
     {
       "id": "parcial.2",
+      "publico": "geral",
       "tela": "Atividade — logo após confirmar (pontuação média)",
       "contexto": "Resposta com pontuação intermediária.",
       "texto": "Foi um bom caminho. Vamos ao próximo!",
@@ -103,6 +112,7 @@
     },
     {
       "id": "erro.1",
+      "publico": "geral",
       "tela": "Atividade — logo após confirmar (pontuação baixa)",
       "contexto": "Resposta com pontuação baixa.",
       "texto": "Essa não foi a melhor. Sem problema, o próximo é uma nova chance.",
@@ -114,6 +124,7 @@
     },
     {
       "id": "erro.2",
+      "publico": "geral",
       "tela": "Atividade — logo após confirmar (pontuação baixa)",
       "contexto": "Resposta com pontuação baixa.",
       "texto": "Errar aqui é melhor que errar com **dinheiro de verdade**.",
@@ -125,6 +136,7 @@
     },
     {
       "id": "parado.1",
+      "publico": "geral",
       "tela": "Atividade — 30 s sem responder",
       "contexto": "Aluno parado na mesma pergunta por segundosParado.",
       "texto": "Tá difícil? Respira e **releia o enunciado** com calma.",
@@ -136,6 +148,7 @@
     },
     {
       "id": "parado.2",
+      "publico": "geral",
       "tela": "Atividade — 30 s sem responder",
       "contexto": "Aluno parado na mesma pergunta por segundosParado.",
       "texto": "Compare as opções uma a uma: qual cuida melhor do dinheiro?",
@@ -147,6 +160,7 @@
     },
     {
       "id": "fase_concluida.1",
+      "publico": "geral",
       "tela": "Resultado do tema",
       "contexto": "Mapa concluído (tela de resultado).",
       "texto": "Tema concluído! Que jornada!",
@@ -158,6 +172,7 @@
     },
     {
       "id": "fase_concluida.2",
+      "publico": "geral",
       "tela": "Resultado do tema",
       "contexto": "Mapa concluído (tela de resultado).",
       "texto": "Missão cumprida! Bora para o próximo tema?",
@@ -169,6 +184,7 @@
     },
     {
       "id": "vitoria.1",
+      "publico": "geral",
       "tela": "Resultado do último tema",
       "contexto": "Concluiu o último mapa (Mapa 4).",
       "texto": "VOCÊ CHEGOU AO FIM! Todos os temas concluídos!",
@@ -180,6 +196,7 @@
     },
     {
       "id": "vitoria.2",
+      "publico": "geral",
       "tela": "Resultado do último tema",
       "contexto": "Concluiu o último mapa (Mapa 4).",
       "texto": "Na vida real é igual: **pense antes de gastar** e cuide do seu dinheiro.",
@@ -190,7 +207,20 @@
       "inativa": false
     },
     {
+      "id": "sem_temas.1",
+      "publico": "geral",
+      "tela": "Mapas — série sem temas publicados (\"Seus temas chegam em breve!\")",
+      "contexto": "Aluno cuja série ainda não tem temas publicados (tela 'Seus temas chegam em breve').",
+      "texto": "Seus temas chegam em breve! Quando estiverem prontos, eles aparecem aqui.",
+      "emocao": "alegria",
+      "animacao": "happy",
+      "grupo": "sem_temas",
+      "sorteio": false,
+      "inativa": false
+    },
+    {
       "id": "tutorial.primeiros-passos.abertura-1",
+      "publico": "geral",
       "tela": "Tutorial (mapas e atividade)",
       "contexto": "etapa \"abertura-1\"",
       "texto": "Oiê! Que alegria ter você aqui.",
@@ -199,6 +229,7 @@
     },
     {
       "id": "tutorial.primeiros-passos.abertura-2",
+      "publico": "geral",
       "tela": "Tutorial (mapas e atividade)",
       "contexto": "etapa \"abertura-2\"",
       "texto": "Eu sou a **Nina**, sua amiga e guia nesta incrível aventura pelo mundo da educação financeira.",
@@ -207,6 +238,7 @@
     },
     {
       "id": "tutorial.primeiros-passos.abertura-3",
+      "publico": "geral",
       "tela": "Tutorial (mapas e atividade)",
       "contexto": "etapa \"abertura-3\"",
       "texto": "Seja muito bem-vindo ao **Financity**.",
@@ -215,6 +247,7 @@
     },
     {
       "id": "tutorial.primeiros-passos.abertura-4",
+      "publico": "geral",
       "tela": "Tutorial (mapas e atividade)",
       "contexto": "etapa \"abertura-4\"",
       "texto": "Você já parou para pensar em como pequenas decisões podem transformar o seu futuro?",
@@ -223,6 +256,7 @@
     },
     {
       "id": "tutorial.primeiros-passos.abertura-5",
+      "publico": "geral",
       "tela": "Tutorial (mapas e atividade)",
       "contexto": "etapa \"abertura-5\"",
       "texto": "Pois é. Às vezes, uma escolha que parece simples pode fazer uma diferença enorme na nossa vida. E é exatamente isso que vamos descobrir juntos.",
@@ -231,6 +265,7 @@
     },
     {
       "id": "tutorial.primeiros-passos.abertura-6",
+      "publico": "geral",
       "tela": "Tutorial (mapas e atividade)",
       "contexto": "etapa \"abertura-6\"",
       "texto": "Aqui no Financity, você vai aprender a cuidar do seu dinheiro, planejar seus sonhos, entender como funcionam os investimentos e descobrir os desafios de administrar uma empresa.",
@@ -239,6 +274,7 @@
     },
     {
       "id": "tutorial.primeiros-passos.abertura-7",
+      "publico": "geral",
       "tela": "Tutorial (mapas e atividade)",
       "contexto": "etapa \"abertura-7\"",
       "texto": "Mas calma, não precisa saber tudo agora. Eu vou estar aqui para ajudar você em cada etapa dessa jornada.",
@@ -247,6 +283,7 @@
     },
     {
       "id": "tutorial.primeiros-passos.abertura-8",
+      "publico": "geral",
       "tela": "Tutorial (mapas e atividade)",
       "contexto": "etapa \"abertura-8\"",
       "texto": "Afinal, o mais importante não é acertar tudo de primeira, mas compreender o que estamos aprendendo. Agora me conta, você está preparado para começar essa aventura?",
@@ -255,6 +292,7 @@
     },
     {
       "id": "tutorial.primeiros-passos.abertura-9",
+      "publico": "geral",
       "tela": "Tutorial (mapas e atividade)",
       "contexto": "etapa \"abertura-9\"",
       "texto": "Eu estou super animada. Então vamos lá. Respire fundo, prepare suas ideias e venha comigo explorar o incrível mundo da educação financeira.",
@@ -263,6 +301,7 @@
     },
     {
       "id": "tutorial.primeiros-passos.mapas",
+      "publico": "geral",
       "tela": "Tutorial (mapas e atividade)",
       "contexto": "etapa \"mapas\"",
       "texto": "São **4 temas**, com 8 desafios cada. Eles abrem um de cada vez, em ordem.",
@@ -271,6 +310,7 @@
     },
     {
       "id": "tutorial.primeiros-passos.entrar",
+      "publico": "geral",
       "tela": "Tutorial (mapas e atividade)",
       "contexto": "etapa \"entrar\"",
       "texto": "Vamos começar? **Clique** em entrar no tema 1.",
@@ -279,6 +319,7 @@
     },
     {
       "id": "tutorial.primeiros-passos.entrar.ok",
+      "publico": "geral",
       "tela": "Tutorial (mapas e atividade)",
       "contexto": "reação depois da ação (etapa \"entrar\")",
       "texto": "Boa! Agora vamos para o desafio.",
@@ -287,6 +328,7 @@
     },
     {
       "id": "tutorial.primeiros-passos.comecar",
+      "publico": "geral",
       "tela": "Tutorial (mapas e atividade)",
       "contexto": "etapa \"comecar\"",
       "texto": "Leia a introdução e clique em **Começar aventura**.",
@@ -295,6 +337,7 @@
     },
     {
       "id": "tutorial.primeiros-passos.comecar.ok",
+      "publico": "geral",
       "tela": "Tutorial (mapas e atividade)",
       "contexto": "reação depois da ação (etapa \"comecar\")",
       "texto": "Isso! Primeiro desafio na tela.",
@@ -303,6 +346,7 @@
     },
     {
       "id": "tutorial.primeiros-passos.opcoes",
+      "publico": "geral",
       "tela": "Tutorial (mapas e atividade)",
       "contexto": "etapa \"opcoes\"",
       "texto": "Leia a situação e **escolha** a alternativa que você acha mais adequada.",
@@ -311,6 +355,7 @@
     },
     {
       "id": "tutorial.primeiros-passos.opcoes.ok",
+      "publico": "geral",
       "tela": "Tutorial (mapas e atividade)",
       "contexto": "reação depois da ação (etapa \"opcoes\")",
       "texto": "Ótimo! Você pode mudar de ideia até confirmar.",
@@ -319,6 +364,7 @@
     },
     {
       "id": "tutorial.primeiros-passos.confirmar",
+      "publico": "geral",
       "tela": "Tutorial (mapas e atividade)",
       "contexto": "etapa \"confirmar\"",
       "texto": "Quando tiver certeza, **confirme**. Depois disso a resposta não muda.",
@@ -327,6 +373,7 @@
     },
     {
       "id": "tutorial.primeiros-passos.confirmar.ok",
+      "publico": "geral",
       "tela": "Tutorial (mapas e atividade)",
       "contexto": "reação depois da ação (etapa \"confirmar\")",
       "texto": "Resposta registrada! Você já sabe o caminho.",
@@ -335,6 +382,7 @@
     },
     {
       "id": "tutorial.primeiros-passos.tchau",
+      "publico": "geral",
       "tela": "Tutorial (mapas e atividade)",
       "contexto": "etapa \"tchau\"",
       "texto": "Eu sou a **Nina** e estarei ao seu lado nessa jornada. Até já, futuro empreendedor.",
@@ -343,6 +391,7 @@
     },
     {
       "id": "guia.sem-pressa",
+      "publico": "geral",
       "tela": "Tutorial — plano B (tempo-limite)",
       "contexto": "aparece se o aluno demora numa etapa que espera uma ação",
       "texto": "Sem pressa! Se quiser, pode continuar sem fazer isso agora.",

@@ -2,7 +2,7 @@ import "server-only";
 import { cookies } from "next/headers";
 import { callApi } from "./gateway";
 
-export type SessionUser = { role: "student" | "teacher"; name: string };
+export type SessionUser = { role: "student" | "teacher"; name: string; serie?: number };
 
 /** Sessão do usuário, lida da API (o banco fica na VPS; aqui só chega o papel e o nome). */
 export async function getSession(): Promise<SessionUser | null> {

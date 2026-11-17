@@ -157,6 +157,24 @@ export async function resetPin(studentId: number, teacherId: number, pin?: strin
   return p;
 }
 
+/**
+ * Exclui alunos DEFINITIVAMENTE (LGPD): tentativas, respostas, sessões e registros do histórico ligados ao aluno, e o próprio cadastro.
+ * Só alunos das turmas do professor. Tudo-ou-nada. O registro da ação não guarda nome, usuário nem PIN. Não dá para desfazer.
+ */
+export async function deleteStudents(ids: number[], teacherId: number): Promise<{ deleted: number }> {
+  const lista = [...new Set(ids)].slice(0, 200);
+  for (const id of lista) await assertTeacherStudent(teacherId, id); // 404 se algum não for do professor: nada é apagado
+  await tx(async (c) => {
+    await q("DELETE FROM answers WHERE attempt_id IN (SELECT id FROM attempts WHERE student_id = ANY($1::int[]))", [lista], c);
+    await q("DELETE FROM attempts WHERE student_id = ANY($1::int[])", [lista], c);
+    await q("DELETE FROM sessions WHERE role='student' AND user_id = ANY($1::int[])", [lista], c);
+    await q("DELETE FROM admin_log WHERE student_id = ANY($1::int[])", [lista], c);
+    await q("DELETE FROM students WHERE id = ANY($1::int[])", [lista], c);
+    await log(teacherId, "excluir_aluno", null, `${lista.length} aluno(s) excluído(s) definitivamente`, c);
+  });
+  return { deleted: lista.length };
+}
+
 export async function setActive(studentId: number, active: boolean, teacherId: number) {
   await assertTeacherStudent(teacherId, studentId);
   await q("UPDATE students SET active=$1 WHERE id=$2", [active ? 1 : 0, studentId]);
@@ -184,16 +202,17 @@ export async function releaseNewAttempt(studentId: number, teacherId: number, re
   });
 }
 
-export async function listStudents(teacherId: number, text: string, classId: number | null, scope: "real" | "demo" | "all") {
+export async function listStudents(teacherId: number, text: string, classId: number | null, scope: "real" | "demo" | "all", serie: number | null = null) {
   const w = new W();
   ownedStudents(w, teacherId);
   if (scope === "real") w.add("s.is_demo=0");
   if (scope === "demo") w.add("s.is_demo=1");
   if (classId) w.add("s.class_id=?", classId);
+  if (serie) w.add("s.serie=?", serie);
   if (text) w.add("(s.full_name ILIKE ? OR s.username ILIKE ?)", `%${text}%`, `%${text}%`);
   const pin = w.param(NO_PIN_HASH);
   return q(
-    `SELECT s.id,s.full_name name,s.username,s.active,s.is_demo demo,c.name "className",(s.pin_hash=${pin})::int pending,a.status,a.total_points points
+    `SELECT s.id,s.full_name name,s.username,s.active,s.is_demo demo,s.serie,c.name "className",(s.pin_hash=${pin})::int pending,a.status,a.total_points points
      FROM students s LEFT JOIN classes c ON c.id=s.class_id
      LEFT JOIN assessments fa ON fa.grade=c.grade AND fa.sort=(SELECT MIN(sort) FROM assessments WHERE grade=c.grade)
      LEFT JOIN attempts a ON a.student_id=s.id AND a.assessment_id=fa.id AND a.status<>'voided'

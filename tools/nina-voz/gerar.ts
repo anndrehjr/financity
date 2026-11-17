@@ -13,6 +13,8 @@ const manifesto = JSON.parse(fs.readFileSync(path.join(web, "public", "guia", "n
 const cfg = JSON.parse(fs.readFileSync(path.join(raiz, "blocos.json"), "utf8")) as { pausa: string; config: string; blocos: { arquivo: string; titulo: string; falas: { id: string; falado: string }[] }[] };
 
 const pendentes = catalogo.filter((f) => !f.inativa && !manifesto.falas[f.id]).map((f) => f.id).sort();
+// só entram nos arquivos as falas que AINDA não têm áudio
+cfg.blocos = cfg.blocos.map((b) => ({ ...b, falas: b.falas.filter((f) => !manifesto.falas[f.id]) })).filter((b) => b.falas.length > 0);
 const nosBlocos = cfg.blocos.flatMap((b) => b.falas.map((f) => f.id));
 const sobram = nosBlocos.filter((i) => !catalogo.some((c) => c.id === i));
 const faltam = pendentes.filter((i) => !nosBlocos.includes(i));
@@ -22,6 +24,7 @@ for (const b of cfg.blocos) if (b.falas.length > 10) { console.error(`${b.arquiv
 
 const PAUSA = ` <break time="${cfg.pausa}" />`;
 fs.mkdirSync(path.join(raiz, "blocos"), { recursive: true });
+for (const velho of fs.readdirSync(path.join(raiz, "blocos"))) fs.rmSync(path.join(raiz, "blocos", velho)); // só ficam os blocos pendentes
 fs.mkdirSync(path.join(raiz, "origem", "geradas"), { recursive: true });
 for (const f of fs.readdirSync(raiz)) if (/^PARA-GERAR-(UNICO|PARTE)/.test(f)) fs.rmSync(path.join(raiz, f));
 fs.rmSync(path.join(raiz, "ordem-geracao.json"), { force: true });
@@ -30,7 +33,7 @@ let md = `# Falas para gerar na ElevenLabs — 3 blocos (modo manual)\n\nGerado 
 let total = 0;
 for (const [i, b] of cfg.blocos.entries()) {
   const texto = b.falas.map((f, k) => f.falado + (k < b.falas.length - 1 ? PAUSA : "")).join("\n");
-  fs.writeFileSync(path.join(raiz, "blocos", `nina-bloco-${i + 1}.txt`), texto + "\n");
+  fs.writeFileSync(path.join(raiz, "blocos", b.arquivo.replace(/.mp3$/, ".txt")), texto + "\n");
   total += b.falas.reduce((s, f) => s + f.falado.length, 0);
   md += `\n## Bloco ${i + 1} — ${b.titulo} → \`${b.arquivo}\` (${b.falas.length} falas, ${b.falas.reduce((s, f) => s + f.falado.length, 0)} caracteres)\n\n| posição | id (arquivo final) | texto falado | legenda no site |\n|---|---|---|---|\n`;
   b.falas.forEach((f, k) => { md += `| ${k + 1} | ${f.id} | ${f.falado} | ${catalogo.find((c) => c.id === f.id)!.texto.replace(/\*\*/g, "")} |\n`; });
