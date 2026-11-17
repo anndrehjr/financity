@@ -49,8 +49,8 @@ export default function Page() {
           <section className="grid gap-4 md:grid-cols-2">
             <div><h2 className="font-display text-lg font-extrabold">Distribuição de pontuações</h2>
               <ResponsiveContainer width="100%" height={200}><BarChart data={data.distribution}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="label" /><YAxis allowDecimals={false} /><Tooltip /><Bar dataKey="alunos" name="Alunos" fill="#0ea5e9" isAnimationActive={false} /></BarChart></ResponsiveContainer></div>
-            <div><h2 className="font-display text-lg font-extrabold">Média por questão (0 a 5)</h2>
-              <ResponsiveContainer width="100%" height={200}><BarChart data={data.questions.map((x) => ({ name: `Q${x.number}`, media: x.avg ?? 0 }))}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="name" /><YAxis domain={[0, 5]} ticks={[0, 1, 2, 3, 4, 5]} /><Tooltip /><Bar dataKey="media" name="Média" fill="#7c3aed" isAnimationActive={false} /></BarChart></ResponsiveContainer></div>
+            <div><h2 className="font-display text-lg font-extrabold">Média de pontos por questão</h2>
+              <ResponsiveContainer width="100%" height={200}><BarChart data={data.questions.map((x) => ({ name: `Q${x.number}`, media: x.avg ?? 0 }))}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="name" /><YAxis domain={[0, "dataMax"]} allowDecimals={false} /><Tooltip /><Bar dataKey="media" name="Média" fill="#7c3aed" isAnimationActive={false} /></BarChart></ResponsiveContainer></div>
           </section>
           <section className="overflow-x-auto" tabIndex={0}><h2 className="font-display text-lg font-extrabold">Desempenho por questão</h2>
             <table className="w-full min-w-[560px]"><thead><tr className="border-b"><th className="th">Questão</th><th className="th">Tema</th><th className="th">Respostas</th><th className="th">Média</th><th className="th">Índice</th><th className="th">5 pts</th><th className="th">0 pts</th></tr></thead>
