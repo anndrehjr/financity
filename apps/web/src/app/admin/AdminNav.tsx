@@ -9,6 +9,7 @@ const ITEMS = [
   { href: "/admin/alunos", label: "Alunos" },
   { href: "/admin/presenca", label: "Presença" },
   { href: "/admin/questoes/1", label: "Questões" },
+  { href: "/admin/ranking", label: "Ranking" },
   { href: "/admin/relatorios", label: "Relatórios" },
   { href: "/admin/config", label: "Configurações" },
 ];
