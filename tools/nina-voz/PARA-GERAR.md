@@ -1,178 +1,44 @@
-# Falas para gerar na ElevenLabs (modo manual)
+# Falas para gerar na ElevenLabs — arquivo único (modo manual)
 
-Gerado por `npx tsx tools/nina-voz/gerar.ts`. O site **não** chama a ElevenLabs: você gera aqui, baixa os MP3 e salva no seu computador.
+Gerado por `npx tsx tools/nina-voz/gerar.ts`. O site **não** chama a ElevenLabs.
 
 ## Configuração (igual à gravação original)
-Modelo: **Eleven Multilingual v2** · Voz: **sylphiette** · Velocidade **0,96** · Estabilidade **57** · Similaridade **75** · Exagero de estilo **0** · Speaker boost **ligado**
+Modelo **Eleven Multilingual v2** · Voz **sylphiette** · Velocidade **0,96** · Estabilidade **57** · Similaridade **75** · Exagero de estilo **0** · Speaker boost **ligado**
 
-## Como fazer
-1. Abra o *Text to Speech* da ElevenLabs, escolha a voz **sylphiette** e ajuste a configuração acima.
-2. Para **cada fala** da lista abaixo: cole o texto da caixa, clique em *Generate*, ouça e baixe o MP3.
-3. Salve cada MP3 em `tools/nina-voz/origem/geradas/` com o **nome exato do id** (ex.: `acerto.1.mp3`).
-4. Se não gostar de uma, gere de novo só aquela (gasta créditos de novo).
-5. Quando terminar, me avise: eu normalizo o volume, corto o silêncio, gero o manifesto e publico.
+## Como fazer (1 geração só)
+1. Abra o arquivo `PARA-GERAR-UNICO.txt` (nesta pasta) e **copie todo o texto**.
+2. No *Text to Speech* da ElevenLabs, com a configuração acima, **cole tudo** e clique em *Generate*. (1373 caracteres; o limite por geração é 2500.)
+3. Ouça. Se a voz **ler em voz alta** as marcas `<break ... />`, use o arquivo `PARA-GERAR-UNICO-sem-pausas.txt` no lugar.
+4. Baixe o MP3 e salve em `tools/nina-voz/origem/geradas/` com o nome `todas.mp3`.
+5. Me avise. Eu transcrevo, corto cada fala no lugar certo, normalizo o volume e mostro uma tabela (fala × trecho) para você aprovar antes de publicar.
 
-## Resumo
-- Falas a gerar: **27** · caracteres: **1373** (plano gratuito ≈ 10.000 créditos/mês, 1 caractere ≈ 1 crédito).
-- Já têm áudio (gravação original): 10.
-
-## Lista (uma fala por bloco)
-
-### Atividade — introdução do tema 1
-
-**mapa_1.1** — emoção: alegria — 76 caracteres — salvar como `mapa_1.1.mp3`
-```text
-Tema 1: cidadania financeira. Direitos, deveres e escolhas que afetam todos.
-```
-
-### Atividade — introdução do tema 2
-
-**mapa_2.1** — emoção: curiosidade — 67 caracteres — salvar como `mapa_2.1.mp3`
-```text
-Tema 2: ética financeira. Honestidade vale mais que qualquer lucro.
-```
-
-### Atividade — introdução do tema 3
-
-**mapa_3.1** — emoção: incentivo — 74 caracteres — salvar como `mapa_3.1.mp3`
-```text
-Tema 3: segurança digital. Desconfie de pressa, links e pedidos de código.
-```
-
-### Atividade — introdução do tema 4
-
-**mapa_4.1** — emoção: curiosidade — 77 caracteres — salvar como `mapa_4.1.mp3`
-```text
-Tema 4: consumo consciente. Faça as contas antes de se empolgar com promoção.
-```
-
-### Atividade — logo após confirmar (pontuação alta)
-
-**acerto.1** — emoção: comemoracao — 24 caracteres — salvar como `acerto.1.mp3`
-```text
-Mandou bem! Boa escolha.
-```
-
-**acerto.2** — emoção: comemoracao — 28 caracteres — salvar como `acerto.2.mp3`
-```text
-Isso aí! Pensou com cuidado.
-```
-
-**acerto.3** — emoção: alegria — 29 caracteres — salvar como `acerto.3.mp3`
-```text
-Boa! Seguimos para o próximo.
-```
-
-### Atividade — logo após confirmar (pontuação média)
-
-**parcial.1** — emoção: curiosidade — 44 caracteres — salvar como `parcial.1.mp3`
-```text
-Tem coisa boa aí! Dá para pensar ainda mais.
-```
-
-**parcial.2** — emoção: alegria — 37 caracteres — salvar como `parcial.2.mp3`
-```text
-Foi um bom caminho. Vamos ao próximo!
-```
-
-### Atividade — logo após confirmar (pontuação baixa)
-
-**erro.1** — emoção: curiosidade — 65 caracteres — salvar como `erro.1.mp3`
-```text
-Essa não foi a melhor. Sem problema, o próximo é uma nova chance.
-```
-
-**erro.2** — emoção: incentivo — 54 caracteres — salvar como `erro.2.mp3`
-```text
-Errar aqui é melhor que errar com dinheiro de verdade.
-```
-
-### Atividade — 30 s sem responder
-
-**parado.1** — emoção: curiosidade — 51 caracteres — salvar como `parado.1.mp3`
-```text
-Tá difícil? Respira e releia o enunciado com calma.
-```
-
-**parado.2** — emoção: curiosidade — 59 caracteres — salvar como `parado.2.mp3`
-```text
-Compare as opções uma a uma: qual cuida melhor do dinheiro?
-```
-
-### Resultado do tema
-
-**fase_concluida.1** — emoção: comemoracao — 28 caracteres — salvar como `fase_concluida.1.mp3`
-```text
-Tema concluído! Que jornada!
-```
-
-**fase_concluida.2** — emoção: comemoracao — 42 caracteres — salvar como `fase_concluida.2.mp3`
-```text
-Missão cumprida! Bora para o próximo tema?
-```
-
-### Resultado do último tema
-
-**vitoria.1** — emoção: comemoracao — 46 caracteres — salvar como `vitoria.1.mp3`
-```text
-VOCÊ CHEGOU AO FIM! Todos os temas concluídos!
-```
-
-**vitoria.2** — emoção: alegria — 68 caracteres — salvar como `vitoria.2.mp3`
-```text
-Na vida real é igual: pense antes de gastar e cuide do seu dinheiro.
-```
-
-### Tutorial (mapas e atividade)
-
-**tutorial.primeiros-passos.mapas** — emoção: explicacao — 70 caracteres — salvar como `tutorial.primeiros-passos.mapas.mp3`
-```text
-São 4 temas, com 8 desafios cada. Eles abrem um de cada vez, em ordem.
-```
-
-**tutorial.primeiros-passos.entrar** — emoção: explicacao — 42 caracteres — salvar como `tutorial.primeiros-passos.entrar.mp3`
-```text
-Vamos começar? Clique em entrar no tema 1.
-```
-
-**tutorial.primeiros-passos.entrar.ok** — emoção: comemoracao — 32 caracteres — salvar como `tutorial.primeiros-passos.entrar.ok.mp3`
-```text
-Boa! Agora vamos para o desafio.
-```
-
-**tutorial.primeiros-passos.comecar** — emoção: explicacao — 47 caracteres — salvar como `tutorial.primeiros-passos.comecar.mp3`
-```text
-Leia a introdução e clique em Começar aventura.
-```
-
-**tutorial.primeiros-passos.comecar.ok** — emoção: comemoracao — 31 caracteres — salvar como `tutorial.primeiros-passos.comecar.ok.mp3`
-```text
-Isso! Primeiro desafio na tela.
-```
-
-**tutorial.primeiros-passos.opcoes** — emoção: curiosidade — 68 caracteres — salvar como `tutorial.primeiros-passos.opcoes.mp3`
-```text
-Leia a situação e escolha a alternativa que você acha mais adequada.
-```
-
-**tutorial.primeiros-passos.opcoes.ok** — emoção: alegria — 46 caracteres — salvar como `tutorial.primeiros-passos.opcoes.ok.mp3`
-```text
-Ótimo! Você pode mudar de ideia até confirmar.
-```
-
-**tutorial.primeiros-passos.confirmar** — emoção: explicacao — 65 caracteres — salvar como `tutorial.primeiros-passos.confirmar.mp3`
-```text
-Quando tiver certeza, confirme. Depois disso a resposta não muda.
-```
-
-**tutorial.primeiros-passos.confirmar.ok** — emoção: comemoracao — 44 caracteres — salvar como `tutorial.primeiros-passos.confirmar.ok.mp3`
-```text
-Resposta registrada! Você já sabe o caminho.
-```
-
-### Tutorial — plano B (tempo-limite)
-
-**guia.sem-pressa** — emoção: incentivo — 59 caracteres — salvar como `guia.sem-pressa.mp3`
-```text
-Sem pressa! Se quiser, pode continuar sem fazer isso agora.
-```
+## Ordem das falas dentro do áudio (27 falas, 1373 caracteres)
+| # | id | tela | texto |
+|---|---|---|---|
+| 1 | mapa_1.1 | Atividade — introdução do tema 1 | Tema 1: cidadania financeira. Direitos, deveres e escolhas que afetam todos. |
+| 2 | mapa_2.1 | Atividade — introdução do tema 2 | Tema 2: ética financeira. Honestidade vale mais que qualquer lucro. |
+| 3 | mapa_3.1 | Atividade — introdução do tema 3 | Tema 3: segurança digital. Desconfie de pressa, links e pedidos de código. |
+| 4 | mapa_4.1 | Atividade — introdução do tema 4 | Tema 4: consumo consciente. Faça as contas antes de se empolgar com promoção. |
+| 5 | acerto.1 | Atividade — logo após confirmar (pontuação alta) | Mandou bem! Boa escolha. |
+| 6 | acerto.2 | Atividade — logo após confirmar (pontuação alta) | Isso aí! Pensou com cuidado. |
+| 7 | acerto.3 | Atividade — logo após confirmar (pontuação alta) | Boa! Seguimos para o próximo. |
+| 8 | parcial.1 | Atividade — logo após confirmar (pontuação média) | Tem coisa boa aí! Dá para pensar ainda mais. |
+| 9 | parcial.2 | Atividade — logo após confirmar (pontuação média) | Foi um bom caminho. Vamos ao próximo! |
+| 10 | erro.1 | Atividade — logo após confirmar (pontuação baixa) | Essa não foi a melhor. Sem problema, o próximo é uma nova chance. |
+| 11 | erro.2 | Atividade — logo após confirmar (pontuação baixa) | Errar aqui é melhor que errar com dinheiro de verdade. |
+| 12 | parado.1 | Atividade — 30 s sem responder | Tá difícil? Respira e releia o enunciado com calma. |
+| 13 | parado.2 | Atividade — 30 s sem responder | Compare as opções uma a uma: qual cuida melhor do dinheiro? |
+| 14 | fase_concluida.1 | Resultado do tema | Tema concluído! Que jornada! |
+| 15 | fase_concluida.2 | Resultado do tema | Missão cumprida! Bora para o próximo tema? |
+| 16 | vitoria.1 | Resultado do último tema | VOCÊ CHEGOU AO FIM! Todos os temas concluídos! |
+| 17 | vitoria.2 | Resultado do último tema | Na vida real é igual: pense antes de gastar e cuide do seu dinheiro. |
+| 18 | tutorial.primeiros-passos.mapas | Tutorial (mapas e atividade) | São 4 temas, com 8 desafios cada. Eles abrem um de cada vez, em ordem. |
+| 19 | tutorial.primeiros-passos.entrar | Tutorial (mapas e atividade) | Vamos começar? Clique em entrar no tema 1. |
+| 20 | tutorial.primeiros-passos.entrar.ok | Tutorial (mapas e atividade) | Boa! Agora vamos para o desafio. |
+| 21 | tutorial.primeiros-passos.comecar | Tutorial (mapas e atividade) | Leia a introdução e clique em Começar aventura. |
+| 22 | tutorial.primeiros-passos.comecar.ok | Tutorial (mapas e atividade) | Isso! Primeiro desafio na tela. |
+| 23 | tutorial.primeiros-passos.opcoes | Tutorial (mapas e atividade) | Leia a situação e escolha a alternativa que você acha mais adequada. |
+| 24 | tutorial.primeiros-passos.opcoes.ok | Tutorial (mapas e atividade) | Ótimo! Você pode mudar de ideia até confirmar. |
+| 25 | tutorial.primeiros-passos.confirmar | Tutorial (mapas e atividade) | Quando tiver certeza, confirme. Depois disso a resposta não muda. |
+| 26 | tutorial.primeiros-passos.confirmar.ok | Tutorial (mapas e atividade) | Resposta registrada! Você já sabe o caminho. |
+| 27 | guia.sem-pressa | Tutorial — plano B (tempo-limite) | Sem pressa! Se quiser, pode continuar sem fazer isso agora. |
