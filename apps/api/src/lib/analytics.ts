@@ -213,8 +213,9 @@ export async function questionDetail(number: number, f: Filter) {
     if (!stats.inadequate && !mid[2] && stats.index !== null && stats.index >= 80) diffs.push("Não houve dificuldades relevantes nesta questão com os dados atuais.");
     if (stats.index !== null && stats.index < 60) diffs.push(`Desempenho médio abaixo de 60%: considere retomar ${qq.retake}.`);
   }
+  const total = (await one<{ c: number }>("SELECT COUNT(*)::int c FROM questions WHERE map_id=$1", [cx.mapId]))!.c; // quantas questões o tema tem (a navegação do painel usa isto)
   return {
-    ...stats, prompt: qq.prompt, scenario: qq.scenario, note: qq.note, difficulties: diffs, assessmentId: cx.assessmentId,
+    ...stats, total, prompt: qq.prompt, scenario: qq.scenario, note: qq.note, difficulties: diffs, assessmentId: cx.assessmentId,
     options: opts.map((o) => ({ ...o, count: ans.filter((a) => a.option_id === o.id).length, students: ans.filter((a) => a.option_id === o.id).map((a) => ({ id: a.sid, name: a.full_name, className: a.cname })) })),
   };
 }
