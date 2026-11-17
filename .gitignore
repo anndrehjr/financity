@@ -23,3 +23,8 @@ tools/nina-voz/origem/
 tools/nina-voz/.venv/
 tools/nina-voz/trabalho/*
 !tools/nina-voz/trabalho/CORTES-PARA-REVISAO.md
+
+# dados de alunos (menores de idade) e credenciais: NUNCA vao para o repositorio
+dados-alunos/
+**/credenciais*.csv
+**/*credenciais*.csv
