@@ -78,12 +78,12 @@ export default function AtividadeClient({ id }: { id: number }) {
       if (c.reagirAoResultado && !r.completed) guia.falar(reacaoPorPontos((r.earned / Math.max(1, r.questionMax)) * 5, c.minAcerto, c.minParcial));
       setTransition(true);
       await new Promise((r) => setTimeout(r, 1700));
+      await load(); // busca a PRÓXIMA pergunta com a tela de transição ainda ativa: evita a pergunta anterior reaparecer
       setTransition(false);
-      await load();
     } catch (e) {
       setError((e as Error).message);
-      setTransition(false);
       await load(); // ressincroniza (ex.: resposta já registrada)
+      setTransition(false);
     } finally { setBusy(false); }
   }
 

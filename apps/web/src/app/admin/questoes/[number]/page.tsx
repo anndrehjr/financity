@@ -5,7 +5,7 @@ import { ErrorBox, Notice, Spinner, apiFetch, fmt, useApi } from "@/components/u
 import FilterBar, { Scope, qs, useAsm } from "../../FilterBar";
 
 type Detail = {
-  number: number; title: string; theme: string; prompt: string; scenario: string; note: string; n: number; avg: number | null; index: number | null; excellent: number; inadequate: number;
+  number: number; total: number; max: number; title: string; theme: string; prompt: string; scenario: string; note: string; n: number; avg: number | null; index: number | null; excellent: number; inadequate: number;
   intermediate: Record<string, number>; difficulties: string[];
   options: { id: number; letter: string; text: string; points: number; why: string; count: number; students: { id: number; name: string; className: string | null }[] }[];
 };
@@ -27,7 +27,7 @@ export default function Page({ params }: { params: Promise<{ number: string }> }
   return (
     <div className="space-y-4">
       <div className="no-print flex flex-wrap items-end justify-between gap-3">
-        <nav aria-label="Questões" className="flex flex-wrap gap-1">{[1, 2, 3, 4, 5].map((n) => <Link key={n} href={`/admin/questoes/${n}`} aria-current={String(n) === number ? "page" : undefined} className={`btn btn-sm ${String(n) === number ? "btn-primary" : "btn-ghost"}`}>Q{n}</Link>)}</nav>
+        <nav aria-label="Questões" className="flex flex-wrap gap-1">{Array.from({ length: data?.total ?? 8 }, (_, i) => i + 1).map((n) => <Link key={n} href={`/admin/questoes/${n}`} aria-current={String(n) === number ? "page" : undefined} className={`btn btn-sm ${String(n) === number ? "btn-primary" : "btn-ghost"}`}>Q{n}</Link>)}</nav>
         <FilterBar scope={scope} setScope={setScope} cls={cls} setCls={setCls} asm={asm} setAsm={setAsm} />
       </div>
       {loading && !data && <Spinner />}
@@ -42,7 +42,7 @@ export default function Page({ params }: { params: Promise<{ number: string }> }
         </section>
 
         <section className="grid grid-cols-2 gap-3 md:grid-cols-5">
-          {[["Respostas", fmt(data.n)], ["Média de pontos", fmt(data.avg)], ["Índice de desempenho", fmt(data.index, "%")], ["Decisões excelentes (5)", fmt(data.n ? Math.round((data.excellent / data.n) * 100) : null, "%")], ["Decisões inadequadas (0)", fmt(data.n ? Math.round((data.inadequate / data.n) * 100) : null, "%")]].map(([l, v]) => (
+          {[["Respostas", fmt(data.n)], ["Média de pontos", fmt(data.avg)], ["Índice de desempenho", fmt(data.index, "%")], ["Decisões excelentes (pontuação máxima)", fmt(data.n ? Math.round((data.excellent / data.n) * 100) : null, "%")], ["Decisões inadequadas (0)", fmt(data.n ? Math.round((data.inadequate / data.n) * 100) : null, "%")]].map(([l, v]) => (
             <div key={l} className="card p-4"><div className="font-display text-2xl font-extrabold text-city-grape">{v}</div><div className="text-xs font-bold text-slate-600">{l}</div></div>))}
         </section>
         <p className="text-sm text-slate-600">Níveis intermediários: 2 pts = {data.intermediate["2"]}, 3 pts = {data.intermediate["3"]}, 4 pts = {data.intermediate["4"]}.</p>
@@ -58,7 +58,7 @@ export default function Page({ params }: { params: Promise<{ number: string }> }
                 <td className="td">{o.why}</td><td className="td font-bold">{o.count}{data.n ? ` (${Math.round((o.count / data.n) * 100)}%)` : ""}</td>
                 <td className="td">{o.students.length ? o.students.map((s) => <Link key={s.id} href={`/admin/alunos/${s.id}`} className="mr-2 inline-block text-indigo-700 underline">{s.name}</Link>) : "—"}</td></tr>))}</tbody></table>
           <div className="no-print mt-3 space-y-2"><button className="btn btn-primary btn-sm" onClick={save}>Salvar pontuações</button>
-            <p className="text-xs text-slate-600">Cada pergunta vale no máximo 5 pontos (valores inteiros de 0 a 5). Alterações valem para respostas futuras.</p>
+            <p className="text-xs text-slate-600">Esta pergunta vale no máximo {data.max} pontos (valores inteiros de 0 a {data.max}). Alterações valem para respostas futuras.</p>
             {msg && <Notice kind={msg.ok ? "ok" : "warn"}>{msg.t}</Notice>}</div>
         </section>
       </>)}

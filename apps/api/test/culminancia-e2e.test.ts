@@ -124,4 +124,14 @@ describe("Culminância — jogo completo", () => {
     const todas = await call("POST", `/api/game/${id}/answer`, { cookie: s2, body: { questionId: q3.id, optionIds: q3.options.map((o: any) => o.id) } });
     assert.equal(todas.json.earned, 0, "marcar todas = 0");
   });
+
+  it("painel do professor: o detalhe por questão cobre as 8 questões do tema (total = 8) e a 9ª não existe", async () => {
+    const t = cookieOf(await call("POST", "/api/auth/login", { body: { username: "prof.c", password: "Senha-Forte-1!" } }));
+    for (const n of [1, 5, 8]) {
+      const r = await call("GET", `/api/admin/questions/${n}?scope=real`, { cookie: t });
+      assert.equal(r.status, 200, `questão ${n}`);
+      assert.equal(r.json.number, n); assert.equal(r.json.total, 8); assert.ok(r.json.max >= 20, "a questão vale mais de 5 pontos");
+    }
+    assert.equal((await call("GET", "/api/admin/questions/9?scope=real", { cookie: t })).status, 404);
+  });
 });
