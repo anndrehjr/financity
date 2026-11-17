@@ -3,38 +3,141 @@
   "pausa": "1.5s",
   "config": "Voz sylphiette · Multilingual v2 · Velocidade 0,96 · Estabilidade 57 · Similaridade 75 · Estilo 0 · Speaker boost ligado",
   "blocos": [
-    { "arquivo": "nina-bloco-1.mp3", "titulo": "temas e encerramento", "falas": [
-      { "id": "mapa_1.1", "falado": "Tema um: cidadania financeira. Direitos, deveres e escolhas que afetam todos." },
-      { "id": "mapa_2.1", "falado": "Tema dois: ética financeira. Honestidade vale mais que qualquer lucro." },
-      { "id": "mapa_3.1", "falado": "Tema três: segurança digital. Desconfie de pressa, links e pedidos de código." },
-      { "id": "mapa_4.1", "falado": "Tema quatro: consumo consciente. Faça as contas antes de se empolgar com promoção." },
-      { "id": "fase_concluida.1", "falado": "Tema concluído! Que jornada!" },
-      { "id": "fase_concluida.2", "falado": "Missão cumprida! Bora para o próximo tema?" },
-      { "id": "vitoria.1", "falado": "Você chegou ao fim! Todos os temas concluídos!" },
-      { "id": "vitoria.2", "falado": "Na vida real é igual: pense antes de gastar e cuide do seu dinheiro." }
-    ] },
-    { "arquivo": "nina-bloco-2.mp3", "titulo": "reações (acerto, quase, erro, ajuda)", "falas": [
-      { "id": "acerto.1", "falado": "Mandou bem! Boa escolha." },
-      { "id": "acerto.2", "falado": "Isso aí! Pensou com cuidado." },
-      { "id": "acerto.3", "falado": "Boa! Seguimos para o próximo." },
-      { "id": "parcial.1", "falado": "Tem coisa boa aí! Dá para pensar ainda mais." },
-      { "id": "parcial.2", "falado": "Foi um bom caminho. Vamos ao próximo!" },
-      { "id": "erro.1", "falado": "Essa não foi a melhor. Sem problema, o próximo é uma nova chance." },
-      { "id": "erro.2", "falado": "Errar aqui é melhor que errar com dinheiro de verdade." },
-      { "id": "parado.1", "falado": "Tá difícil? Respira e releia o enunciado com calma." },
-      { "id": "parado.2", "falado": "Compare as opções uma a uma: qual cuida melhor do dinheiro?" }
-    ] },
-    { "arquivo": "nina-bloco-3.mp3", "titulo": "tutorial de primeiros passos", "falas": [
-      { "id": "tutorial.primeiros-passos.mapas", "falado": "São quatro temas, com oito desafios cada. Eles abrem um de cada vez, em ordem." },
-      { "id": "tutorial.primeiros-passos.entrar", "falado": "Vamos começar? Clique em entrar no tema um." },
-      { "id": "tutorial.primeiros-passos.entrar.ok", "falado": "Boa! Agora vamos para o desafio." },
-      { "id": "tutorial.primeiros-passos.comecar", "falado": "Leia a introdução e clique em Começar aventura." },
-      { "id": "tutorial.primeiros-passos.comecar.ok", "falado": "Isso! Primeiro desafio na tela." },
-      { "id": "tutorial.primeiros-passos.opcoes", "falado": "Leia a situação e escolha a alternativa que você acha mais adequada." },
-      { "id": "tutorial.primeiros-passos.opcoes.ok", "falado": "Ótimo! Você pode mudar de ideia até confirmar." },
-      { "id": "tutorial.primeiros-passos.confirmar", "falado": "Quando tiver certeza, confirme. Depois disso a resposta não muda." },
-      { "id": "tutorial.primeiros-passos.confirmar.ok", "falado": "Resposta registrada! Você já sabe o caminho." },
-      { "id": "guia.sem-pressa", "falado": "Sem pressa! Se quiser, pode continuar sem fazer isso agora." }
-    ] }
+    {
+      "arquivo": "nina-bloco-1.mp3",
+      "titulo": "temas e encerramento",
+      "falas": [
+        {
+          "id": "mapa_1.1",
+          "falado": "Tema um: cidadania financeira. Direitos, deveres e escolhas que afetam todos."
+        },
+        {
+          "id": "mapa_2.1",
+          "falado": "Tema dois: ética financeira. Honestidade vale mais que qualquer lucro."
+        },
+        {
+          "id": "mapa_3.1",
+          "falado": "Tema três: segurança digital. Desconfie de pressa, links e pedidos de código."
+        },
+        {
+          "id": "mapa_4.1",
+          "falado": "Tema quatro: consumo consciente. Faça as contas antes de se empolgar com promoção."
+        },
+        {
+          "id": "fase_concluida.1",
+          "falado": "Tema concluído! Que jornada!"
+        },
+        {
+          "id": "fase_concluida.2",
+          "falado": "Missão cumprida! Bora para o próximo tema?"
+        },
+        {
+          "id": "vitoria.1",
+          "falado": "Você chegou ao fim! Todos os temas concluídos!"
+        },
+        {
+          "id": "vitoria.2",
+          "falado": "Na vida real é igual: pense antes de gastar e cuide do seu dinheiro."
+        }
+      ]
+    },
+    {
+      "arquivo": "nina-bloco-2.mp3",
+      "titulo": "reações (acerto, quase, erro, ajuda)",
+      "falas": [
+        {
+          "id": "acerto.1",
+          "falado": "Mandou bem! Boa escolha."
+        },
+        {
+          "id": "acerto.2",
+          "falado": "Isso aí! Pensou com cuidado."
+        },
+        {
+          "id": "acerto.3",
+          "falado": "Boa! Seguimos para o próximo."
+        },
+        {
+          "id": "parcial.1",
+          "falado": "Tem coisa boa aí! Dá para pensar ainda mais."
+        },
+        {
+          "id": "parcial.2",
+          "falado": "Foi um bom caminho. Vamos ao próximo!"
+        },
+        {
+          "id": "erro.1",
+          "falado": "Essa não foi a melhor. Sem problema, o próximo é uma nova chance."
+        },
+        {
+          "id": "erro.2",
+          "falado": "Errar aqui é melhor que errar com dinheiro de verdade."
+        },
+        {
+          "id": "parado.1",
+          "falado": "Tá difícil? Respira e releia o enunciado com calma."
+        },
+        {
+          "id": "parado.2",
+          "falado": "Compare as opções uma a uma: qual cuida melhor do dinheiro?"
+        }
+      ]
+    },
+    {
+      "arquivo": "nina-bloco-3.mp3",
+      "titulo": "tutorial de primeiros passos",
+      "falas": [
+        {
+          "id": "tutorial.primeiros-passos.mapas",
+          "falado": "São quatro temas, com oito desafios cada. Eles abrem um de cada vez, em ordem."
+        },
+        {
+          "id": "tutorial.primeiros-passos.entrar",
+          "falado": "Vamos começar? Clique em entrar no tema um."
+        },
+        {
+          "id": "tutorial.primeiros-passos.entrar.ok",
+          "falado": "Boa! Agora vamos para o desafio."
+        },
+        {
+          "id": "tutorial.primeiros-passos.comecar",
+          "falado": "Leia a introdução e clique em Começar aventura."
+        },
+        {
+          "id": "tutorial.primeiros-passos.comecar.ok",
+          "falado": "Isso! Primeiro desafio na tela."
+        },
+        {
+          "id": "tutorial.primeiros-passos.opcoes",
+          "falado": "Leia a situação e escolha a alternativa que você acha mais adequada."
+        },
+        {
+          "id": "tutorial.primeiros-passos.opcoes.ok",
+          "falado": "Ótimo! Você pode mudar de ideia até confirmar."
+        },
+        {
+          "id": "tutorial.primeiros-passos.confirmar",
+          "falado": "Quando tiver certeza, confirme. Depois disso a resposta não muda."
+        },
+        {
+          "id": "tutorial.primeiros-passos.confirmar.ok",
+          "falado": "Resposta registrada! Você já sabe o caminho."
+        },
+        {
+          "id": "guia.sem-pressa",
+          "falado": "Sem pressa! Se quiser, pode continuar sem fazer isso agora."
+        }
+      ]
+    },
+    {
+      "arquivo": "nina-bloco-4.mp3",
+      "titulo": "avisos (séries)",
+      "falas": [
+        {
+          "id": "sem_temas.1",
+          "falado": "Seus temas chegam em breve! Quando estiverem prontos, eles aparecem aqui."
+        }
+      ]
+    }
   ]
 }

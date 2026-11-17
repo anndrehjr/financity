@@ -75,12 +75,14 @@ const json = async <T extends z.ZodTypeAny>(c: { req: { json(): Promise<unknown>
 
 const filterOf = (c: { req: { query(k: string): string | undefined } }, teacherId: number): Filter => ({
   scope: parseScope(c.req.query("scope")), classId: toId(c.req.query("class")) || null, teacherId, assessmentId: toId(c.req.query("assessment")) || null,
+  serie: toId(c.req.query("serie")) || null,
 });
 
 // ───────── sessão ─────────
 app.get("/api/session", async (c) => {
   const s = await getSession(c);
-  return c.json({ session: s ? { role: s.role, name: s.name } : null });
+  const serie = s?.role === "student" ? (await one<{ serie: number }>("SELECT serie FROM students WHERE id=$1", [s.id]))?.serie ?? null : null;
+  return c.json({ session: s ? { role: s.role, name: s.name, ...(serie !== null ? { serie } : {}) } : null });
 });
 app.post("/api/auth/login", async (c) => {
   const { username, password } = await json(c, z.object({ username: z.string().max(200), password: z.string().max(200) }));
@@ -194,7 +196,7 @@ app.put("/api/admin/settings", async (c) => {
 
 app.get("/api/admin/students", async (c) => {
   const t = await requireRole(c, "teacher");
-  return c.json(await listStudents(t.id, (c.req.query("q") || "").trim().slice(0, 60), toId(c.req.query("class")) || null, parseScope(c.req.query("scope"))));
+  return c.json(await listStudents(t.id, (c.req.query("q") || "").trim().slice(0, 60), toId(c.req.query("class")) || null, parseScope(c.req.query("scope")), toId(c.req.query("serie")) || null));
 });
 app.post("/api/admin/students", async (c) => {
   const t = await requireRole(c, "teacher");

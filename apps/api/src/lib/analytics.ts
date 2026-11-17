@@ -7,7 +7,7 @@ export type Scope = "real" | "demo" | "all";
 export const parseScope = (v: string | null | undefined): Scope => (v === "demo" || v === "all" ? v : "real");
 
 /** teacherId: só entram turmas do professor. assessmentId: sem ele, usa a primeira avaliação da série consultada. */
-export type Filter = { scope: Scope; classId?: number | null; teacherId: number; assessmentId?: number | null };
+export type Filter = { scope: Scope; classId?: number | null; teacherId: number; assessmentId?: number | null; serie?: number | null };
 
 type Ctx = { assessmentId: number; mapId: number; grade: number; sort: number; max: number; title: string };
 
@@ -25,10 +25,16 @@ async function resolve(f: Filter): Promise<Ctx> {
     if (!a || !mine) throw new HttpError(404, "Avaliação não encontrada.");
     if (grade !== null && a.grade !== grade) throw new HttpError(400, "A avaliação não é da série desta turma.");
   } else {
-    if (grade === null) {
+    if (grade === null && f.serie) {
       grade = (await one<{ grade: number }>(
-        `SELECT MIN(c.grade) grade FROM teacher_classes tc JOIN classes c ON c.id=tc.class_id
-          WHERE tc.teacher_id=$1 AND c.grade IS NOT NULL AND EXISTS (SELECT 1 FROM assessments x WHERE x.grade=c.grade)`, [f.teacherId]))?.grade ?? null;
+        `SELECT c.grade FROM teacher_classes tc JOIN classes c ON c.id=tc.class_id
+          WHERE tc.teacher_id=$1 AND c.grade=$2 AND EXISTS (SELECT 1 FROM assessments x WHERE x.grade=c.grade) LIMIT 1`, [f.teacherId, f.serie]))?.grade ?? null;
+    }
+    if (grade === null) {
+      // padrão: a série mais alta com avaliações (hoje o 8º ano), para a visão do professor não mudar ao cadastrar outra série
+      grade = (await one<{ grade: number }>(
+        `SELECT MAX(c.grade) grade FROM teacher_classes tc JOIN classes c ON c.id=tc.class_id
+          WHERE tc.teacher_id=$1 AND c.grade IS NOT NULL AND EXISTS (SELECT 1 FROM assessments x WHERE x.grade=c.grade AND x.status='available')`, [f.teacherId]))?.grade ?? null;
     }
     const first = grade === null ? undefined : await one<{ id: number }>("SELECT id FROM assessments WHERE grade=$1 ORDER BY sort LIMIT 1", [grade]);
     if (!first) throw new HttpError(404, "Nenhuma avaliação cadastrada para as suas turmas.");

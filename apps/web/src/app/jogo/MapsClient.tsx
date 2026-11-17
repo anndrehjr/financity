@@ -1,15 +1,19 @@
 "use client";
 import Link from "next/link";
 import { useEffect } from "react";
+import { useGuia } from "@/features/guia/useGuia";
 import { emitir } from "@/features/guia/tutorial/barramento";
 import { Lock, MapArt } from "@/components/art";
 import { ErrorBox, Spinner, doLogout, useApi } from "@/components/ui";
 
-type Me = { name: string; totalPoints: number; maps: { id: number; sort: number; title: string; subtitle: string; topics: string[]; published: boolean; unlocked: boolean; progress: string; score: number }[] };
+type Me = { name: string; serie?: number; totalPoints: number; maps: { id: number; sort: number; title: string; subtitle: string; topics: string[]; published: boolean; unlocked: boolean; progress: string; score: number }[] };
 
 export default function MapsClient() {
   const { data, error, loading, reload } = useApi<Me>("/api/me");
+  const guia = useGuia();
   useEffect(() => { if (data) emitir("jogo:aberto", { mapas: data.maps.length }); }, [data]);
+  const semTemas = !!data && data.maps.length === 0;
+  useEffect(() => { if (semTemas) guia.falar("sem_temas"); }, [semTemas]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <main className="game-bg px-4 pb-10">
       <header className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 py-4">
@@ -22,12 +26,19 @@ export default function MapsClient() {
 
       <div className="mx-auto max-w-5xl">
         <h1 className="font-display text-4xl font-extrabold md:text-5xl">BEM-VINDO À FINANCITY!</h1>
-        <p className="mt-2 max-w-3xl text-lg font-semibold text-indigo-900">Suas decisões constroem seu futuro. Explore os quatro mapas e descubra como administrar melhor seu dinheiro.</p>
+        <p className="mt-2 max-w-3xl text-lg font-semibold text-indigo-900">Suas decisões constroem seu futuro. Explore os mapas e descubra como administrar melhor seu dinheiro.</p>
 
         {loading && <Spinner label="Carregando os mapas…" />}
         {error && <div className="mt-6"><ErrorBox message={error} onRetry={reload} /></div>}
 
-        {data && (
+        {semTemas && (
+          <section className="card mt-6 max-w-xl text-center" aria-live="polite">
+            <p className="font-display text-3xl font-extrabold text-city-grape">Seus temas chegam em breve!</p>
+            <p className="mt-2 text-lg font-semibold text-slate-700">Quando estiverem prontos, eles aparecem aqui. É só voltar e entrar de novo.</p>
+          </section>
+        )}
+
+        {data && data.maps.length > 0 && (
           <ul data-tutorial="lista-mapas" className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
             {data.maps.map((m) => {
               const playable = m.published && m.unlocked;
