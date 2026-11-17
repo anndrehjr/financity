@@ -76,9 +76,11 @@ export async function questionStats(f: Filter, cx: Ctx) {
   const qs = await loadQuestions(cx.mapId);
   const w = studentWhere(f, cx);
   const aid = w.param(cx.assessmentId);
-  const rows = await q<{ question_id: number; points: number; letter: string }>(
-    `SELECT an.question_id,an.points,o.letter FROM answers an JOIN attempts a ON a.id=an.attempt_id JOIN students s ON s.id=a.student_id
-       JOIN classes c ON c.id=s.class_id JOIN options o ON o.id=an.option_id
+  // mx = máximo da questão pela regra da PRÓPRIA tentativa (scoring 1 = valores antigos, 2 = padronizado): índice e faixas ficam corretos com dados misturados
+  const rows = await q<{ question_id: number; points: number; letter: string; mx: number }>(
+    `SELECT an.question_id,an.points,o.letter,CASE WHEN a.scoring=1 THEN COALESCE(qx.legacy_max_points,qx.max_points) ELSE qx.max_points END mx
+       FROM answers an JOIN attempts a ON a.id=an.attempt_id JOIN students s ON s.id=a.student_id
+       JOIN classes c ON c.id=s.class_id JOIN options o ON o.id=an.option_id JOIN questions qx ON qx.id=an.question_id
       WHERE a.assessment_id=${aid} AND a.status<>'voided'${w.sql}`, w.vals);
   const maxes = await q<{ question_id: number; m: number }>("SELECT id question_id,max_points m FROM questions WHERE id = ANY($1::int[])", [qs.map((x) => x.id)]);
   const maxBy = new Map(maxes.map((m) => [m.question_id, m.m]));
@@ -91,10 +93,10 @@ export async function questionStats(f: Filter, cx: Ctx) {
     return {
       id: qq.id, number: qq.number, title: qq.title, theme: qq.theme, retake: qq.retake, n, max,
       avg: n ? Math.round(sum / n * 1000) / 1000 : null as number | null, // 3 casas, sem o ruído de ponto flutuante (11,267000000000001)
-      index: n ? round1((sum / (n * max)) * 100) : null as number | null, // índice de desempenho (%)
-      excellent: rs.filter((r) => r.points === max).length,
+      index: n ? round1((sum / rs.reduce((a, r) => a + r.mx, 0)) * 100) : null as number | null, // índice de desempenho (%), sobre o máximo de cada tentativa
+      excellent: rs.filter((r) => r.points === r.mx).length,
       inadequate: rs.filter((r) => r.points === 0).length,
-      intermediate: { 2: rs.filter((r) => bucket(r.points, max) === 2).length, 3: rs.filter((r) => bucket(r.points, max) === 3).length, 4: rs.filter((r) => bucket(r.points, max) === 4).length },
+      intermediate: { 2: rs.filter((r) => bucket(r.points, r.mx) === 2).length, 3: rs.filter((r) => bucket(r.points, r.mx) === 3).length, 4: rs.filter((r) => bucket(r.points, r.mx) === 4).length },
       letters,
     };
   });
@@ -239,7 +241,9 @@ export async function studentReport(teacherId: number, studentId: number, assess
     "SELECT id,status,total_points,started_at,completed_at FROM attempts WHERE student_id=$1 AND assessment_id=$2 AND status<>'voided'", [studentId, aRow.id]) : undefined;
   const max = aRow ? await maxPointsForMap(aRow.map_id) : 0;
   const rows = a ? await q<{ number: number; title: string; theme: string; strength: string; retake: string; letter: string; text: string; why: string; points: number; mx: number }>(
-    `SELECT q.number,q.title,q.theme,q.strength,q.retake,o.letter,o.text,o.why,an.points,q.max_points mx FROM answers an JOIN questions q ON q.id=an.question_id
+    `SELECT q.number,q.title,q.theme,q.strength,q.retake,o.letter,o.text,o.why,an.points,
+       CASE WHEN att.scoring=1 THEN COALESCE(q.legacy_max_points,q.max_points) ELSE q.max_points END mx
+       FROM answers an JOIN attempts att ON att.id=an.attempt_id JOIN questions q ON q.id=an.question_id
        JOIN options o ON o.id=an.option_id WHERE an.attempt_id=$1 ORDER BY q.number`, [a.id]) : [];
   const strong = rows.filter((r) => r.points / r.mx >= 0.8), weak = rows.filter((r) => r.points / r.mx <= 0.4);
   let diagnosis = "Ainda não há respostas registradas para este estudante.";
