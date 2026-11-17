@@ -27,8 +27,9 @@ const csvEsc = (v: string) => { const s = /^[=+\-@\t\r]/.test(v) ? "'" + v : v; 
 export default function Students() {
   const [scope, setScope] = useState<Scope>("real");
   const [cls, setCls] = useState("");
+  const [serie, setSerie] = useState("");
   const [q, setQ] = useState("");
-  const { data, error, loading, reload } = useApi<Row[]>(`/api/admin/students?${qs(scope, cls)}&q=${encodeURIComponent(q)}`);
+  const { data, error, loading, reload } = useApi<Row[]>(`/api/admin/students?${qs(scope, cls)}${serie ? `&serie=${serie}` : ""}&q=${encodeURIComponent(q)}`);
   const { data: classes, reload: reloadClasses } = useApi<{ id: number; name: string; demo?: number }[]>("/api/admin/classes");
   const { data: pend, reload: reloadPend } = useApi<{ pending: number }>("/api/admin/pins");
 
@@ -175,7 +176,7 @@ export default function Students() {
           <h2 className="font-display text-xl font-extrabold">Alunos cadastrados</h2>
           <div className="flex flex-wrap items-end gap-3">
             <label className="text-sm font-bold">Buscar<input className="mt-1 block rounded-xl border-2 border-slate-300 px-3 py-2" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Nome ou usuário" /></label>
-            <FilterBar scope={scope} setScope={setScope} cls={cls} setCls={setCls} />
+            <FilterBar scope={scope} setScope={setScope} cls={cls} setCls={setCls} serie={serie} setSerie={setSerie} />
           </div>
         </div>
         {loading && !data && <Spinner />}

@@ -28,3 +28,4 @@ tools/nina-voz/trabalho/*
 dados-alunos/
 **/credenciais*.csv
 **/*credenciais*.csv
+credenciais-*.html

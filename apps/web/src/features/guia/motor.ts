@@ -26,6 +26,19 @@ export function abrir(atual: Aberta | null, nome: string, config: Falas, ultimo:
   return { momento: nome, falas, indice: 0, ids };
 }
 
+/**
+ * Escolhe o momento certo para a série do aluno: primeiro a versão da série ("s7.nome"), depois a fala geral.
+ * Fala de OUTRA série nunca é usada (um aluno do 7º não ouve o texto dos temas do 8º). Sem versão aplicável: undefined (a Nina não fala).
+ */
+export function resolverMomento(config: Falas, nome: string, serie: number): string | undefined {
+  const especifico = `s${serie}.${nome}`;
+  if (config.momentos[especifico]) return especifico;
+  const m = config.momentos[nome];
+  if (!m) return undefined;
+  const p = m.publico ?? "geral";
+  return p === "geral" || p === String(serie) ? nome : undefined;
+}
+
 /** Próxima fala da sequência; null quando acabou. */
 export function avancar(a: Aberta): Aberta | null {
   return a.indice + 1 < a.falas.length ? { ...a, indice: a.indice + 1 } : null;

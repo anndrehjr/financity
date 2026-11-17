@@ -184,16 +184,17 @@ export async function releaseNewAttempt(studentId: number, teacherId: number, re
   });
 }
 
-export async function listStudents(teacherId: number, text: string, classId: number | null, scope: "real" | "demo" | "all") {
+export async function listStudents(teacherId: number, text: string, classId: number | null, scope: "real" | "demo" | "all", serie: number | null = null) {
   const w = new W();
   ownedStudents(w, teacherId);
   if (scope === "real") w.add("s.is_demo=0");
   if (scope === "demo") w.add("s.is_demo=1");
   if (classId) w.add("s.class_id=?", classId);
+  if (serie) w.add("s.serie=?", serie);
   if (text) w.add("(s.full_name ILIKE ? OR s.username ILIKE ?)", `%${text}%`, `%${text}%`);
   const pin = w.param(NO_PIN_HASH);
   return q(
-    `SELECT s.id,s.full_name name,s.username,s.active,s.is_demo demo,c.name "className",(s.pin_hash=${pin})::int pending,a.status,a.total_points points
+    `SELECT s.id,s.full_name name,s.username,s.active,s.is_demo demo,s.serie,c.name "className",(s.pin_hash=${pin})::int pending,a.status,a.total_points points
      FROM students s LEFT JOIN classes c ON c.id=s.class_id
      LEFT JOIN assessments fa ON fa.grade=c.grade AND fa.sort=(SELECT MIN(sort) FROM assessments WHERE grade=c.grade)
      LEFT JOIN attempts a ON a.student_id=s.id AND a.assessment_id=fa.id AND a.status<>'voided'

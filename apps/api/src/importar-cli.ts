@@ -8,7 +8,7 @@
 // Colunas: nome, serie, turma (turma pode ficar vazia → "<serie> ano", como a turma existente "8 ano"). Aceita vírgula ou ponto e vírgula.
 import { closePool, one, q } from "./lib/db.js";
 import { gradeFromName } from "./lib/scope.js";
-import { createStudents, makeUsername } from "./lib/students.js";
+import { createStudents } from "./lib/students.js";
 
 export type Linha = { nome: string; serie: number; turma: string };
 export type Rejeitada = { linha: number; motivo: string };
@@ -76,15 +76,7 @@ async function main() {
   console.error(`Turmas: ${turmas.map((t) => `"${t}" (${existentes.some((e) => e.name === t) ? "já existe" : "será criada"})`).join(", ") || "nenhuma"}.`);
   for (const r of rejeitadas) console.error(`  linha ${r.linha}: ${r.motivo}`);
   if (!executar) {
-    // pré-visualização dos usuários (sem nomes e sem PIN)
-    const usados = new Set<string>(); const previa: string[] = [];
-    for (const l of linhas) {
-      let u = await makeUsername(l.nome); let i = 1; const base = u.replace(/\d+$/, "");
-      while (usados.has(u)) u = `${base}${++i}`;
-      usados.add(u); previa.push(u);
-    }
-    console.error(`Usuários que seriam criados: ${previa.join(", ")}`);
-    console.error("Para gravar, rode de novo com --executar (as credenciais saem pela saída padrão).");
+    console.error("Nada foi gravado. Para gravar, rode de novo com --executar (as credenciais saem pela saída padrão).");
     await closePool(); return;
   }
   const r = await createStudents(linhas.map((l) => ({ name: l.nome, className: l.turma })), prof[0].id);
