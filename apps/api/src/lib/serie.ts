@@ -4,7 +4,9 @@ import { tx } from "./db.js";
 
 export type TemaSerie = Omit<TemaC, "questions"> & { serie: number; rascunho: boolean; questions: QuestaoC[] };
 
-export const PONTOS_POR_DESAFIO = [20, 20, 30, 30, 30, 30, 40, 40]; // 240 por tema, como no 8º ano
+/** Padrão único: TODO desafio vale 30 (240 por tema). Nos de escolha, as alternativas valem 30 / 20 / 10 / 0. */
+export const PONTOS_POR_DESAFIO = [30, 30, 30, 30, 30, 30, 30, 30];
+export const ESCALA_ESCOLHA = [0, 10, 20, 30];
 const vazio = (t: string | undefined) => !t || !t.trim();
 
 /** Confere um tema: 8 desafios completos (enunciado, alternativas, resposta correta, pontuação e explicação). Devolve a lista de problemas. */
@@ -26,7 +28,7 @@ export function validarTema(t: TemaSerie): string[] {
     if (q.options.some((o) => vazio(o.why))) e.push(`${r}: alternativa sem explicação`);
     if (new Set(q.options.map((o) => o.text.trim())).size !== 4) e.push(`${r}: alternativas repetidas`);
     if (q.kind === "choice") {
-      if (q.options.some((o) => !Number.isInteger(o.points) || o.points < 0 || o.points > q.max)) e.push(`${r}: pontos devem ser inteiros de 0 a ${q.max}`);
+      if (q.options.some((o) => !ESCALA_ESCOLHA.includes(o.points))) e.push(`${r}: as alternativas só podem valer 30 (correta), 20, 10 ou 0 pontos`);
       if (q.options.filter((o) => o.points === q.max).length !== 1) e.push(`${r}: deve haver exatamente 1 resposta correta (vale ${q.max})`);
     } else if (q.kind === "multi") {
       const c = q.options.filter((o) => o.correct).length;

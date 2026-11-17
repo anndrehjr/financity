@@ -19,8 +19,8 @@ Para cada tema preencha: `title`, `subtitle`, `topics` e, em cada desafio:
 | `scene` | ilustração (use uma chave existente; padrão `plan`) |
 
 ### Tipos e pontos (igual ao 8º ano)
-Pontos por desafio: **20, 20, 30, 30, 30, 30, 40, 40** (240 por tema).
-- `choice`: 4 alternativas; **uma** vale o máximo, as outras valem menos (inteiros).
+Pontos por desafio: **30 em todos** (240 por tema; padrão único, igual ao 8º ano).
+- `choice`: 4 alternativas; **uma** vale 30 (a correta); as outras só podem valer **20** (quase certa), **10** (parcial) ou **0** (errada). A validação recusa outros valores.
 - `multi` (sugerido no desafio 3): marque `correct: true` em 1 a 3 alternativas. Os pontos ficam 0 (a regra calcula).
 - `order` (sugerido no desafio 5): `seq` de 1 a 4 na ordem correta. O aluno vê as etapas embaralhadas, sem números.
 

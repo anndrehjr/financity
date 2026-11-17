@@ -2,14 +2,14 @@
 // `rascunho` para false. Passo a passo em docs/CONTEUDO-7-ANO.md.
 //
 // Formato dos desafios = o mesmo do 8º ano (content/culminancia.ts):
-//   kind "choice"  → 4 alternativas, UMA vale `max` (as outras valem menos, inteiros ≥ 0)
+//   kind "choice"  → 4 alternativas, UMA vale 30 (a correta); as outras valem 20 (quase certa), 10 (parcial) ou 0 (errada)
 //   kind "multi"   → marque `correct: true` nas corretas (1 a 3); pontos 0 (a regra calcula)
 //   kind "order"   → `seq` 1..4 na ordem correta; as alternativas são as etapas
-// Pontos por desafio: 20, 20, 30, 30, 30, 30, 40, 40 (240 por tema). Sugestão: desafio 3 = multisseleção, desafio 5 = ordenação.
+// Pontos por desafio: 30 em todos (240 por tema). Sugestão: desafio 3 = multisseleção, desafio 5 = ordenação.
 import type { Bloom, Kind, OpcaoC, QuestaoC } from "./culminancia.js";
 import type { TemaSerie } from "../lib/serie.js";
 
-const PONTOS = [20, 20, 30, 30, 30, 30, 40, 40];
+const PONTOS = [30, 30, 30, 30, 30, 30, 30, 30];
 const BLOOM: Bloom[] = ["Lembrar", "Compreender", "Aplicar", "Analisar", "Aplicar", "Analisar", "Avaliar", "Criar"];
 const KIND = (n: number): Kind => (n === 3 ? "multi" : n === 5 ? "order" : "choice");
 

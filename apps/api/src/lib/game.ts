@@ -151,14 +151,18 @@ export async function submitAnswer(studentId: number, assessmentId: number, ques
   try {
     await tx(async (c) => {
       // trava a tentativa: duas respostas simultâneas do mesmo aluno são processadas uma de cada vez
-      const attempt = await one<{ id: number; status: string }>(
-        "SELECT id,status FROM attempts WHERE student_id=$1 AND assessment_id=$2 AND status<>'voided' FOR UPDATE", [studentId, a.id], c);
+      const attempt = await one<{ id: number; status: string; scoring: number }>(
+        "SELECT id,status,scoring FROM attempts WHERE student_id=$1 AND assessment_id=$2 AND status<>'voided' FOR UPDATE", [studentId, a.id], c);
       if (!attempt) throw new HttpError(409, "Atividade não iniciada.");
       if (attempt.status === "completed") throw new HttpError(409, "Esta atividade já foi concluída.");
       const next = await one<{ id: number }>(NEXT_Q.replace("SELECT *", "SELECT id"), [a.map_id, attempt.id], c);
       if (!next || next.id !== questionId) throw new HttpError(409, "Esta pergunta já foi respondida ou não é a atual.");
-      const qinfo = (await one<{ kind: Kind; max_points: number }>("SELECT kind,max_points FROM questions WHERE id=$1", [questionId], c))!;
-      const opts = await q<OptG>("SELECT id,points,is_correct,seq FROM options WHERE question_id=$1", [questionId], c);
+      // tentativas anteriores à padronização (scoring 1) terminam com os valores antigos; as novas (scoring 2) usam a escala padrão
+      const legacy = attempt.scoring === 1;
+      const qinfo = (await one<{ kind: Kind; max_points: number }>(
+        `SELECT kind,${legacy ? "COALESCE(legacy_max_points,max_points)" : "max_points"} max_points FROM questions WHERE id=$1`, [questionId], c))!;
+      const opts = await q<OptG>(
+        `SELECT id,${legacy ? "COALESCE(legacy_points,points)" : "points"} points,is_correct,seq FROM options WHERE question_id=$1`, [questionId], c);
       let g;
       try { g = grade(qinfo.kind, qinfo.max_points, opts, resp); } catch (e) { if (e instanceof RespostaInvalida) throw new HttpError(400, e.message); throw e; }
       earned = g.points; questionMax = qinfo.max_points;
