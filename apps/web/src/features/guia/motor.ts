@@ -13,8 +13,6 @@ export function parseNegrito(t: string): Trecho[] {
 export function abrir(atual: Aberta | null, nome: string, config: Falas, ultimo: Record<string, number>, rnd: () => number = Math.random): Aberta | undefined {
   const m = config.momentos[nome];
   if (!m || m.falas.length === 0) return undefined;
-  const alta = m.prioridade === "alta";
-  if (atual?.protegida && !alta) return undefined; // tutorial aberto: reações são descartadas
   if (m.somenteSeLivre && atual) return undefined;
   let falas = m.falas;
   let ids = m.falas.map((_, i) => `${nome}.${i + 1}`);
@@ -25,7 +23,7 @@ export function abrir(atual: Aberta | null, nome: string, config: Falas, ultimo:
     ultimo[nome] = i;
     falas = [m.falas[i]]; ids = [`${nome}.${i + 1}`];
   }
-  return { momento: nome, falas, indice: 0, protegida: alta, ids };
+  return { momento: nome, falas, indice: 0, ids };
 }
 
 /** Próxima fala da sequência; null quando acabou. */

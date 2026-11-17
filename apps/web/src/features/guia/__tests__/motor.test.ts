@@ -20,8 +20,8 @@ test("todos os momentos do JSON têm falas válidas, expressões conhecidas e te
 });
 
 test("sequência: abre na 1ª fala e avança em ordem até acabar", () => {
-  let a = abrir(null, "boas_vindas", falas, {})!;
-  const total = falas.momentos.boas_vindas.falas.length;
+  let a = abrir(null, "vitoria", falas, {})!;
+  const total = falas.momentos.vitoria.falas.length;
   assert.equal(a.indice, 0); assert.equal(a.falas.length, total);
   for (let i = 1; i < total; i++) { a = avancar(a)!; assert.equal(a.indice, i); }
   assert.equal(avancar(a), null);
@@ -44,14 +44,9 @@ test("sorteio: nunca repete a última fala do mesmo momento", () => {
   }
 });
 
-test("tutorial aberto descarta reações; reação aberta é substituída por outra reação", () => {
-  const tut = abrir(null, "boas_vindas", falas, {})!;
-  assert.equal(abrir(tut, "acerto", falas, {}), undefined);
-  assert.equal(abrir(tut, "erro", falas, {}), undefined);
+test("reação aberta é substituída por outra reação", () => {
   const reacao = abrir(null, "acerto", falas, {})!;
-  const nova = abrir(reacao, "erro", falas, {})!;
-  assert.equal(nova.momento, "erro");
-  assert.equal(abrir(reacao, "boas_vindas", falas, {})!.momento, "boas_vindas"); // tutorial pode substituir reação
+  assert.equal(abrir(reacao, "erro", falas, {})!.momento, "erro");
 });
 
 test("'parado' só dispara se não houver fala aberta", () => {

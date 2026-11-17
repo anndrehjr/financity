@@ -21,7 +21,7 @@ class AudioFalso {
   disparar(t: string) { for (const f of [...(this.ouvintes.get(t) ?? [])]) f(); }
 }
 function montar(over: Partial<Deps> & { ativo?: boolean; manifesto?: ManifestoVoz | null; rejeitar?: boolean; boca?: unknown } = {}) {
-  const mem = memoria(); const voz = new VozNina(mem, null); if (over.ativo !== false) voz.ligar(true);
+  const mem = memoria(); const voz = new VozNina(mem); if (over.ativo !== false) voz.ligar(true);
   const audios: AudioFalso[] = []; const tarefas: { f: () => void; ms: number; id: number }[] = []; let n = 0; const urls: string[] = [];
   const s = new NinaVoiceService(voz, {
     armazem: mem, interagiu: over.interagiu ?? (() => true),
