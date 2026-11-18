@@ -8,6 +8,10 @@
 // Pontos por desafio: 30 em todos (240 por tema). Sugestão: desafio 3 = multisseleção, desafio 5 = ordenação.
 import type { Bloom, Kind, OpcaoC, QuestaoC } from "./culminancia.js";
 import type { TemaSerie } from "../lib/serie.js";
+import { TEMA_7_1 } from "./serie7-tema1.js";
+import { TEMA_7_2 } from "./serie7-tema2.js";
+import { TEMA_7_3 } from "./serie7-tema3.js";
+import { TEMA_7_4 } from "./serie7-tema4.js";
 
 const PONTOS = [30, 30, 30, 30, 30, 30, 30, 30];
 const BLOOM: Bloom[] = ["Lembrar", "Compreender", "Aplicar", "Analisar", "Aplicar", "Analisar", "Avaliar", "Criar"];
@@ -22,9 +26,12 @@ const desafioVazio = (n: number): QuestaoC => {
     options: [0, 1, 2, 3].map((i) => opcaoVazia(kind, i)),
   };
 };
-const temaVazio = (n: number): TemaSerie => ({
+/** Molde em branco (para criar novos temas e para os testes). */
+export const temaVazio = (n: number): TemaSerie => ({
   slug: `s7-tema-${n}`, title: "", subtitle: "", topics: [], serie: 7, rascunho: true,
   questions: [1, 2, 3, 4, 5, 6, 7, 8].map(desafioVazio),
 });
 
-export const SERIE_7: TemaSerie[] = [1, 2, 3, 4].map(temaVazio);
+// Os 4 temas foram escritos a partir das 12 aulas do 4º bimestre. TODOS ainda são rascunho:
+// o professor revisa (docs/REVISAO-CONTEUDO-7-ANO.md) e só então troca `rascunho` para false.
+export const SERIE_7: TemaSerie[] = [TEMA_7_1, TEMA_7_2, TEMA_7_3, TEMA_7_4];
