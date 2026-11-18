@@ -153,13 +153,13 @@ function GuiaBase() {
         <Avatar estado={c.estado} falando={falando} escutando={escutando} boca={bocaVoz} tamanho={personagem.visual.tamanhoPx} />
       </div>
       <div key={c.chave} role="status" aria-live="polite" onClick={() => setCompleto(true)}
-        className="nina-balao pointer-events-auto w-[min(92vw,26rem)] rounded-3xl border-2 bg-white p-4 shadow-lg" style={{ borderColor: personagem.visual.corDestaque }}>
+        className="nina-balao pointer-events-auto flex w-[min(92vw,26rem)] flex-col rounded-3xl border-2 bg-white p-4 shadow-lg" style={{ borderColor: personagem.visual.corDestaque }}>
         {c.tutorial && s && (
           <div className="mb-3 h-1.5 w-full overflow-hidden rounded-full bg-slate-200" role="progressbar" aria-label="Progresso do tutorial" aria-valuemin={1} aria-valuemax={s.total} aria-valuenow={s.indice + 1}>
             <div className="h-full w-full rounded-full transition-transform duration-300" style={{ background: personagem.visual.corDestaque, transform: `scaleX(${(s.indice + 1) / s.total})`, transformOrigin: "left" }} />
           </div>
         )}
-        <p className="text-lg font-bold leading-snug text-slate-900 sm:text-xl">
+        <p className="my-auto text-lg font-bold leading-snug text-slate-900 sm:text-xl">
           <span className="sr-only">{personagem.nome}: </span>
           <Texto texto={c.texto} completo={completo} onFim={setDigitando} />
         </p>
