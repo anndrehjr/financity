@@ -44,6 +44,11 @@ Sem senhas, PINs, chaves nem dados de alunos neste arquivo.
 - **Publicado:** banco da VPS na migração 004. Excluir aluno: botão "Excluir" no painel (confirmação digitando EXCLUIR; apaga cadastro, tentativas, respostas, sessões e histórico; só alunos do professor).
 - **Incidente corrigido:** o backup automático (cron 02:40) falhava por falta de permissão de execução após o `git archive`; corrigido com `chmod +x` e documentado em `PUBLICACAO-E-REVERSAO.md`.
 
+## 2026-11-18 — 7º ano e Nina 3D publicados
+- **7º ano:** 12 aulas do 4º bimestre (PPTX SEDUC-SP) viraram 4 temas por assunto (Renda e Trabalho; Controle do Dinheiro; Compras e Porcentagem; Metas e Gráficos Financeiros), 32 desafios no mesmo modelo do 8º (30 pts cada). Aprovados pelo professor. Publicados com `serie-cli publicar` após backup; 14 alunos importados.
+- **Nina:** arte 3D (recorte da vista frontal da ficha 360°), animações só em CSS, tamanhos/posição/imagem em `config/personagem.ts`; a Nina não sobe nem desce com o tamanho da mensagem (balão cresce para cima no celular); só troca de lado quando cobriria o elemento destacado. 5 falas do 7º (aberturas de tema + "temas chegam em breve") cortadas pelo texto falado (`alinhar.py`/`cortar-alinhado.py`), porque o áudio saiu sem pausas.
+- **Aprendizados:** o gerador separa falas com ` <break time="1.5s" />` (linha em branco não vira pausa); `git archive` perde o `+x` dos scripts de backup (rodar `chmod +x` depois); PIN repetido é recusado na criação de alunos (proteção); ao editar arquivos CRLF com Python usar `newline=''`.
+
 ## Decisões e regras combinadas
 - Publicar **direto em produção** (merge na `main`) é permitido, porque o site ainda não está aberto ao público. **Exceção:** a estrutura por série só publica com o "pode publicar" e **depois do backup** (entrega de senhas do 8º ano na manhã seguinte).
 - Dados de menores: nunca no repositório, em log, commit ou terminal; senhas só no arquivo local de credenciais.
