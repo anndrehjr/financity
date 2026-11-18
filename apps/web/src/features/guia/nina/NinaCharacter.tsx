@@ -1,5 +1,6 @@
 "use client";
 import { memo, useEffect, useRef, useState } from "react";
+import { personagem } from "../config/personagem";
 import { temArteEmCamadas, type Manifesto } from "./animacao";
 import type { ControleNina } from "./NinaPhaser";
 import type { EstadoNina } from "../tutorial/tipos";
@@ -12,18 +13,20 @@ export function carregarManifesto(): Promise<Manifesto | null> {
 }
 const reduzMovimento = () => { try { return window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch { return false; } };
 
-type Props = { estado: EstadoNina; falando: boolean; boca?: string | null; tamanho: number };
+/** Estado visual da Nina 3D: parada (respira), falando (áudio ou texto em digitação) ou escutando (esperando o aluno agir). "Pausada" = voltou ao repouso. */
+export type EstadoVisual = "idle" | "speaking" | "listening";
+type Props = { estado: EstadoNina; falando: boolean; escutando?: boolean; boca?: string | null; tamanho: number };
 
 /**
- * Nina anime. Com arte em camadas no manifesto: renderiza com Phaser (carregado sob demanda).
- * Sem arte (estado atual): mostra a imagem de referência estática — "infraestrutura pronta, arte pendente".
+ * Com arte em camadas no manifesto: renderiza com Phaser (carregado sob demanda), pronto para uma Nina com rosto/boca animados.
+ * Sem arte em camadas (estado atual): mostra a Nina 3D estática (config/personagem.ts → visual.arte) com animação leve só em CSS
+ * (transform/opacity). Uma imagem não tem articulações: NÃO há sincronia labial real; ela só se movimenta enquanto fala.
  */
-function NinaCharacterBase({ estado, falando, boca = null, tamanho }: Props) {
+function NinaCharacterBase({ estado, falando, escutando = false, boca = null, tamanho }: Props) {
   const [m, setM] = useState<Manifesto | null>(null);
-  const [pronto, setPronto] = useState(false);
   const alvo = useRef<HTMLDivElement>(null);
   const ctrl = useRef<ControleNina | null>(null);
-  useEffect(() => { let vivo = true; void carregarManifesto().then((x) => { if (vivo) { setM(x); setPronto(true); } }); return () => { vivo = false; }; }, []);
+  useEffect(() => { let vivo = true; void carregarManifesto().then((x) => { if (vivo) setM(x); }); return () => { vivo = false; }; }, []);
 
   const camadas = !!m && temArteEmCamadas(m);
   const largura = Math.round(tamanho * 0.75), altura = tamanho;
@@ -42,11 +45,12 @@ function NinaCharacterBase({ estado, falando, boca = null, tamanho }: Props) {
   useEffect(() => { ctrl.current?.definirBoca(boca); }, [boca]);
 
   if (camadas) return <div ref={alvo} role="img" aria-label="Nina, Guardiã Veterana" style={{ width: largura, height: altura }} />;
-  if (!pronto) return <div style={{ width: largura, height: altura }} aria-hidden="true" />;
+  const arte = personagem.visual.arte;
+  const visual: EstadoVisual = falando ? "speaking" : escutando ? "listening" : "idle";
   return (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={m?.referencia ?? "/guia/nina/referencia.webp"} alt="Nina, Guardiã Veterana" width={largura} height={altura} decoding="async"
-      className="rounded-2xl object-cover object-top shadow-lg ring-2 ring-white" style={{ width: largura, height: altura }} />
+    <img src={arte.corpo} alt={arte.alt} width={arte.largura} height={arte.altura} decoding="async" draggable={false}
+      className="nina-3d" data-estado={visual} />
   );
 }
 export const NinaCharacter = memo(NinaCharacterBase);

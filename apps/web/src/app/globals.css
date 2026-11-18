@@ -19,6 +19,25 @@ h1, h2, h3, .font-display { font-family: var(--font-display), system-ui, sans-se
 .th { @apply px-3 py-2 text-left text-xs font-bold uppercase tracking-wide text-slate-600; }
 .td { @apply px-3 py-2 text-sm; }
 
+/* ── Nina 3D (features/guia). Só transform/opacity; as medidas vêm de config/personagem.ts (variáveis --nina-*) ── */
+.nina-3d { display: block; width: auto; height: var(--nina-h); aspect-ratio: var(--nina-ratio, 347 / 700); object-fit: contain; transform-origin: 50% 100%; user-select: none; -webkit-user-drag: none; pointer-events: none; will-change: transform; }
+.nina-3d[data-estado="idle"] { animation: nina-respira 4.2s ease-in-out infinite; }
+.nina-3d[data-estado="speaking"] { animation: nina-fala 1.15s ease-in-out infinite; }
+.nina-3d[data-estado="listening"] { animation: nina-escuta 3.6s ease-in-out infinite; }
+.nina-entra { animation: nina-entra .45s cubic-bezier(.2,.8,.2,1) both; }
+.nina-sai { animation: nina-sai .22s ease-in forwards; }
+.nina-balao { animation: nina-balao .28s ease-out both; min-height: var(--nina-h); } /* balão nunca menor que a Nina: mensagens curtas e longas variam menos */
+@keyframes nina-respira { 0%,100% { transform: translateY(0) scaleY(1); } 50% { transform: translateY(-2px) scaleY(1.008); } }
+@keyframes nina-fala { 0%,100% { transform: translateY(0) rotate(-.7deg); } 25% { transform: translateY(-3px) rotate(0deg) scale(1.006); } 50% { transform: translateY(-1px) rotate(.7deg); } 75% { transform: translateY(-3px) rotate(0deg) scale(1.006); } }
+@keyframes nina-escuta { 0%,100% { transform: rotate(-1.8deg) translateY(0); } 50% { transform: rotate(-2.6deg) translateY(-2px); } }
+@keyframes nina-entra { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes nina-sai { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(8px); } }
+@keyframes nina-balao { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+/* Tamanho por tela: celular = entre min e max conforme a altura disponível; tablet e desktop = valores fixos da configuração */
+.nina-guia { --nina-h: clamp(var(--nina-h-cel-min), 20vh, var(--nina-h-cel-max)); }
+@media (min-width: 640px) { .nina-guia { --nina-h: var(--nina-h-tablet); } }
+@media (min-width: 1024px) { .nina-guia { --nina-h: var(--nina-h-desktop); } }
+
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 
 /* Impressão / PDF dos relatórios */

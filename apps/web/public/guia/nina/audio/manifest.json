@@ -315,6 +315,51 @@
       "animacao": "encouraging",
       "falado": "Sem pressa! Se quiser, pode continuar sem fazer isso agora.",
       "geradoEm": "2026-11-16"
+    },
+    "s7.mapa_1.1": {
+      "audio": "s7.mapa_1.1.mp3",
+      "texto": "Tema 1: **renda e trabalho**. De onde vem o dinheiro e o que os dados mostram.",
+      "duracaoMs": 5500,
+      "contexto": "s7.mapa_1",
+      "animacao": "happy",
+      "falado": "Tema um: renda e trabalho. De onde vem o dinheiro e o que os dados mostram.",
+      "geradoEm": "2026-11-18"
+    },
+    "s7.mapa_2.1": {
+      "audio": "s7.mapa_2.1.mp3",
+      "texto": "Tema 2: **controle do dinheiro**. Extrato e fatura contam para onde o dinheiro vai.",
+      "duracaoMs": 6100,
+      "contexto": "s7.mapa_2",
+      "animacao": "thinking",
+      "falado": "Tema dois: controle do dinheiro. Extrato e fatura contam para onde o dinheiro vai.",
+      "geradoEm": "2026-11-18"
+    },
+    "s7.mapa_3.1": {
+      "audio": "s7.mapa_3.1.mp3",
+      "texto": "Tema 3: **compras e porcentagem**. Leia o cupom e faça as contas antes de pagar.",
+      "duracaoMs": 6300,
+      "contexto": "s7.mapa_3",
+      "animacao": "thinking",
+      "falado": "Tema três: compras e porcentagem. Leia o cupom e faça as contas antes de pagar.",
+      "geradoEm": "2026-11-18"
+    },
+    "s7.mapa_4.1": {
+      "audio": "s7.mapa_4.1.mp3",
+      "texto": "Tema 4: **metas e gráficos**. Planeje o dinheiro e leia os dados com atenção.",
+      "duracaoMs": 6100,
+      "contexto": "s7.mapa_4",
+      "animacao": "happy",
+      "falado": "Tema quatro: metas e gráficos. Planeje o dinheiro e leia os dados com atenção.",
+      "geradoEm": "2026-11-18"
+    },
+    "sem_temas.1": {
+      "audio": "sem_temas.1.mp3",
+      "texto": "Seus temas chegam em breve! Quando estiverem prontos, eles aparecem aqui.",
+      "duracaoMs": 5100,
+      "contexto": "Mapas — série sem temas publicados (\"Seus temas chegam em breve!\")",
+      "animacao": "happy",
+      "falado": "Seus temas chegam em breve! Quando estiverem prontos, eles aparecem aqui.",
+      "geradoEm": "2026-11-18"
     }
   }
 }
