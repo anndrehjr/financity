@@ -25,11 +25,11 @@ A imagem antiga (`referencia.webp`) continua na pasta, mas não é mais carregad
 
 ## Como configurar tamanho e posição (tudo em `personagem.ts → visual`)
 ```ts
-altura: { desktop: 220, tablet: 170, celularMin: 110, celularMax: 140 }, // px; largura proporcional
+altura: { desktop: 220, tablet: 210, celularMin: 110, celularMax: 140 }, // px; largura proporcional
 margemPx: 16,                      // distância da borda (inferior e lateral)
 posicao: "inferior-esquerda",      // ou "inferior-direita"
 ```
-No celular a altura varia entre `celularMin` e `celularMax` conforme a altura da tela (20% dela). Esses valores viram variáveis CSS (`--nina-h-*`), então não há número solto no código.
+Desktop e tablet usam a altura do **maior balão do tutorial** (210 px medidos com 26 rem de largura): o balão nunca é menor que a Nina (`min-height`), então ela e o balão ficam sempre do mesmo tamanho. No celular a altura varia entre `celularMin` e `celularMax` conforme a altura da tela (20% dela). Esses valores viram variáveis CSS (`--nina-h-*`), então não há número solto no código.
 
 ## Estados e animações (só `transform` e `opacity`)
 | Estado | Quando | Animação |
@@ -51,16 +51,20 @@ Uma imagem não tem articulações nem rosto móvel. **Não há sincronia labial
 ### Caminho para um avatar 3D real (não implementado de propósito)
 `NinaCharacter.tsx` decide o que mostrar: (1) arte em camadas, se o manifesto tiver camadas; (2) senão, a imagem 3D. Para um modelo GLB/GLTF com rigging e visemas, crie um terceiro ramo nesse componente (carregado sob demanda, como o Phaser) que receba os mesmos `estado`, `falando` e `boca`. O restante do sistema não precisa mudar.
 
-## Posição inteligente (não cobrir o que o tutorial mostra)
-Durante as etapas que destacam um elemento (`data-tutorial`), a Nina e o balão escolhem o primeiro canto livre: inferior do lado padrão → inferior do outro lado → superior do lado padrão → superior do outro lado (`posicao.ts`, função pura com testes). Se o elemento é maior que o espaço livre (ex.: as 4 alternativas num celular de 780 px de altura), ela fica no canto que cobre **menos área**; a página continua rolável.
+## Posição: a Nina NUNCA sobe nem desce
+- A Nina é **sempre** ancorada no canto inferior. O tamanho da mensagem não a move: o balão é que cresce.
+- Desktop e tablet: a Nina fica ao lado do balão, alinhada pela base. O balão tem altura mínima igual à da Nina (e o maior balão do tutorial cabe exatamente nela), então nem o balão muda de tamanho entre as etapas.
+- Celular: o balão fica **acima** da Nina e cresce para cima (a Nina fica sempre no mesmo ponto).
+- Só o **lado** pode mudar (`posicao.ts`, função pura com testes): quando a etapa destaca um elemento que ficaria coberto, ela passa para o lado oposto, escolhendo o lado que cobre menos área do elemento (usa os retângulos reais do avatar e do balão). Nunca muda de altura.
+- Medido no navegador nas 3 larguras: a base da Nina varia **no máximo 5 px** (é a animação de respiração) durante as 15 etapas.
 
 ## Resultados dos testes (2026-11-18)
-- Testes automáticos do site: 51 de 51 (6 deles da posição). Tipos (`tsc`) e build de produção: sem erro.
-- No navegador (Chrome, build de produção, banco isolado com alunos fictícios), nas 3 larguras (1366, 820 e 390 px): as **15 etapas do tutorial** foram percorridas até o fim, incluindo as 4 que exigem ação (entrar no tema, começar, escolher, confirmar); tamanhos medidos 220 / 170 / 140 px de altura; sem rolagem horizontal; **0 erros no console**; 0 falhas de rede.
+- Testes automáticos do site: 52 de 52 (8 deles da posição). Tipos (`tsc`) e build de produção: sem erro.
+- No navegador (Chrome, build de produção, banco isolado com alunos fictícios), nas 3 larguras (1366, 820 e 390 px): as **15 etapas do tutorial** foram percorridas até o fim, incluindo as 4 que exigem ação (entrar no tema, começar, escolher, confirmar); tamanhos medidos 220 / 210 / 140 px de altura; balão de 220 px (desktop) e 210 px (tablet) em TODAS as etapas; sem rolagem horizontal; **0 erros no console**; 0 falhas de rede.
 - Interações: ligar/desligar voz, repetir fala, volume e velocidade (controles presentes e acionáveis), esconder (fade-out), chamar de volta, pular tutorial.
 - Imagem carregada uma vez por página; movimento reduzido desliga as animações.
 
 ## Limitações conhecidas
-- **Celular:** quando o elemento destacado é grande (lista de alternativas), parte dele fica atrás da Nina/balão; é possível rolar a página.
+- **Celular:** o balão fica acima da Nina e pode cobrir parte da lista de alternativas (a tela de 780 px não comporta os dois); é possível rolar a página.
 - Não foram testados: Safari/Firefox, celular físico, leitor de tela, e o áudio real saindo pelo alto-falante (só os controles e o estado). A voz e as falas não foram alteradas.
 - A etapa final ("tchau") não tem alvo; o balão pode ficar sobre algum botão da tela até o aluno clicar em Ok.

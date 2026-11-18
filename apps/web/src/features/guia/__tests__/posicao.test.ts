@@ -1,44 +1,49 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { areaDeCruzamento, escolherPosicao, retanguloDaPosicao } from "../posicao";
+import { areaDeCruzamento, escolherLado, espelhar } from "../posicao";
 
-const tela = { w: 1366, h: 800 }, caixa = { w: 533, h: 210 }, M = 16;
+const L = 1366;
+// desktop, lado esquerdo: avatar 109x220 em (16,564) e balão 416x220 em (133,564)
+const desktopEsq = [{ x: 16, y: 564, w: 109, h: 220 }, { x: 133, y: 564, w: 416, h: 220 }];
+// celular, lado esquerdo (390 de largura): balão acima, avatar embaixo
+const celEsq = [{ x: 16, y: 413, w: 358, h: 204 }, { x: 16, y: 621, w: 69, h: 140 }];
 
-test("sem alvo (ou alvo vazio) a Nina fica na posição padrão", () => {
-  assert.deepEqual(escolherPosicao(null, caixa, tela, M, "esquerda"), { vertical: "baixo", lado: "esquerda" });
-  assert.deepEqual(escolherPosicao({ x: 0, y: 0, w: 0, h: 0 }, caixa, tela, M, "direita"), { vertical: "baixo", lado: "direita" });
+test("sem alvo (ou alvo vazio) a Nina fica no lado padrão", () => {
+  assert.equal(escolherLado(null, desktopEsq, L, "esquerda", "esquerda"), "esquerda");
+  assert.equal(escolherLado({ x: 0, y: 0, w: 0, h: 0 }, desktopEsq, L, "direita", "direita"), "direita");
 });
 
-test("alvo longe da Nina: não muda de lugar", () => {
-  assert.deepEqual(escolherPosicao({ x: 600, y: 100, w: 200, h: 40 }, caixa, tela, M, "esquerda"), { vertical: "baixo", lado: "esquerda" });
+test("alvo longe da Nina: não troca de lado", () => {
+  assert.equal(escolherLado({ x: 600, y: 100, w: 200, h: 40 }, desktopEsq, L, "esquerda", "esquerda"), "esquerda");
 });
 
-test("alvo embaixo, à esquerda (o botão 'Começar aventura' sob o balão): vai para o outro lado", () => {
-  const p = escolherPosicao({ x: 260, y: 572, w: 220, h: 44 }, caixa, tela, M, "esquerda");
-  assert.deepEqual(p, { vertical: "baixo", lado: "direita" });
-  assert.equal(retanguloDaPosicao(p, caixa, tela, M).x, 1366 - 533 - 16);
+test("desktop: botão 'Começar aventura' sob o balão → vai para o outro lado", () => {
+  assert.equal(escolherLado({ x: 260, y: 572, w: 220, h: 44 }, desktopEsq, L, "esquerda", "esquerda"), "direita");
 });
 
-test("celular (conjunto ocupa a largura toda): sobe para o topo quando o alvo está embaixo", () => {
-  const cel = { w: 390, h: 780 }, cx = { w: 358, h: 350 };
-  assert.deepEqual(escolherPosicao({ x: 20, y: 600, w: 340, h: 50 }, cx, cel, M, "esquerda"), { vertical: "topo", lado: "esquerda" });
+test("sem oscilar: já no outro lado, a mesma situação mantém o lado (e volta ao padrão quando o alvo sai)", () => {
+  const dirDesktop = desktopEsq.map((r) => espelhar(r, L));
+  const alvo = { x: 260, y: 572, w: 220, h: 44 };
+  assert.equal(escolherLado(alvo, dirDesktop, L, "direita", "esquerda"), "direita");
+  assert.equal(escolherLado(null, dirDesktop, L, "direita", "esquerda"), "esquerda");
 });
 
-test("alvo cobre a tela toda: todas empatam e vale a preferência (posição padrão, nunca falha)", () => {
-  assert.deepEqual(escolherPosicao({ x: 0, y: 0, w: 1366, h: 800 }, caixa, tela, M, "esquerda"), { vertical: "baixo", lado: "esquerda" });
+test("celular: só o avatar (69 px) cobre o botão de baixo → trocar de lado libera o botão", () => {
+  const botao = { x: 36, y: 630, w: 224, h: 52 };            // 'Confirmar resposta', à esquerda
+  assert.equal(escolherLado(botao, celEsq, 390, "esquerda", "esquerda"), "direita");
 });
 
-test("alvo grande sem canto livre (lista de alternativas): escolhe o canto que cobre menos área", () => {
-  const cel = { w: 390, h: 780 }, cx = { w: 358, h: 350 };
-  const alvo = { x: 16, y: 300, w: 358, h: 400 };               // ocupa do meio até quase o fim da tela
-  const p = escolherPosicao(alvo, cx, cel, M, "esquerda");
-  const area = (q: typeof p) => areaDeCruzamento(retanguloDaPosicao(q, cx, cel, M), alvo);
-  for (const outra of [{ vertical: "baixo", lado: "esquerda" }, { vertical: "baixo", lado: "direita" }, { vertical: "topo", lado: "esquerda" }, { vertical: "topo", lado: "direita" }] as const)
-    assert.ok(area(p) <= area(outra), `${JSON.stringify(p)} deveria cobrir no máximo o mesmo que ${JSON.stringify(outra)}`);
-  assert.equal(p.vertical, "topo");
+test("celular: alvo no meio coberto pelo balão dos dois lados → empate, fica no lado padrão", () => {
+  assert.equal(escolherLado({ x: 36, y: 500, w: 318, h: 40 }, celEsq, 390, "esquerda", "esquerda"), "esquerda");
 });
 
-test("o lado padrão da configuração é respeitado nas duas direções", () => {
-  assert.equal(escolherPosicao(null, caixa, tela, M, "direita").lado, "direita");
-  assert.deepEqual(escolherPosicao({ x: 900, y: 572, w: 220, h: 44 }, caixa, tela, M, "direita"), { vertical: "baixo", lado: "esquerda" });
+test("alvo cobre a tela toda: empate, vale o lado padrão (nunca falha)", () => {
+  assert.equal(escolherLado({ x: 0, y: 0, w: 1366, h: 800 }, desktopEsq, L, "direita", "esquerda"), "esquerda");
+});
+
+test("espelhar é reversível e a área de cruzamento é zero quando não se tocam", () => {
+  const r = { x: 16, y: 564, w: 109, h: 220 };
+  assert.deepEqual(espelhar(espelhar(r, L), L), r);
+  assert.equal(areaDeCruzamento({ x: 0, y: 0, w: 10, h: 10 }, { x: 20, y: 20, w: 5, h: 5 }), 0);
+  assert.equal(areaDeCruzamento({ x: 0, y: 0, w: 10, h: 10 }, { x: 5, y: 5, w: 10, h: 10 }), 25);
 });
