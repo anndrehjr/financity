@@ -1,11 +1,11 @@
 [
   {
-    "onde": "testar-local.ps1 @c0bf74c",
+    "onde": "testar-local.ps1 @235017b",
     "tipo": "segredo-literal",
     "motivo": "Frase fixa de TESTE LOCAL do cenário SQLite antigo (letras minúsculas e hífens), sem relação com produção. Linha atual já está marcada."
   },
   {
-    "onde": "apps/api/test/security.test.ts @a9be649",
+    "onde": "apps/api/test/security.test.ts @089891b",
     "tipo": "segredo-literal",
     "motivo": "Valor propositalmente ERRADO usado para provar que um segredo incorreto é recusado (401). Linha atual já está marcada."
   }
