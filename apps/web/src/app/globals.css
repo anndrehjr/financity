@@ -26,7 +26,7 @@ h1, h2, h3, .font-display { font-family: var(--font-display), system-ui, sans-se
 .nina-3d[data-estado="listening"] { animation: nina-escuta 3.6s ease-in-out infinite; }
 .nina-entra { animation: nina-entra .45s cubic-bezier(.2,.8,.2,1) both; }
 .nina-sai { animation: nina-sai .22s ease-in forwards; }
-.nina-balao { animation: nina-balao .28s ease-out both; }
+.nina-balao { animation: nina-balao .28s ease-out both; min-height: var(--nina-h); } /* balão nunca menor que a Nina: mensagens curtas e longas variam menos */
 @keyframes nina-respira { 0%,100% { transform: translateY(0) scaleY(1); } 50% { transform: translateY(-2px) scaleY(1.008); } }
 @keyframes nina-fala { 0%,100% { transform: translateY(0) rotate(-.7deg); } 25% { transform: translateY(-3px) rotate(0deg) scale(1.006); } 50% { transform: translateY(-1px) rotate(.7deg); } 75% { transform: translateY(-3px) rotate(0deg) scale(1.006); } }
 @keyframes nina-escuta { 0%,100% { transform: rotate(-1.8deg) translateY(0); } 50% { transform: rotate(-2.6deg) translateY(-2px); } }

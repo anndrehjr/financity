@@ -20,7 +20,9 @@ export const personagem = {
       alt: "Nina, Guardiã Veterana",
     },
     // Altura da Nina na tela, em px (a largura é proporcional). Celular: ajusta entre min e max conforme a altura da tela.
-    altura: { desktop: 220, tablet: 170, celularMin: 110, celularMax: 140 },
+    // Desktop e tablet = altura do MAIOR balão do tutorial (210 px medidos com 26 rem de largura): o balão fica sempre do tamanho da
+    // Nina e ela nunca sobe nem desce conforme a mensagem. No celular o balão fica ACIMA dela e cresce para cima.
+    altura: { desktop: 220, tablet: 210, celularMin: 110, celularMax: 140 },
     // Distância da borda da tela (inferior e lateral), em px.
     margemPx: 16,
     // Só para a arte em camadas (Phaser), usada quando houver camadas no manifesto.

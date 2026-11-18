@@ -3,7 +3,7 @@ import { memo, useEffect, useMemo, useRef, useState, type CSSProperties } from "
 import { Avatar } from "./Avatar";
 import { personagem } from "./config/personagem";
 import { parseNegrito } from "./motor";
-import { escolherPosicao, type Posicao } from "./posicao";
+import { escolherLado, type Lado } from "./posicao";
 import { useTutorial } from "./tutorial/TutorialProvider";
 import { TUTORIAIS } from "./tutorial/registro";
 import type { EstadoNina } from "./tutorial/tipos";
@@ -14,7 +14,7 @@ const { velocidadeDigitacaoMs } = personagem.comportamento;
 const SEM_PRESSA = "Sem pressa! Se quiser, pode continuar sem fazer isso agora."; // id de áudio: guia.sem-pressa
 const reduzMovimento = () => { try { return window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch { return false; } };
 const { altura: ALTURA_NINA, margemPx } = personagem.visual;
-const LADO_PADRAO: Posicao["lado"] = personagem.visual.posicao === "inferior-direita" ? "direita" : "esquerda";
+const LADO_PADRAO: Lado = personagem.visual.posicao === "inferior-direita" ? "direita" : "esquerda";
 // Medidas da Nina (config/personagem.ts) viram variáveis CSS lidas por .nina-guia / .nina-3d (globals.css).
 const VARS_NINA = { "--nina-h-desktop": `${ALTURA_NINA.desktop}px`, "--nina-h-tablet": `${ALTURA_NINA.tablet}px`, "--nina-h-cel-min": `${ALTURA_NINA.celularMin}px`, "--nina-h-cel-max": `${ALTURA_NINA.celularMax}px`, "--nina-ratio": `${personagem.visual.arte.largura} / ${personagem.visual.arte.altura}` } as CSSProperties;
 const ESTADO_DA_EXPRESSAO: Record<Expressao, EstadoNina> = { feliz: "happy", pensando: "thinking", preocupada: "encouraging", comemorando: "celebrating" };
@@ -54,7 +54,7 @@ function GuiaBase() {
   const [bocaVoz, setBocaVoz] = useState<string | null>(null);
   const [saindo, setSaindo] = useState(false);
   const raiz = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState<Posicao>({ vertical: "baixo", lado: LADO_PADRAO });
+  const [ladoAtual, setLadoAtual] = useState<Lado>(LADO_PADRAO);
   const timerSaida = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => () => { if (timerSaida.current) clearTimeout(timerSaida.current); }, []);
   useEffect(() => g.voz.onMudar(() => forcar((x) => x + 1)), [g.voz]);
@@ -71,7 +71,7 @@ function GuiaBase() {
   }, [s, a]);
 
   useEffect(() => { setCompleto(false); }, [c?.chave]);
-  // Posição: durante o tutorial, a Nina sai da frente do elemento que a etapa destaca (4 cantos, ver posicao.ts).
+  // Lado: durante o tutorial, a Nina troca de LADO (nunca de altura) se estiver na frente do elemento que a etapa destaca (posicao.ts).
   const seletorAlvo = s && s.alvo.tipo === "dom" ? s.alvo.seletor : null;
   useEffect(() => {
     if (!c) return;
@@ -80,8 +80,9 @@ function GuiaBase() {
       const el = raiz.current; if (!el) return;
       const r = seletorAlvo ? document.querySelector(seletorAlvo)?.getBoundingClientRect() : undefined;
       const alvo = r && r.width > 0 && r.height > 0 ? { x: r.x, y: r.y, w: r.width, h: r.height } : null;
-      const p = escolherPosicao(alvo, { w: el.offsetWidth, h: el.offsetHeight }, { w: window.innerWidth, h: window.innerHeight }, margemPx, LADO_PADRAO);
-      setPos((a) => (a.vertical === p.vertical && a.lado === p.lado ? a : p));
+      // retângulos reais do avatar e do balão (no lado atual); o outro lado é o espelho deles
+      const rects = Array.from(el.children).map((f) => { const q = f.getBoundingClientRect(); return { x: q.x, y: q.y, w: q.width, h: q.height }; });
+      setLadoAtual((atual) => escolherLado(alvo, rects, window.innerWidth, atual, LADO_PADRAO));
     };
     const agendar = () => { cancelAnimationFrame(quadro); quadro = requestAnimationFrame(medir); };
     medir();
@@ -110,8 +111,10 @@ function GuiaBase() {
 
   if (!personagem.ativo) return null;
   const direita = personagem.visual.posicao === "inferior-direita";
-  const aDireita = pos.lado === "direita", noTopo = pos.vertical === "topo";
-  const lado = aDireita ? "items-end sm:flex-row-reverse sm:items-end" : "items-start sm:flex-row sm:items-end";
+  // A Nina fica SEMPRE no canto inferior: no celular o balão fica ACIMA dela (flex-col-reverse) e cresce para cima; no tablet/desktop
+  // ela fica ao lado do balão, alinhada pela base. Assim o tamanho da mensagem nunca a faz subir ou descer.
+  const aDireita = ladoAtual === "direita";
+  const lado = aDireita ? "flex-col-reverse items-end sm:flex-row-reverse sm:items-end" : "flex-col-reverse items-start sm:flex-row sm:items-end";
   // Esconder: a Nina some com um fade-out curto (sem animação se o aluno pediu menos movimento).
   const esconder = () => {
     if (reduzMovimento()) { g.silenciar(true); return; }
@@ -144,8 +147,8 @@ function GuiaBase() {
   const falando = digitando || g.servico.falando;
   const escutando = !falando && !!s && s.fase === "aguardando"; // o tutorial espera o aluno agir
   return (
-    <div ref={raiz} className={`nina-guia pointer-events-none fixed ${Z} flex max-w-[calc(100vw-2rem)] flex-col gap-2 ${lado} ${saindo ? "nina-sai" : "nina-entra"}`}
-      style={{ ...VARS_NINA, [noTopo ? "top" : "bottom"]: margemPx, [aDireita ? "right" : "left"]: margemPx }}>
+    <div ref={raiz} className={`nina-guia pointer-events-none fixed ${Z} flex max-w-[calc(100vw-2rem)] gap-2 ${lado} ${saindo ? "nina-sai" : "nina-entra"}`}
+      style={{ ...VARS_NINA, bottom: margemPx, [aDireita ? "right" : "left"]: margemPx }}>
       <div className="shrink-0">
         <Avatar estado={c.estado} falando={falando} escutando={escutando} boca={bocaVoz} tamanho={personagem.visual.tamanhoPx} />
       </div>
