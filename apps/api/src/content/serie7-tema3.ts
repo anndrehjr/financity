@@ -1,4 +1,4 @@
-// 7º ano — Tema 3 (RASCUNHO para revisão do professor). Fonte: aulas 5 a 9 do 4º bimestre (Educação Financeira, SEDUC-SP).
+// 7º ano — Tema 3 (APROVADO pelo professor em 2026-11-18; só vai ao banco com `serie-cli publicar`). Fonte: aulas 5 a 9 do 4º bimestre (Educação Financeira, SEDUC-SP).
 //   Aula 5 · Cupom fiscal: para que serve? – Parte 1 (cupom x nota fiscal, impostos, taxa de serviço)
 //   Aula 6 · Cupom fiscal: para que serve? – Parte 2 (cobranças adicionais, gorjeta, porcentagem)
 //   Aula 7 · Porcentagem no dia a dia – Parte 1: na mídia (notícias e propagandas)
@@ -19,7 +19,7 @@ const q = (number: number, kind: Kind, bloom: Bloom, rest: Omit<QuestaoC, "code"
   ({ code: `S7-3-${number}`, number, kind, bloom, max: 30, ...rest });
 
 export const TEMA_7_3: TemaSerie = {
-  slug: "s7-tema-3", serie: 7, rascunho: true,
+  slug: "s7-tema-3", serie: 7, rascunho: false,
   title: "Compras e Porcentagem", subtitle: "Cupom, descontos, acréscimos e contas de consumo",
   topics: ["Cupom fiscal, impostos e taxas", "Descontos e acréscimos", "Contas de consumo"],
   questions: [

@@ -32,6 +32,6 @@ export const temaVazio = (n: number): TemaSerie => ({
   questions: [1, 2, 3, 4, 5, 6, 7, 8].map(desafioVazio),
 });
 
-// Os 4 temas foram escritos a partir das 12 aulas do 4º bimestre. TODOS ainda são rascunho:
-// o professor revisa (docs/REVISAO-CONTEUDO-7-ANO.md) e só então troca `rascunho` para false.
+// Os 4 temas foram escritos a partir das 12 aulas do 4º bimestre e APROVADOS pelo professor (2026-11-18): rascunho: false.
+// Isso NÃO publica nada sozinho: só `serie-cli publicar` (manual, com backup antes) grava os temas no banco.
 export const SERIE_7: TemaSerie[] = [TEMA_7_1, TEMA_7_2, TEMA_7_3, TEMA_7_4];

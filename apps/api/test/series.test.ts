@@ -128,14 +128,16 @@ describe("estrutura por série", () => {
     assert.equal((await call("GET", "/api/me", { cookie: aluno8 })).json.maps.length, 4); // o 8º não é afetado
   });
 
-  it("7º ano: 4 temas escritos, todos ainda em rascunho; a carga de rascunho não grava nada e tema incompleto é recusado", async () => {
+  it("7º ano: 4 temas aprovados e válidos (rascunho: false); a carga de rascunho não grava nada e tema incompleto é recusado", async () => {
     assert.equal(SERIE_7.length, 4);
     for (const t of SERIE_7) {
-      assert.equal(t.questions.length, 8); assert.equal(t.rascunho, true); assert.equal(t.serie, 7);
-      assert.deepEqual(validarTema({ ...t, rascunho: false }), [], `${t.slug} deve estar completo e válido`);
+      assert.equal(t.questions.length, 8); assert.equal(t.rascunho, false); assert.equal(t.serie, 7);
+      assert.deepEqual(validarTema(t), [], `${t.slug} deve estar completo e válido`);
     }
     const antesMapas = (await one<{ c: number }>("SELECT COUNT(*)::int c FROM maps"))!.c;
-    const r = await seedSerie(SERIE_7);
+    // os mesmos 4 temas marcados como rascunho: nada vai ao banco (aqui NÃO se carrega o conteúdo real, para não misturar com os outros testes)
+    const comoRascunho = SERIE_7.map((t) => ({ ...structuredClone(t), rascunho: true }));
+    const r = await seedSerie(comoRascunho);
     assert.deepEqual(r.publicados, []); assert.equal(r.rascunhos.length, 4);
     assert.equal((await one<{ c: number }>("SELECT COUNT(*)::int c FROM maps"))!.c, antesMapas);
     const incompleto = structuredClone(temaVazio(1)); incompleto.rascunho = false;

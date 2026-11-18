@@ -1,6 +1,6 @@
 # Revisão do conteúdo do 7º ano (rascunho)
 
-Gerado a partir de `apps/api/src/content/serie7-tema1.ts` … `serie7-tema4.ts`. **Nenhum tema está publicado**: todos estão como `rascunho: true` e não vão para o banco até você revisar e trocar para `false`.
+Gerado a partir de `apps/api/src/content/serie7-tema1.ts` … `serie7-tema4.ts`. **Aprovado pelo professor em 2026-11-18** (`rascunho: false`). **Ainda NÃO está publicado no banco**: só vai ao ar com o comando manual `serie-cli publicar`, depois de backup e com autorização.
 
 Fonte: as 12 aulas do 4º bimestre do 7º ano (Educação Financeira, SEDUC-SP). Os temas foram montados **por assunto**. Os números são os dos slides ou dados fictícios coerentes com eles. Ao lado do título de cada desafio está a aula de onde ele veio.
 
