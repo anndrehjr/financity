@@ -66,3 +66,11 @@ Sem senhas, PINs ou chaves neste arquivo.
 - Novo: série 7º/8º (aluno só vê temas da sua série; "Seus temas chegam em breve!" para série sem temas), filtro de série no painel, Nina por série, molde do 7º, importador, **botão Excluir aluno** no painel.
 - Incidente: backup automático falhava (permissão de execução perdida no deploy). Corrigido; após cada deploy rodar `chmod +x deploy/backup/*.sh`.
 - Próximo: conteúdo do 7º (docs/CONTEUDO-7-ANO.md), importar os 14 alunos (simulação primeiro, com autorização), testar o painel (Excluir) com aluno de teste.
+
+## Atualização 2026-11-18: 7º ANO E NINA 3D PUBLICADOS — ESTADO ATUAL (leia primeiro)
+- **No ar:** Nina 3D no tutorial (visual novo, animações CSS, fixa no canto inferior; guia em `docs/NINA-3D.md`), **7º ano** (4 temas × 8 desafios, aprovados pelo professor; `docs/REVISAO-CONTEUDO-7-ANO.md`), 5 falas da Nina do 7º com áudio. PR #24 (main `86b5607`).
+- **Banco (VPS):** migração 006 (sem migração nova). Backups: `financity-20261118-141304Z.dump` (antes de publicar; restauração testada) e `financity-20261118-141756Z.dump` (depois de importar o 7º). Conteúdo do 7º gravado com `serie-cli publicar` (maps 12, questions 84).
+- **Alunos:** 14 do 7º importados (turma "7 ano"); 8º intacto (attempts 21, answers 149). Totais: 56 alunos.
+- **Do André:** imprimir `D:\Projetos Serios\Jogos Novos\dados-alunos\credenciais-7ano.html`, entregar os cartões e **apagar o HTML e o `7ano.csv`**. Ver a Nina 3D no site real e passar o tutorial; entrar com um aluno do 7º e conferir os 4 temas.
+- **Não verificado:** tela de um aluno real do 7º; Nina em Safari/Firefox/celular físico/leitor de tela; áudio saindo pelo alto-falante.
+- **Pendências antigas:** trocar a senha do professor e apagar `credenciais-professor.txt`; plano da ElevenLabs (créditos no rodapé); envio dos backups ao Google Drive; arte própria dos cenários.
