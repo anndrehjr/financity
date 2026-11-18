@@ -9,7 +9,7 @@ A Nina do tutorial agora usa uma arte 3D estilizada (vista frontal, fundo transp
 | Imagem usada no site (corpo inteiro, 347×700, WebP, 40 KB) | `apps/web/public/guia/nina/nina-3d.webp` |
 | Miniatura redonda do botão "ver tutorial" (176×176, 10 KB) | `apps/web/public/guia/nina/nina-3d-rosto.webp` |
 | **Original sem perdas** (recorte da vista frontal, PNG 386×779) | `apps/web/design/nina/nina-3d-frontal.png` (fora de `public/`, não vai para o site) |
-| Ficha completa em 5 vistas (frontal, ¾, perfil, costas) | `D:\Projetos Serios\Jogos Novos\nina3d\Ficha de Personagem Financity em 360°.png` (fora do repositório) |
+| Ficha completa em 5 vistas (frontal, ¾, perfil, costas) | `<pasta-local>\nina3d\Ficha de Personagem Financity em 360°.png` (fora do repositório) |
 | Tamanho, posição e caminho da imagem | `apps/web/src/features/guia/config/personagem.ts` → `visual` |
 | Animações (CSS) | `apps/web/src/app/globals.css` → bloco "Nina 3D" |
 | Componentes | `Guia.tsx` (balão e controles), `Avatar.tsx`, `nina/NinaCharacter.tsx` (imagem + estados), `posicao.ts` (onde ela fica) |

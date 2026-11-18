@@ -1,10 +1,10 @@
 # Migração SQLite → PostgreSQL: procedimento, validação e reversão
 
 ## 1. Estado do sistema atual (preservado)
-- Pasta original: `D:\Projetos Serios\Jogos Novos\financity` — **não foi alterada** (branch `main`, tag `v0-sqlite-estavel`).
+- Pasta original: `<pasta-do-projeto-sqlite>` — **não foi alterada** (branch `main`, tag `v0-sqlite-estavel`).
 - Banco original `data/financity.db` (+ `-wal`/`-shm`): **intacto**. A migração lê somente uma cópia verificada.
-- Versão nova: `D:\Projetos Serios\Jogos Novos\financity-pg` (git worktree da branch `feat/postgres-api`).
-- Backups desta sessão (em `D:\Projetos Serios\Jogos Novos\financity-backups\<data-hora>\`): `financity.db` (API de backup do SQLite), `codigo-financity.tar.gz`, `data-bruto/` (cópia exata dos arquivos, incluindo WAL, `secret.key`), `SHA256SUMS.txt`, `verificacao-sqlite.json`.
+- Versão nova: `<pasta-do-projeto>` (git worktree da branch `feat/postgres-api`).
+- Backups desta sessão (em `<pasta-de-backups>\<data-hora>\`): `financity.db` (API de backup do SQLite), `codigo-financity.tar.gz`, `data-bruto/` (cópia exata dos arquivos, incluindo WAL, `secret.key`), `SHA256SUMS.txt`, `verificacao-sqlite.json`.
   - Verificação do backup: `integrity_check = ok`, 0 violações de chave estrangeira, restauração em arquivo separado com contagens idênticas; código extraído idêntico ao original.
   - ⚠ Os backups contêm dados de alunos e o `secret.key`: mantenha-os fora de nuvem pública e de repositórios.
 

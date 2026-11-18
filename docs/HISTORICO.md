@@ -4,10 +4,10 @@ Sem senhas, PINs, chaves nem dados de alunos neste arquivo.
 
 ## Arquitetura em produção
 - **Site:** Vercel, https://financity-eta.vercel.app (Root Directory `apps/web`, Node 22.x, branch `main`). Variáveis `API_URL` e `GATEWAY_SECRET` **só em Production** → os deploys de *Preview* não conseguem logar (503).
-- **API + PostgreSQL 16:** VPS, containers `financity-api-1` e `financity-db-1` (compose em `~/docker/financity`, segredos em `.env.production`, banco só na rede interna). API em https://api.144-217-161-241.sslip.io (Nginx Proxy Manager + Let's Encrypt).
+- **API + PostgreSQL 16:** VPS, containers `financity-api-1` e `financity-db-1` (compose em `~/docker/financity`, segredos em `.env.production`, banco só na rede interna). API em https://<HOST-DA-API> (Nginx Proxy Manager + Let's Encrypt).
 - O navegador só fala com o site; o site assina cada chamada (HMAC) para a API; a API recusa chamadas sem assinatura. Detalhes: `docs/ARQUITETURA.md`.
 - **Backup:** cron diário 02:40 (`~/backups/financity`), script `deploy/backup/backup-financity.sh`, restauração `restore-financity.sh`. Ainda sem envio ao Google Drive.
-- **Sistema antigo (SQLite):** `D:\Projetos Serios\Jogos Novos\financity`, intacto (caminho de retorno). Backups em `financity-backups`.
+- **Sistema antigo (SQLite):** `<pasta-do-projeto-sqlite>`, intacto (caminho de retorno). Backups em `financity-backups`.
 
 ## O que foi entregue (PRs no GitHub `anndrehjr/financity`)
 | PR | Entrega |
@@ -32,7 +32,7 @@ Sem senhas, PINs, chaves nem dados de alunos neste arquivo.
 - Ferramentas (`tools/nina-voz`, ver README): `inventario.ts`, `gerar.ts` (blocos para colar na ElevenLabs), `alinhar.py` + `cortar-alinhado.py` (cortam um áudio longo por transcrição), `cortar-blocos.py`. Ambiente Python local `tools/nina-voz/.venv` (imageio-ffmpeg, faster-whisper; PyAV 19 exige o ajuste já aplicado nos scripts). Gravação original e intermediários ficam em `origem/` e `trabalho/` (fora do git).
 
 ### Importação de alunos
-`apps/api/src/importar-cli.ts` (roda dentro do container, CSV pela entrada padrão, credenciais pela saída padrão) e `tools/alunos/importar.ts` (recusa CSV dentro do repositório; simulação por padrão; gera `credenciais-<série>ano.html` na pasta do CSV; só contagens no terminal). A lista do 7º ano está em `D:\Projetos Serios\Jogos Novos\dados-alunos\7ano.csv` (**fora do git**).
+`apps/api/src/importar-cli.ts` (roda dentro do container, CSV pela entrada padrão, credenciais pela saída padrão) e `tools/alunos/importar.ts` (recusa CSV dentro do repositório; simulação por padrão; gera `credenciais-<série>ano.html` na pasta do CSV; só contagens no terminal). A lista do 7º ano está em `<pasta-fora-do-repositório>\7ano.csv` (**fora do git**).
 
 ## PR #12 — estrutura por série (PUBLICADO)
 - Migração aditiva `004_series.sql`: `students.serie` e `maps.serie` (padrão 8) + gatilho que acompanha a série da turma. Nada apagado/alterado; login, senhas e progresso do 8º não são tocados.
