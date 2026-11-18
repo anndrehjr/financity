@@ -1,7 +1,6 @@
-// 7º ano — Tema 1 (RASCUNHO para revisão do professor). Fonte: aulas 1, 2 e 3 do 4º bimestre (Educação Financeira, SEDUC-SP).
+// 7º ano — Tema 1 (RASCUNHO para revisão do professor). Fonte: aulas 1 e 2 do 4º bimestre (Educação Financeira, SEDUC-SP).
 //   Aula 1 · Introdução à renda – Parte 1 (renda formal x informal; histograma)
 //   Aula 2 · Introdução à renda – Parte 2 (leitura de gráficos de renda)
-//   Aula 3 · Quanto tem na conta? (extrato bancário; gastos essenciais, não essenciais e tarifas)
 // Todos os números abaixo são os dos próprios slides ou dados fictícios coerentes com eles.
 import type { Bloom, Kind, OpcaoC, QuestaoC } from "./culminancia.js";
 import type { TemaSerie } from "../lib/serie.js";
@@ -9,7 +8,6 @@ import type { TemaSerie } from "../lib/serie.js";
 const TCT = "Tema transversal: Educação Financeira";
 const AULA1 = "EF06MA32 (habilidade indicada na aula 1); " + TCT;
 const AULA2 = "EF07GE08 (habilidade indicada na aula 2); " + TCT;
-const AULA3 = "EF07MA12 (habilidade indicada na aula 3); " + TCT;
 
 const ch = (points: number[], texts: string[], whys: string[]): OpcaoC[] => texts.map((text, i) => ({ text, points: points[i], why: whys[i] }));
 const mu = (correct: string, texts: string[], whys: string[]): OpcaoC[] => texts.map((text, i) => ({ text, points: 0, why: whys[i], correct: correct.includes("ABCD"[i]) }));
@@ -19,8 +17,8 @@ const q = (number: number, kind: Kind, bloom: Bloom, rest: Omit<QuestaoC, "code"
 
 export const TEMA_7_1: TemaSerie = {
   slug: "s7-tema-1", serie: 7, rascunho: true,
-  title: "Renda e Dinheiro na Conta", subtitle: "De onde o dinheiro vem e para onde ele vai",
-  topics: ["Renda formal e informal", "Leitura de gráficos de renda", "Extrato bancário"],
+  title: "Renda e Trabalho", subtitle: "Quem trabalha, quanto ganha e o que os dados mostram",
+  topics: ["Renda formal e informal", "Leitura de gráficos de renda", "Planejar com renda variável"],
   questions: [
     q(1, "choice", "Lembrar", {
       source: "Aula 1", title: "O jovem aprendiz", theme: "Renda formal", scene: "goal",
@@ -41,14 +39,13 @@ export const TEMA_7_1: TemaSerie = {
         ["Relaciona registro, previsibilidade e direitos ao tipo de renda.", "Receber dinheiro não torna a renda formal; falta registro e direitos.", "Classifica certo, mas afirma que a renda informal é sempre maior: ela é variável e sem estabilidade.", "Trabalhar para outra pessoa com registro é justamente o trabalho formal."]),
     }),
     q(3, "multi", "Aplicar", {
-      source: "Aula 3", title: "O extrato da Ana Maria", theme: "Tarifas bancárias", scene: "ledger",
-      scenario: "No extrato da conta-corrente de Ana Maria, na última semana de outubro, aparecem: aula de natação (R$ 158,00), manutenção da conta (R$ 28,00), supermercado (R$ 280,00) e transferência TED (R$ 12,50).",
-      prompt: "Selecione TODOS os lançamentos que são tarifas (valores cobrados pelo banco por um serviço).",
-      hint: "Tarifas são cobradas pelo banco: manutenção, transferências, saques, cartão…",
-      rubric: "Conjunto correto B e D; pontuação proporcional, sem crédito se marcar tudo", strength: "identificação de tarifas bancárias no extrato", retake: "diferença entre gastos e tarifas bancárias", bncc: AULA3,
-      options: mu("BD",
-        ["Aula de natação (R$ 158,00).", "Manutenção da conta (R$ 28,00).", "Supermercado (R$ 280,00).", "Transferência TED (R$ 12,50)."],
-        ["É um gasto não essencial pago a um terceiro, não uma cobrança do banco.", "É a tarifa que o banco cobra para manter a conta funcionando.", "É um gasto essencial (alimentação), não uma tarifa.", "É a tarifa cobrada pelo banco pela transferência."]),
+      source: "Aula 1", title: "Fontes de renda da comunidade", theme: "Reconhecer renda informal", scene: "bag",
+      scenario: "Quatro pessoas da mesma comunidade contam como ganham dinheiro.",
+      prompt: "Selecione TODAS as situações que são exemplos de renda informal.", hint: "Renda informal: sem registro e sem garantia de direitos trabalhistas.",
+      rubric: "Conjunto correto A e C; pontuação proporcional, sem crédito se marcar tudo", strength: "reconhecimento de exemplos de renda informal", retake: "exemplos de renda formal e informal", bncc: AULA1,
+      options: mu("AC",
+        ["Venda autônoma de salgados na porta da escola.", "Salário com carteira assinada de vendedor contratado em uma loja.", "Trabalhos temporários, os “bicos”, sem registro.", "Jovem aprendiz com contrato e direitos trabalhistas."],
+        ["É uma venda autônoma, sem registro: renda informal.", "Tem carteira assinada e direitos: renda formal.", "Trabalho temporário sem registro: renda informal.", "Tem contrato e direitos trabalhistas: renda formal."]),
     }),
     q(4, "choice", "Analisar", {
       source: "Aula 1", title: "Renda das famílias da comunidade", theme: "Ler um histograma", scene: "trend",
@@ -78,22 +75,22 @@ export const TEMA_7_1: TemaSerie = {
         ["Trata a média como se fosse o ganho de cada pessoa.", "Calcula a diferença corretamente e percebe que a média não mostra a distribuição.", "Calcula certo, mas a média sozinha não informa se a desigualdade mudou.", "Inverte a comparação: de 2.901 para 3.408 houve aumento."]),
     }),
     q(7, "choice", "Avaliar", {
-      source: "Aula 3", title: "Onde economizar?", theme: "Decidir com base no extrato", scene: "envelopes",
-      scenario: "Na semana do extrato de Ana Maria, os gastos essenciais foram R$ 2.680 (supermercado R$ 280 e aluguel R$ 2.400), os não essenciais R$ 238 (natação R$ 158 e pizzaria R$ 80) e as tarifas R$ 40,50 (manutenção R$ 28 e TED R$ 12,50). Ela quer economizar R$ 100 na semana seguinte.",
-      prompt: "Qual decisão é melhor fundamentada no extrato?",
-      rubric: "Escala: integral 30; adequada parcial 20; incipiente 10; inadequada 0", strength: "decisão financeira fundamentada nos dados do extrato", retake: "separar gastos essenciais, não essenciais e tarifas para decidir", bncc: AULA3,
-      options: ch([0, 30, 20, 10],
-        ["Cortar o aluguel, por ser o maior valor do extrato.", "Reduzir gastos não essenciais (R$ 238 na semana), manter aluguel e mercado e perguntar ao banco por um pacote com tarifas menores.", "Reduzir só os gastos não essenciais e ignorar as tarifas, por serem pequenas.", "Parar de consultar o extrato para não se preocupar com os números."],
-        ["O aluguel é um gasto essencial; cortá-lo não é uma opção viável.", "Protege o essencial, usa os gastos que podem ser reduzidos e ainda busca reduzir tarifas, que podem ser renegociadas.", "A decisão é válida, mas deixa de lado as tarifas, que também podem ser reduzidas.", "Sem consultar o extrato, não há como planejar nem identificar onde economizar."]),
+      source: "Aula 2", title: "O rendimento do Distrito Federal", theme: "Avaliar uma afirmação sobre a média", scene: "ad",
+      scenario: "Um gráfico mostra o rendimento médio: Distrito Federal R$ 5.037, Brasil R$ 3.208 e Maranhão R$ 2.051. Um colega afirma: “Todo morador do DF ganha R$ 5.037”.",
+      prompt: "Qual avaliação dessa afirmação é mais adequada?", hint: "Uma média mostra como a renda está dividida entre as pessoas?",
+      rubric: "Escala: integral 30; adequada parcial 20; incipiente 10; inadequada 0", strength: "avaliação crítica de afirmações sobre o rendimento médio", retake: "limites da média: ela não mostra a distribuição da renda", bncc: AULA2,
+      options: ch([0, 10, 30, 0],
+        ["Correta: se a média do DF é R$ 5.037, cada morador recebe esse valor.", "Incorreta, porque o maior rendimento do gráfico é o do Maranhão.", "Incorreta: é um valor médio. Há moradores que ganham menos e outros que ganham mais; a média não mostra como a renda se distribui.", "Correta, pois o DF tem a maior média e a diferença para o Maranhão é de R$ 2.986."],
+        ["Trata a média como o valor que cada pessoa recebe.", "Rejeita a afirmação, mas por um motivo errado: o maior rendimento do gráfico é o do DF.", "Reconhece que a média não revela a distribuição da renda entre as pessoas.", "A diferença (R$ 5.037 − R$ 2.051 = R$ 2.986) está certa, mas isso não prova que todos ganham a mesma coisa."]),
     }),
     q(8, "choice", "Criar", {
-      source: "Aula 3", title: "Acompanhar o dinheiro da conta", theme: "Rotina de controle com o extrato", scene: "plan",
-      scenario: "Uma família quer acompanhar melhor o dinheiro que entra e sai da conta durante o mês e evitar surpresas.",
-      prompt: "Escolha o plano que usa o extrato com mais critério.",
-      rubric: "Avaliar plano por 4 critérios: periodicidade, entradas e saídas, classificação dos gastos e saldo disponível", strength: "rotina de acompanhamento financeiro com o extrato", retake: "uso do extrato para acompanhar entradas, saídas e saldo", bncc: AULA3,
-      options: ch([0, 30, 10, 20],
-        ["Olhar o extrato só no fim do ano.", "Consultar o extrato toda semana, conferir entradas (C) e saídas (D), separar gastos essenciais, não essenciais e tarifas e comparar com o saldo disponível antes de novas compras.", "Olhar apenas o saldo atual e gastar tudo o que aparecer, sem conferir o resto.", "Consultar o extrato e anotar só os maiores gastos, ignorando tarifas e pequenas saídas."],
-        ["Um controle só no fim do ano não evita surpresas durante o mês.", "Combina periodicidade, leitura de C e D, classificação dos gastos e atenção ao saldo disponível.", "O saldo atual pode incluir valores bloqueados ou pendentes; o disponível é o que pode ser usado.", "Acompanha parte do dinheiro, mas pequenas saídas e tarifas também pesam no mês."]),
+      source: "Aulas 1–2", title: "Renda que varia", theme: "Planejar com renda variável", scene: "envelopes",
+      scenario: "Marina vende doces por encomenda. Em alguns meses ganha R$ 1.200,00 e em outros, R$ 600,00. Ela quer organizar o dinheiro sem se apertar nos meses mais fracos.",
+      prompt: "Escolha o plano que melhor lida com uma renda que varia.",
+      rubric: "Avaliar plano por 4 critérios: registro das entradas, gastos essenciais primeiro, reserva nos meses melhores e realismo", strength: "planejamento com renda variável", retake: "como organizar o dinheiro quando a renda muda de mês para mês", bncc: AULA1,
+      options: ch([0, 10, 30, 20],
+        ["Gastar tudo nos meses bons, porque nos meses ruins ela dá um jeito.", "Basear os gastos sempre no mês de R$ 1.200,00, porque é o valor mais alto.", "Anotar o que entra e sai, pagar primeiro os gastos essenciais e guardar parte do dinheiro dos meses melhores para os meses mais fracos.", "Anotar o que entra, mas sem guardar nada para os meses mais fracos."],
+        ["A renda informal é variável e sem estabilidade: gastar tudo deixa os meses ruins sem cobertura.", "Planejar pelo mês mais alto faltará dinheiro nos meses de R$ 600,00.", "Combina registro, prioridade ao essencial e reserva para os meses de renda menor.", "Registrar ajuda, mas sem uma reserva os meses de renda baixa continuam sem cobertura."]),
     }),
   ],
 };
