@@ -3,10 +3,10 @@
 Gerado por `npx tsx tools/nina-voz/inventario.ts`. Catálogo único: `apps/web/src/data/nina/falas.json`.
 
 ## Resumo
-- Falas no catálogo: **38** (ativas: 38; inativas/código morto: 0).
-- Com áudio da gravação original: **37**.
-- **Sem áudio (ativas): 1**, somando **73 caracteres** a gerar (73 se contar as inativas).
-- Plano gratuito da ElevenLabs: ~10.000 créditos/mês (1 crédito ≈ 1 caractere no multilingual v2). 73 caracteres cabem com folga; refazer falas ruins gasta créditos de novo.
+- Falas no catálogo: **42** (ativas: 42; inativas/código morto: 0).
+- Com áudio da gravação original: **42**.
+- **Sem áudio (ativas): 0**, somando **0 caracteres** a gerar (0 se contar as inativas).
+- Plano gratuito da ElevenLabs: ~10.000 créditos/mês (1 crédito ≈ 1 caractere no multilingual v2). 0 caracteres cabem com folga; refazer falas ruins gasta créditos de novo.
 
 ## Tabela
 
@@ -16,6 +16,10 @@ Gerado por `npx tsx tools/nina-voz/inventario.ts`. Catálogo único: `apps/web/s
 | mapa_2.1 | 8 | Atividade — introdução do tema 2 | Tema 2: **ética financeira**. Honestidade vale mais que qualquer lucro. | **sim (original)** | 67 | número fixo no texto (4 temas / 8 desafios): vira falso se o nº mudar |
 | mapa_3.1 | 8 | Atividade — introdução do tema 3 | Tema 3: **segurança digital**. Desconfie de pressa, links e pedidos de código. | **sim (original)** | 74 | número fixo no texto (4 temas / 8 desafios): vira falso se o nº mudar |
 | mapa_4.1 | 8 | Atividade — introdução do tema 4 | Tema 4: **consumo consciente**. Faça as contas antes de se empolgar com promoção. | **sim (original)** | 77 | número fixo no texto (4 temas / 8 desafios): vira falso se o nº mudar |
+| s7.mapa_1.1 | 7 | s7.mapa_1 | Tema 1: **renda e trabalho**. De onde vem o dinheiro e o que os dados mostram. | **sim (original)** | 74 | número fixo no texto (4 temas / 8 desafios): vira falso se o nº mudar |
+| s7.mapa_2.1 | 7 | s7.mapa_2 | Tema 2: **controle do dinheiro**. Extrato e fatura contam para onde o dinheiro vai. | **sim (original)** | 79 | número fixo no texto (4 temas / 8 desafios): vira falso se o nº mudar |
+| s7.mapa_3.1 | 7 | s7.mapa_3 | Tema 3: **compras e porcentagem**. Leia o cupom e faça as contas antes de pagar. | **sim (original)** | 76 | número fixo no texto (4 temas / 8 desafios): vira falso se o nº mudar |
+| s7.mapa_4.1 | 7 | s7.mapa_4 | Tema 4: **metas e gráficos**. Planeje o dinheiro e leia os dados com atenção. | **sim (original)** | 73 | número fixo no texto (4 temas / 8 desafios): vira falso se o nº mudar |
 | acerto.1 | geral | Atividade — logo após confirmar (pontuação alta) | Mandou bem! Boa escolha. | **sim (original)** | 24 | sorteio: 1 áudio por variação |
 | acerto.2 | geral | Atividade — logo após confirmar (pontuação alta) | Isso aí! Pensou com cuidado. | **sim (original)** | 28 | sorteio: 1 áudio por variação |
 | acerto.3 | geral | Atividade — logo após confirmar (pontuação alta) | Boa! Seguimos para o próximo. | **sim (original)** | 29 | sorteio: 1 áudio por variação |
@@ -29,7 +33,7 @@ Gerado por `npx tsx tools/nina-voz/inventario.ts`. Catálogo único: `apps/web/s
 | fase_concluida.2 | geral | Resultado do tema | Missão cumprida! Bora para o próximo tema? | **sim (original)** | 42 | sorteio: 1 áudio por variação |
 | vitoria.1 | geral | Resultado do último tema | VOCÊ CHEGOU AO FIM! Todos os temas concluídos! | **sim (original)** | 46 | — |
 | vitoria.2 | geral | Resultado do último tema | Na vida real é igual: **pense antes de gastar** e cuide do seu dinheiro. | **sim (original)** | 68 | — |
-| sem_temas.1 | geral | Mapas — série sem temas publicados ("Seus temas chegam em breve!") | Seus temas chegam em breve! Quando estiverem prontos, eles aparecem aqui. | não | 73 | — |
+| sem_temas.1 | geral | Mapas — série sem temas publicados ("Seus temas chegam em breve!") | Seus temas chegam em breve! Quando estiverem prontos, eles aparecem aqui. | **sim (original)** | 73 | — |
 | tutorial.primeiros-passos.abertura-1 | geral | Tutorial (mapas e atividade) | Oiê! Que alegria ter você aqui. | **sim (original)** | 31 | — |
 | tutorial.primeiros-passos.abertura-2 | geral | Tutorial (mapas e atividade) | Eu sou a **Nina**, sua amiga e guia nesta incrível aventura pelo mundo da educação financeira. | **sim (original)** | 90 | — |
 | tutorial.primeiros-passos.abertura-3 | geral | Tutorial (mapas e atividade) | Seja muito bem-vindo ao **Financity**. | **sim (original)** | 34 | masculino (gravação original) |
