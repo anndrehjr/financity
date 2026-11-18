@@ -1,13 +1,16 @@
-// 7º ano — Tema 3 (RASCUNHO para revisão do professor). Fonte: aulas 7, 8 e 9 do 4º bimestre (Educação Financeira, SEDUC-SP).
-//   Aula 7 · Porcentagem no dia a dia – Parte 1: na mídia (notícias, propagandas, promoções)
+// 7º ano — Tema 3 (RASCUNHO para revisão do professor). Fonte: aulas 5 a 9 do 4º bimestre (Educação Financeira, SEDUC-SP).
+//   Aula 5 · Cupom fiscal: para que serve? – Parte 1 (cupom x nota fiscal, impostos, taxa de serviço)
+//   Aula 6 · Cupom fiscal: para que serve? – Parte 2 (cobranças adicionais, gorjeta, porcentagem)
+//   Aula 7 · Porcentagem no dia a dia – Parte 1: na mídia (notícias e propagandas)
 //   Aula 8 · Porcentagem no dia a dia – Parte 2: descontos e acréscimos
-//   Aula 9 · Porcentagem no dia a dia – Parte 3: contas de consumo (bandeiras tarifárias, ICMS, multa)
+//   Aula 9 · Porcentagem no dia a dia – Parte 3: contas de consumo (bandeiras tarifárias)
 // Todos os números abaixo são os dos próprios slides ou dados fictícios coerentes com eles.
 import type { Bloom, Kind, OpcaoC, QuestaoC } from "./culminancia.js";
 import type { TemaSerie } from "../lib/serie.js";
 
 const TCT = "Tema transversal: Educação Financeira";
-const MA02 = "EF07MA02 (habilidade indicada nas aulas 7 a 9); " + TCT;
+const AULA5 = "EF07CI06 (habilidade indicada na aula 5); " + TCT;
+const MA02 = "EF07MA02 (habilidade indicada nas aulas 6 a 9); " + TCT;
 
 const ch = (points: number[], texts: string[], whys: string[]): OpcaoC[] => texts.map((text, i) => ({ text, points: points[i], why: whys[i] }));
 const mu = (correct: string, texts: string[], whys: string[]): OpcaoC[] => texts.map((text, i) => ({ text, points: 0, why: whys[i], correct: correct.includes("ABCD"[i]) }));
@@ -17,35 +20,36 @@ const q = (number: number, kind: Kind, bloom: Bloom, rest: Omit<QuestaoC, "code"
 
 export const TEMA_7_3: TemaSerie = {
   slug: "s7-tema-3", serie: 7, rascunho: true,
-  title: "Porcentagem no Dia a Dia", subtitle: "Descontos, aumentos e contas de consumo",
-  topics: ["Porcentagem na mídia e nas promoções", "Descontos e acréscimos", "Contas de consumo, impostos e multas"],
+  title: "Compras e Porcentagem", subtitle: "Cupom, descontos, acréscimos e contas de consumo",
+  topics: ["Cupom fiscal, impostos e taxas", "Descontos e acréscimos", "Contas de consumo"],
   questions: [
     q(1, "choice", "Lembrar", {
-      source: "Aula 7", title: "A notícia dos 9%", theme: "O que é porcentagem", scene: "message",
-      scenario: "Uma notícia afirma: “Apenas 9% do plástico global é reciclado”.",
-      prompt: "O que significa a porcentagem 9% nessa notícia?", hint: "Nas porcentagens, o todo é sempre 100%: “100 partes em cada 100”.",
-      rubric: "Interpretar porcentagem como parte de 100", strength: "interpretação do significado de uma porcentagem", retake: "o que significa o símbolo % (partes em cada 100)", bncc: MA02,
-      options: ch([10, 30, 0, 0],
-        ["Que apenas 9 produtos de plástico foram reciclados no mundo.", "Que 9 em cada 100 produtos de plástico foram reciclados.", "Que 9 em cada 10 produtos de plástico foram reciclados.", "Que o plástico reciclado custa 9% menos."],
-        ["Percebe o número 9, mas esquece que o todo é 100: não é a quantidade total.", "A porcentagem indica 9 partes em cada 100 do todo.", "Confunde 100 com 10: 9 em cada 10 seria 90%.", "A notícia fala da quantidade reciclada, não do preço."]),
+      source: "Aula 5", title: "O papelzinho da compra", theme: "Para que serve o cupom fiscal", scene: "bag",
+      scenario: "Depois de comprar um lanche na padaria, o caixa pergunta se você quer o cupom fiscal.",
+      prompt: "Qual é um bom motivo para pedir e guardar o cupom fiscal?", hint: "O cupom é uma proteção para o consumidor.",
+      rubric: "Reconhecer a função do cupom fiscal (comprovar a compra, garantia, troca, controle de impostos)", strength: "reconhecimento da função do cupom fiscal", retake: "para que serve o cupom fiscal", bncc: AULA5,
+      options: ch([0, 10, 30, 0],
+        ["Evitar filas no caixa.", "Guardar como recordação da compra.", "Comprovar a compra e poder exigir garantia ou troca.", "Ganhar desconto automático."],
+        ["O cupom não tem relação com filas.", "Guardar ajuda, mas o objetivo principal é comprovar a compra e ter direitos.", "É a função principal: comprovar a compra e proteger o consumidor.", "O cupom não dá desconto automático."]),
     }),
     q(2, "choice", "Compreender", {
-      source: "Aula 7", title: "A promoção do smartphone", theme: "Interpretar a porcentagem de uma promoção", scene: "phone",
-      scenario: "Um anúncio diz: “15% de desconto na compra de smartphones. Válido só para pagamento à vista no Pix”.",
-      prompt: "O que a porcentagem indica nessa oferta?", hint: "Além da porcentagem, leia a condição da compra.",
-      rubric: "Interpretar porcentagem e condição de compra em propaganda", strength: "interpretação de porcentagens em propagandas", retake: "como ler porcentagem e condições em promoções", bncc: MA02,
+      source: "Aula 5", title: "Cupom ou nota fiscal?", theme: "Diferença entre cupom fiscal e nota fiscal", scene: "packs",
+      scenario: "Bruno comprou um lanche na padaria e recebeu um papel com informações simples. A mãe dele comprou um eletrodoméstico pela internet e recebeu um documento com dados do cliente, descrição dos itens, valores, impostos e forma de entrega.",
+      prompt: "Qual explicação diferencia corretamente os dois documentos?",
+      rubric: "Diferenciar cupom fiscal (compras do dia a dia, informações simples) de nota fiscal (informações detalhadas)", strength: "diferença entre cupom fiscal e nota fiscal", retake: "diferença entre cupom fiscal e nota fiscal", bncc: AULA5,
       options: ch([0, 10, 0, 30],
-        ["Um desconto de R$ 15,00 em qualquer smartphone.", "Um desconto de 15% sobre o preço, válido para qualquer forma de pagamento.", "Um aumento de 15% no preço de quem paga no Pix.", "Um desconto de 15% sobre o preço do produto, válido só para pagamento à vista no Pix."],
-        ["15% é uma parte de cada 100 do preço, não um valor fixo em reais.", "Entende o desconto, mas ignora a condição: só vale para pagamento à vista no Pix.", "Troca desconto por aumento.", "Interpreta a porcentagem e a condição de compra."]),
+        ["O cupom é só para compras on-line, e a nota fiscal só para compras no mercado.", "Os dois são idênticos; só mudam de nome.", "A nota fiscal serve só para pagar impostos e não ajuda o consumidor.", "O cupom fiscal costuma ser entregue em compras do dia a dia, com informações mais simples; a nota fiscal registra a venda com informações mais detalhadas."],
+        ["Inverte as situações: o cupom é típico do dia a dia, e a nota aparece em compras como as on-line.", "É comum confundir os dois, mas a nota traz informações mais detalhadas que o cupom.", "A nota também comprova a compra, garante trocas e direitos do consumidor.", "Descreve corretamente o tipo de compra e o nível de detalhe de cada documento."]),
     }),
     q(3, "multi", "Aplicar", {
-      source: "Aula 9", title: "A conta de luz", theme: "Bandeiras tarifárias e consumo", scene: "bag",
-      scenario: "A família de Caio quer entender por que a conta de luz muda de um mês para outro.",
-      prompt: "Selecione TODAS as afirmações corretas sobre contas de consumo.", hint: "Pense em consumo, bandeiras e em quem define o ICMS.",
-      rubric: "Conjunto correto A e B; pontuação proporcional, sem crédito se marcar tudo", strength: "compreensão de porcentagens em contas de consumo", retake: "bandeiras tarifárias, faixas de consumo e ICMS", bncc: MA02,
+      source: "Aulas 5–6", title: "Impostos, taxa de serviço e gorjeta", theme: "Cobranças além do produto", scene: "ad",
+      scenario: "Ao analisar o cupom fiscal de um restaurante, Sofia percebe que ele traz impostos, uma taxa de serviço de 10% e a possibilidade de deixar gorjeta.",
+      prompt: "Selecione TODAS as afirmações verdadeiras.",
+      hint: "Pense no que é obrigatório e no que é opcional.",
+      rubric: "Conjunto correto A e B; pontuação proporcional, sem crédito se marcar tudo", strength: "distinção entre impostos obrigatórios e cobranças opcionais", retake: "diferença entre impostos, taxa de serviço e gorjeta", bncc: AULA5,
       options: mu("AB",
-        ["Em contas de água e luz, quanto mais se consome, maior é a tarifa proporcional em cada faixa de consumo.", "As bandeiras tarifárias acrescentam (ou não) uma porcentagem extra na conta de luz, conforme o custo de geração de energia.", "A bandeira verde sempre acrescenta 25% à conta.", "O ICMS é igual em todos os estados, porque é um imposto federal."],
-        ["Correto: as faixas de consumo têm tarifas proporcionais maiores para quem consome mais.", "Correto: as bandeiras podem acrescentar uma porcentagem extra à conta.", "Na bandeira verde não há acréscimo; o acréscimo de 25% do exemplo é o da bandeira vermelha.", "O ICMS é um imposto estadual: cada estado define o percentual."]),
+        ["A gorjeta é voluntária: o cliente não é obrigado a pagá-la.", "Os impostos são valores cobrados pelo governo e ajudam a financiar serviços como escolas e hospitais.", "A taxa de serviço é sempre obrigatória e sempre de 10%.", "O cupom fiscal só serve para quem vai pedir troca."],
+        ["Correto: a gorjeta é um valor adicional dado de forma voluntária.", "Correto: impostos financiam serviços públicos como educação, saúde e segurança.", "A cobrança de taxa de serviço não é obrigatória, e o índice pode variar (8%, 10%, 12%…).", "O cupom também ajuda no controle de impostos e comprova valores cobrados."]),
     }),
     q(4, "choice", "Analisar", {
       source: "Aula 9", title: "Preços no supermercado", theme: "Variação percentual e variação em reais", scene: "packs",
@@ -66,13 +70,13 @@ export const TEMA_7_3: TemaSerie = {
         ["É preciso saber o valor e a porcentagem antes de calcular.", "10% é a décima parte: basta dividir por 10.", "Em um aumento, o valor do acréscimo é somado ao preço original.", "Conferir se o resultado faz sentido evita erros."]),
     }),
     q(6, "choice", "Analisar", {
-      source: "Aula 8", title: "O querosene ficou mais barato", theme: "Calcular uma redução percentual", scene: "trend",
-      scenario: "Uma empresa aérea gasta R$ 1.000,00 com querosene de aviação, e o preço sofreu uma redução de 7%. Ana calculou: 1% de R$ 1.000 é R$ 10; 7% é R$ 70; então R$ 1.000 − R$ 70 = R$ 930. Bia calculou: 7% de R$ 1.000 é R$ 7; então R$ 1.000 − R$ 7 = R$ 993.",
-      prompt: "Qual raciocínio está correto?",
-      rubric: "Calcular redução percentual a partir de 1%", strength: "cálculo de redução percentual", retake: "cálculo de porcentagem a partir de 1%", bncc: MA02,
-      options: ch([30, 0, 10, 0],
-        ["O de Ana: 1% de R$ 1.000 é R$ 10, então 7% é R$ 70 e a empresa passa a gastar R$ 930,00.", "O de Bia: 7% de R$ 1.000 é R$ 7, e a empresa passa a gastar R$ 993,00.", "Os dois, porque os resultados ficam parecidos.", "Nenhum, porque uma redução deve ser somada ao valor."],
-        ["Calcula 1% (R$ 10), depois 7% (R$ 70) e subtrai: R$ 930,00.", "Confunde 7% com 7 reais: 7% de R$ 1.000 é R$ 70.", "Os resultados são diferentes (R$ 930 e R$ 993), e só um está certo.", "Em uma redução, o valor é subtraído, não somado."]),
+      source: "Aulas 7–8", title: "O desconto só no Pix", theme: "Interpretar a condição de uma promoção", scene: "phone",
+      scenario: "Na loja A, um smartphone custa R$ 2.000,00 e a propaganda diz: “15% de desconto, só para pagamento à vista no Pix”. Na loja B, o mesmo smartphone custa R$ 1.800,00 em qualquer forma de pagamento. Carla só pode pagar no cartão.",
+      prompt: "Para Carla, qual loja sai mais barata?", hint: "Leia a condição da promoção, além da porcentagem.",
+      rubric: "Interpretar porcentagem e condição de compra em propaganda e comparar o preço final", strength: "interpretação de promoções com condições de pagamento", retake: "como ler porcentagem e condições em promoções", bncc: MA02,
+      options: ch([0, 0, 30, 20],
+        ["Loja A, porque com 15% de desconto custaria R$ 1.700,00.", "Qualquer uma, porque o desconto de 15% compensa a diferença.", "Loja B: no cartão Carla não tem o desconto da loja A, então pagaria R$ 2.000,00 contra R$ 1.800,00.", "Loja B, porque R$ 1.800,00 equivale a 15% de desconto sobre R$ 2.000,00."],
+        ["Ignora a condição: o desconto vale só no Pix, e Carla paga no cartão.", "Sem o Pix, o desconto não vale; as lojas custam R$ 2.000,00 e R$ 1.800,00.", "Interpreta a condição da promoção e compara o preço que Carla realmente pagaria.", "Acerta a loja, mas 15% de R$ 2.000 é R$ 300 (R$ 1.700), e não R$ 200."]),
     }),
     q(7, "choice", "Avaliar", {
       source: "Aula 8", title: "A televisão do Paulo", theme: "Decidir entre desconto à vista e parcelamento", scene: "install",

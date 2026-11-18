@@ -1,15 +1,13 @@
-// 7º ano — Tema 2 (RASCUNHO para revisão do professor). Fonte: aulas 4, 5 e 6 do 4º bimestre (Educação Financeira, SEDUC-SP).
+// 7º ano — Tema 2 (RASCUNHO para revisão do professor). Fonte: aulas 3 e 4 do 4º bimestre (Educação Financeira, SEDUC-SP).
+//   Aula 3 · Quanto tem na conta? (extrato bancário; gastos essenciais, não essenciais e tarifas)
 //   Aula 4 · Chegou a fatura. E agora? (fatura do cartão de crédito, juros, "bola de neve")
-//   Aula 5 · Cupom fiscal: para que serve? – Parte 1 (cupom x nota fiscal, impostos, taxa de serviço)
-//   Aula 6 · Cupom fiscal: para que serve? – Parte 2 (cobranças adicionais, gorjeta, porcentagem)
 // Todos os números abaixo são os dos próprios slides ou dados fictícios coerentes com eles.
 import type { Bloom, Kind, OpcaoC, QuestaoC } from "./culminancia.js";
 import type { TemaSerie } from "../lib/serie.js";
 
 const TCT = "Tema transversal: Educação Financeira";
+const AULA3 = "EF07MA12 (habilidade indicada na aula 3); " + TCT;
 const AULA4 = "EF07MA12 (habilidade indicada na aula 4); " + TCT;
-const AULA5 = "EF07CI06 (habilidade indicada na aula 5); " + TCT;
-const AULA6 = "EF07MA02 (habilidade indicada na aula 6); " + TCT;
 
 const ch = (points: number[], texts: string[], whys: string[]): OpcaoC[] => texts.map((text, i) => ({ text, points: points[i], why: whys[i] }));
 const mu = (correct: string, texts: string[], whys: string[]): OpcaoC[] => texts.map((text, i) => ({ text, points: 0, why: whys[i], correct: correct.includes("ABCD"[i]) }));
@@ -19,45 +17,45 @@ const q = (number: number, kind: Kind, bloom: Bloom, rest: Omit<QuestaoC, "code"
 
 export const TEMA_7_2: TemaSerie = {
   slug: "s7-tema-2", serie: 7, rascunho: true,
-  title: "Fatura, Cupom e Cobranças", subtitle: "Entender o que está escrito antes de pagar",
-  topics: ["Fatura do cartão de crédito", "Cupom fiscal e nota fiscal", "Impostos, taxa de serviço e gorjeta"],
+  title: "Controle do Dinheiro", subtitle: "Extrato, fatura e o saldo de cada dia",
+  topics: ["Extrato bancário", "Fatura do cartão de crédito", "Juros e efeito bola de neve"],
   questions: [
     q(1, "choice", "Lembrar", {
-      source: "Aula 5", title: "O papelzinho da compra", theme: "Para que serve o cupom fiscal", scene: "bag",
-      scenario: "Depois de comprar um lanche na padaria, o caixa pergunta se você quer o cupom fiscal.",
-      prompt: "Qual é um bom motivo para pedir e guardar o cupom fiscal?", hint: "O cupom é uma proteção para o consumidor.",
-      rubric: "Reconhecer a função do cupom fiscal (comprovar a compra, garantia, troca, controle de impostos)", strength: "reconhecimento da função do cupom fiscal", retake: "para que serve o cupom fiscal", bncc: AULA5,
+      source: "Aula 3", title: "As letras do extrato", theme: "Siglas do extrato bancário", scene: "ledger",
+      scenario: "Ao abrir o extrato da conta-corrente, Ana vê lançamentos marcados com as letras C e D.",
+      prompt: "O que indicam as letras C e D no extrato?", hint: "Pense em entrada e saída de dinheiro.",
+      rubric: "Reconhecer as siglas do extrato (C crédito = entrada; D débito = saída)", strength: "leitura das siglas do extrato bancário", retake: "siglas do extrato: C (crédito), D (débito), CC e CP", bncc: AULA3,
       options: ch([0, 10, 30, 0],
-        ["Evitar filas no caixa.", "Guardar como recordação da compra.", "Comprovar a compra e poder exigir garantia ou troca.", "Ganhar desconto automático."],
-        ["O cupom não tem relação com filas.", "Guardar ajuda, mas o objetivo principal é comprovar a compra e ter direitos.", "É a função principal: comprovar a compra e proteger o consumidor.", "O cupom não dá desconto automático."]),
+        ["C é compra e D é depósito.", "C é saída de dinheiro e D é entrada de dinheiro.", "C é crédito (entrada de dinheiro) e D é débito (saída de dinheiro).", "C é conta-corrente e D é conta-poupança."],
+        ["As letras não indicam o tipo de operação, e sim o sentido do dinheiro.", "Percebe que as letras indicam o sentido do dinheiro, mas inverte entrada e saída.", "C é crédito (entrada, como receber um Pix) e D é débito (saída, como pagar uma conta).", "Conta-corrente e conta-poupança são indicadas por CC e CP."]),
     }),
     q(2, "choice", "Compreender", {
-      source: "Aula 5", title: "Cupom ou nota fiscal?", theme: "Diferença entre cupom fiscal e nota fiscal", scene: "packs",
-      scenario: "Bruno comprou um lanche na padaria e recebeu um papel com informações simples. A mãe dele comprou um eletrodoméstico pela internet e recebeu um documento com dados do cliente, descrição dos itens, valores, impostos e forma de entrega.",
-      prompt: "Qual explicação diferencia corretamente os dois documentos?",
-      rubric: "Diferenciar cupom fiscal (compras do dia a dia, informações simples) de nota fiscal (informações detalhadas)", strength: "diferença entre cupom fiscal e nota fiscal", retake: "diferença entre cupom fiscal e nota fiscal", bncc: AULA5,
-      options: ch([0, 10, 0, 30],
-        ["O cupom é só para compras on-line, e a nota fiscal só para compras no mercado.", "Os dois são idênticos; só mudam de nome.", "A nota fiscal serve só para pagar impostos e não ajuda o consumidor.", "O cupom fiscal costuma ser entregue em compras do dia a dia, com informações mais simples; a nota fiscal registra a venda com informações mais detalhadas."],
-        ["Inverte as situações: o cupom é típico do dia a dia, e a nota aparece em compras como as on-line.", "É comum confundir os dois, mas a nota traz informações mais detalhadas que o cupom.", "A nota também comprova a compra, garante trocas e direitos do consumidor.", "Descreve corretamente o tipo de compra e o nível de detalhe de cada documento."]),
+      source: "Aula 3", title: "Os três saldos", theme: "Saldo anterior, atual e disponível", scene: "cash",
+      scenario: "No extrato aparecem o saldo anterior, o saldo atual e o saldo disponível.",
+      prompt: "Qual explicação está correta?",
+      rubric: "Diferenciar saldo anterior, saldo atual e saldo disponível", strength: "compreensão dos diferentes saldos do extrato", retake: "diferença entre saldo anterior, atual e disponível", bncc: AULA3,
+      options: ch([10, 30, 0, 0],
+        ["O saldo atual é sempre o valor que pode ser gasto agora.", "O saldo anterior é o valor de antes das movimentações do período, e o saldo disponível é o que realmente pode ser usado agora, depois de pagamentos agendados.", "Os três saldos são sempre iguais.", "O saldo anterior é o dinheiro que a pessoa tem agora."],
+        ["O saldo atual pode incluir valores pendentes ou bloqueados: parte dele pode não estar disponível.", "Diferencia o valor que havia antes das movimentações do que pode ser usado no momento.", "Os saldos mudam conforme as movimentações e os pagamentos agendados.", "O saldo anterior mostra o que havia antes das movimentações, não o que há agora."]),
     }),
     q(3, "multi", "Aplicar", {
-      source: "Aulas 5–6", title: "Impostos, taxa de serviço e gorjeta", theme: "Cobranças além do produto", scene: "ad",
-      scenario: "Ao analisar o cupom fiscal de um restaurante, Sofia percebe que ele traz impostos, uma taxa de serviço de 10% e a possibilidade de deixar gorjeta.",
-      prompt: "Selecione TODAS as afirmações verdadeiras.",
-      hint: "Pense no que é obrigatório e no que é opcional.",
-      rubric: "Conjunto correto A e B; pontuação proporcional, sem crédito se marcar tudo", strength: "distinção entre impostos obrigatórios e cobranças opcionais", retake: "diferença entre impostos, taxa de serviço e gorjeta", bncc: AULA5,
-      options: mu("AB",
-        ["A gorjeta é voluntária: o cliente não é obrigado a pagá-la.", "Os impostos são valores cobrados pelo governo e ajudam a financiar serviços como escolas e hospitais.", "A taxa de serviço é sempre obrigatória e sempre de 10%.", "O cupom fiscal só serve para quem vai pedir troca."],
-        ["Correto: a gorjeta é um valor adicional dado de forma voluntária.", "Correto: impostos financiam serviços públicos como educação, saúde e segurança.", "A cobrança de taxa de serviço não é obrigatória, e o índice pode variar (8%, 10%, 12%…).", "O cupom também ajuda no controle de impostos e comprova valores cobrados."]),
+      source: "Aula 3", title: "O extrato da Ana Maria", theme: "Tarifas bancárias", scene: "ledger",
+      scenario: "No extrato da conta-corrente de Ana Maria, na última semana de outubro, aparecem: aula de natação (R$ 158,00), manutenção da conta (R$ 28,00), supermercado (R$ 280,00) e transferência TED (R$ 12,50).",
+      prompt: "Selecione TODOS os lançamentos que são tarifas (valores cobrados pelo banco por um serviço).",
+      hint: "Tarifas são cobradas pelo banco: manutenção, transferências, saques, cartão…",
+      rubric: "Conjunto correto B e D; pontuação proporcional, sem crédito se marcar tudo", strength: "identificação de tarifas bancárias no extrato", retake: "diferença entre gastos e tarifas bancárias", bncc: AULA3,
+      options: mu("BD",
+        ["Aula de natação (R$ 158,00).", "Manutenção da conta (R$ 28,00).", "Supermercado (R$ 280,00).", "Transferência TED (R$ 12,50)."],
+        ["É um gasto não essencial pago a um terceiro, não uma cobrança do banco.", "É a tarifa que o banco cobra para manter a conta funcionando.", "É um gasto essencial (alimentação), não uma tarifa.", "É a tarifa cobrada pelo banco pela transferência."]),
     }),
     q(4, "choice", "Analisar", {
-      source: "Aula 5", title: "Os impostos da nota", theme: "Impostos dentro do preço", scene: "ledger",
-      scenario: "Uma nota fiscal fictícia de um kit de higiene mostra: valor total da compra R$ 42,90; ICMS R$ 5,00; PIS/COFINS R$ 1,80.",
-      prompt: "Qual afirmação sobre os impostos dessa nota está correta?", hint: "Os impostos são cobrados à parte ou já estão no preço?",
-      rubric: "Interpretar impostos incluídos no preço e calcular o total", strength: "leitura de impostos em uma nota fiscal", retake: "leitura de impostos em cupom e nota fiscal", bncc: AULA5,
+      source: "Aula 3", title: "Essenciais ou não?", theme: "Classificar os gastos do extrato", scene: "plan",
+      scenario: "No extrato de Ana Maria: aula de natação R$ 158,00, manutenção da conta R$ 28,00, supermercado R$ 280,00, pizzaria R$ 80,00, aluguel R$ 2.400,00 e TED R$ 12,50.",
+      prompt: "Qual afirmação sobre esses gastos está correta?", hint: "Some os essenciais (mercado e aluguel) e os não essenciais (natação e pizzaria).",
+      rubric: "Classificar gastos em essenciais, não essenciais e tarifas e comparar os totais", strength: "classificação e comparação de gastos no extrato", retake: "gastos essenciais, não essenciais e tarifas", bncc: AULA3,
       options: ch([0, 10, 30, 0],
-        ["Não há impostos, porque o produto é de higiene.", "Os impostos são de R$ 5,00, porque só o ICMS conta.", "Os impostos somam R$ 6,80 (R$ 5,00 + R$ 1,80) e já estão incluídos no valor de R$ 42,90.", "Os impostos são cobrados à parte, e o total a pagar é R$ 49,70."],
-        ["Produtos de higiene também têm impostos; a nota mostra ICMS e PIS/COFINS.", "Soma só uma parte: o PIS/COFINS (R$ 1,80) também é imposto.", "Soma os dois impostos corretamente e entende que ficam dentro do preço.", "Os impostos já estão no valor total; somar de novo conta duas vezes."]),
+        ["Os gastos não essenciais foram maiores, porque natação e pizzaria somam mais que o supermercado.", "Os gastos essenciais foram maiores (R$ 2.680,00), e a manutenção e a TED também são gastos essenciais.", "Os gastos essenciais (supermercado e aluguel, R$ 2.680,00) foram maiores que os não essenciais (natação e pizzaria, R$ 238,00).", "Os gastos foram iguais, porque tudo saiu da mesma conta."],
+        ["Natação e pizzaria somam R$ 238,00, menos que só o supermercado (R$ 280,00).", "Acerta que os essenciais foram maiores, mas manutenção e TED são tarifas, não gastos essenciais.", "Soma corretamente: R$ 280 + R$ 2.400 = R$ 2.680 contra R$ 158 + R$ 80 = R$ 238.", "Sair da mesma conta não torna os valores iguais: eles são muito diferentes."]),
     }),
     q(5, "order", "Aplicar", {
       source: "Aula 4", title: "Lendo a fatura do cartão", theme: "Como ler uma fatura", scene: "plan",
@@ -78,16 +76,16 @@ export const TEMA_7_2: TemaSerie = {
         ["Soma certo, mas esses valores poderiam ser evitados com o pagamento integral em dia.", "A fatura inclui compras, multas e valores não pagos de meses anteriores.", "Esquece de somar a multa (R$ 55,12), mas percebe que o atraso é evitável.", "Soma todos os valores e liga a multa e o saldo à fatura anterior não paga."]),
     }),
     q(7, "choice", "Avaliar", {
-      source: "Aula 6", title: "Qual armário compensa?", theme: "Custo total com cobranças adicionais", scene: "packs",
-      scenario: "A loja A vende um armário por R$ 300,00, mas cobra entrega de R$ 45,00 e montagem de 4% do valor do móvel. A loja B vende o mesmo armário por R$ 330,00, com entrega e montagem incluídas.",
-      prompt: "Qual escolha é melhor para o orçamento da família?",
-      rubric: "Escala: integral 30; adequada parcial 20; incipiente 10; inadequada 0", strength: "comparação do custo total considerando entrega e montagem", retake: "cálculo do custo total com cobranças adicionais e porcentagem", bncc: AULA6,
-      options: ch([0, 30, 10, 0],
-        ["Loja A, porque o armário custa R$ 300,00 e isso é o que importa.", "Loja B: o custo total é R$ 330,00, contra R$ 357,00 na loja A (300 + 45 + 12).", "Loja A, porque a montagem de 4% (R$ 12,00) é um valor pequeno.", "As duas custam o mesmo, porque a diferença do preço do armário se compensa."],
-        ["Olha só o preço do móvel e ignora entrega e montagem.", "Calcula a montagem (4% de 300 = 12) e compara o custo total: R$ 27,00 mais barato na loja B.", "Considera só a montagem e deixa a entrega (R$ 45,00) de fora.", "Os totais são diferentes: R$ 357,00 e R$ 330,00."]),
+      source: "Aula 3", title: "Onde economizar?", theme: "Decidir com base no extrato", scene: "envelopes",
+      scenario: "Na semana do extrato de Ana Maria, os gastos essenciais foram R$ 2.680 (supermercado R$ 280 e aluguel R$ 2.400), os não essenciais R$ 238 (natação R$ 158 e pizzaria R$ 80) e as tarifas R$ 40,50 (manutenção R$ 28 e TED R$ 12,50). Ela quer economizar R$ 100 na semana seguinte.",
+      prompt: "Qual decisão é melhor fundamentada no extrato?",
+      rubric: "Escala: integral 30; adequada parcial 20; incipiente 10; inadequada 0", strength: "decisão financeira fundamentada nos dados do extrato", retake: "separar gastos essenciais, não essenciais e tarifas para decidir", bncc: AULA3,
+      options: ch([0, 30, 20, 10],
+        ["Cortar o aluguel, por ser o maior valor do extrato.", "Reduzir gastos não essenciais (R$ 238 na semana), manter aluguel e mercado e perguntar ao banco por um pacote com tarifas menores.", "Reduzir só os gastos não essenciais e ignorar as tarifas, por serem pequenas.", "Parar de consultar o extrato para não se preocupar com os números."],
+        ["O aluguel é um gasto essencial; cortá-lo não é uma opção viável.", "Protege o essencial, usa os gastos que podem ser reduzidos e ainda busca reduzir tarifas, que podem ser renegociadas.", "A decisão é válida, mas deixa de lado as tarifas, que também podem ser reduzidas.", "Sem consultar o extrato, não há como planejar nem identificar onde economizar."]),
     }),
     q(8, "choice", "Criar", {
-      source: "Aulas 4–6", title: "Fugindo da bola de neve", theme: "Plano para usar o cartão sem acumular dívida", scene: "pact",
+      source: "Aula 4", title: "Fugindo da bola de neve", theme: "Plano para usar o cartão sem acumular dívida", scene: "pact",
       scenario: "Larissa vai começar a usar o cartão de crédito e quer evitar que uma dívida pequena vire uma “bola de neve”.",
       prompt: "Escolha o plano com mais evidências de responsabilidade financeira.",
       rubric: "Avaliar plano por 4 critérios: conferir a fatura, separar gastos, limitar compras ao orçamento e pagar o total em dia", strength: "planejamento do uso do cartão para evitar dívidas", retake: "como evitar juros, multa e efeito bola de neve na fatura", bncc: AULA4,

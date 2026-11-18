@@ -2,7 +2,7 @@
 
 Gerado a partir de `apps/api/src/content/serie7-tema1.ts` … `serie7-tema4.ts`. **Nenhum tema está publicado**: todos estão como `rascunho: true` e não vão para o banco até você revisar e trocar para `false`.
 
-Fonte: as 12 aulas do 4º bimestre do 7º ano (Educação Financeira, SEDUC-SP) + a trilha de exercícios. Os números são os dos slides ou dados fictícios coerentes com eles. Ao lado do título de cada desafio está a aula de onde ele veio.
+Fonte: as 12 aulas do 4º bimestre do 7º ano (Educação Financeira, SEDUC-SP). Os temas foram montados **por assunto**. Os números são os dos slides ou dados fictícios coerentes com eles. Ao lado do título de cada desafio está a aula de onde ele veio.
 
 **Como corrigir:** `choice` = 1 alternativa vale 30; as outras 20/10/0. `multi` = marque todas as corretas (pontuação proporcional). `order` = ordem das etapas. Todo desafio vale 30 pontos (240 por tema).
 
@@ -12,14 +12,14 @@ Fonte: as 12 aulas do 4º bimestre do 7º ano (Educação Financeira, SEDUC-SP) 
 
 | Tema | Nome | Aulas | Desafios | Pontos |
 |---|---|---|---|---|
-| s7-tema-1 | Renda e Dinheiro na Conta — De onde o dinheiro vem e para onde ele vai | Aula 1; Aula 3; Aula 2 | 8 | 240 |
-| s7-tema-2 | Fatura, Cupom e Cobranças — Entender o que está escrito antes de pagar | Aula 5; Aulas 5–6; Aula 4; Aula 6; Aulas 4–6 | 8 | 240 |
-| s7-tema-3 | Porcentagem no Dia a Dia — Descontos, aumentos e contas de consumo | Aula 7; Aula 9; Aula 8 | 8 | 240 |
-| s7-tema-4 | Metas e Gráficos Financeiros — Planejar o dinheiro e entender o que os dados mostram | Aula 10; Aula 12; Aulas 10 e 12; Aula 11; Aulas 10–12 | 8 | 240 |
+| s7-tema-1 | Renda e Trabalho — Quem trabalha, quanto ganha e o que os dados mostram | 1, 2 | 8 | 240 |
+| s7-tema-2 | Controle do Dinheiro — Extrato, fatura e o saldo de cada dia | 3, 4 | 8 | 240 |
+| s7-tema-3 | Compras e Porcentagem — Cupom, descontos, acréscimos e contas de consumo | 5, 6, 7, 8, 9 | 8 | 240 |
+| s7-tema-4 | Metas e Gráficos Financeiros — Planejar o dinheiro e entender o que os dados mostram | 10, 11, 12 | 8 | 240 |
 
-## s7-tema-1: Renda e Dinheiro na Conta
+## s7-tema-1: Renda e Trabalho
 
-*De onde o dinheiro vem e para onde ele vai* · Tópicos: Renda formal e informal; Leitura de gráficos de renda; Extrato bancário
+*Quem trabalha, quanto ganha e o que os dados mostram* · Tópicos: Renda formal e informal; Leitura de gráficos de renda; Planejar com renda variável
 
 ### 1. O jovem aprendiz  _(escolha · Lembrar · Aula 1)_
 
@@ -59,25 +59,25 @@ _Critério:_ Identificar renda formal (registro, contrato e direitos) · _BNCC:_
 
 _Critério:_ Comparar renda formal (registrada, previsível) e informal (variável, sem garantias) · _BNCC:_ EF06MA32 (habilidade indicada na aula 1); Tema transversal: Educação Financeira
 
-### 3. O extrato da Ana Maria  _(multisseleção · Aplicar · Aula 3)_
+### 3. Fontes de renda da comunidade  _(multisseleção · Aplicar · Aula 1)_
 
-**Situação:** No extrato da conta-corrente de Ana Maria, na última semana de outubro, aparecem: aula de natação (R$ 158,00), manutenção da conta (R$ 28,00), supermercado (R$ 280,00) e transferência TED (R$ 12,50).
+**Situação:** Quatro pessoas da mesma comunidade contam como ganham dinheiro.
 
-**Pergunta:** Selecione TODOS os lançamentos que são tarifas (valores cobrados pelo banco por um serviço).
+**Pergunta:** Selecione TODAS as situações que são exemplos de renda informal.
 
-**Dica:** Tarifas são cobradas pelo banco: manutenção, transferências, saques, cartão…
+**Dica:** Renda informal: sem registro e sem garantia de direitos trabalhistas.
 
 **Alternativas:**
-- **A)** Aula de natação (R$ 158,00).  
-  _✘. É um gasto não essencial pago a um terceiro, não uma cobrança do banco._
-- **B)** Manutenção da conta (R$ 28,00).  
-  _✔ CORRETA. É a tarifa que o banco cobra para manter a conta funcionando._
-- **C)** Supermercado (R$ 280,00).  
-  _✘. É um gasto essencial (alimentação), não uma tarifa._
-- **D)** Transferência TED (R$ 12,50).  
-  _✔ CORRETA. É a tarifa cobrada pelo banco pela transferência._
+- **A)** Venda autônoma de salgados na porta da escola.  
+  _✔ CORRETA. É uma venda autônoma, sem registro: renda informal._
+- **B)** Salário com carteira assinada de vendedor contratado em uma loja.  
+  _✘. Tem carteira assinada e direitos: renda formal._
+- **C)** Trabalhos temporários, os “bicos”, sem registro.  
+  _✔ CORRETA. Trabalho temporário sem registro: renda informal._
+- **D)** Jovem aprendiz com contrato e direitos trabalhistas.  
+  _✘. Tem contrato e direitos trabalhistas: renda formal._
 
-_Critério:_ Conjunto correto B e D; pontuação proporcional, sem crédito se marcar tudo · _BNCC:_ EF07MA12 (habilidade indicada na aula 3); Tema transversal: Educação Financeira
+_Critério:_ Conjunto correto A e C; pontuação proporcional, sem crédito se marcar tudo · _BNCC:_ EF06MA32 (habilidade indicada na aula 1); Tema transversal: Educação Financeira
 
 ### 4. Renda das famílias da comunidade  _(escolha · Analisar · Aula 1)_
 
@@ -133,6 +133,160 @@ _Critério:_ Ordem exata 100%; 2 relações corretas 65%; 1 relação 30%; nenhu
 
 _Critério:_ Calcular a variação e reconhecer o limite da média · _BNCC:_ EF07GE08 (habilidade indicada na aula 2); Tema transversal: Educação Financeira
 
+### 7. O rendimento do Distrito Federal  _(escolha · Avaliar · Aula 2)_
+
+**Situação:** Um gráfico mostra o rendimento médio: Distrito Federal R$ 5.037, Brasil R$ 3.208 e Maranhão R$ 2.051. Um colega afirma: “Todo morador do DF ganha R$ 5.037”.
+
+**Pergunta:** Qual avaliação dessa afirmação é mais adequada?
+
+**Dica:** Uma média mostra como a renda está dividida entre as pessoas?
+
+**Alternativas:**
+- **A)** Correta: se a média do DF é R$ 5.037, cada morador recebe esse valor.  
+  _0 pts. Trata a média como o valor que cada pessoa recebe._
+- **B)** Incorreta, porque o maior rendimento do gráfico é o do Maranhão.  
+  _10 pts. Rejeita a afirmação, mas por um motivo errado: o maior rendimento do gráfico é o do DF._
+- **C)** Incorreta: é um valor médio. Há moradores que ganham menos e outros que ganham mais; a média não mostra como a renda se distribui.  
+  _30 pts ✔ CORRETA. Reconhece que a média não revela a distribuição da renda entre as pessoas._
+- **D)** Correta, pois o DF tem a maior média e a diferença para o Maranhão é de R$ 2.986.  
+  _0 pts. A diferença (R$ 5.037 − R$ 2.051 = R$ 2.986) está certa, mas isso não prova que todos ganham a mesma coisa._
+
+_Critério:_ Escala: integral 30; adequada parcial 20; incipiente 10; inadequada 0 · _BNCC:_ EF07GE08 (habilidade indicada na aula 2); Tema transversal: Educação Financeira
+
+### 8. Renda que varia  _(escolha · Criar · Aulas 1–2)_
+
+**Situação:** Marina vende doces por encomenda. Em alguns meses ganha R$ 1.200,00 e em outros, R$ 600,00. Ela quer organizar o dinheiro sem se apertar nos meses mais fracos.
+
+**Pergunta:** Escolha o plano que melhor lida com uma renda que varia.
+
+**Alternativas:**
+- **A)** Gastar tudo nos meses bons, porque nos meses ruins ela dá um jeito.  
+  _0 pts. A renda informal é variável e sem estabilidade: gastar tudo deixa os meses ruins sem cobertura._
+- **B)** Basear os gastos sempre no mês de R$ 1.200,00, porque é o valor mais alto.  
+  _10 pts. Planejar pelo mês mais alto faltará dinheiro nos meses de R$ 600,00._
+- **C)** Anotar o que entra e sai, pagar primeiro os gastos essenciais e guardar parte do dinheiro dos meses melhores para os meses mais fracos.  
+  _30 pts ✔ CORRETA. Combina registro, prioridade ao essencial e reserva para os meses de renda menor._
+- **D)** Anotar o que entra, mas sem guardar nada para os meses mais fracos.  
+  _20 pts. Registrar ajuda, mas sem uma reserva os meses de renda baixa continuam sem cobertura._
+
+_Critério:_ Avaliar plano por 4 critérios: registro das entradas, gastos essenciais primeiro, reserva nos meses melhores e realismo · _BNCC:_ EF06MA32 (habilidade indicada na aula 1); Tema transversal: Educação Financeira
+
+## s7-tema-2: Controle do Dinheiro
+
+*Extrato, fatura e o saldo de cada dia* · Tópicos: Extrato bancário; Fatura do cartão de crédito; Juros e efeito bola de neve
+
+### 1. As letras do extrato  _(escolha · Lembrar · Aula 3)_
+
+**Situação:** Ao abrir o extrato da conta-corrente, Ana vê lançamentos marcados com as letras C e D.
+
+**Pergunta:** O que indicam as letras C e D no extrato?
+
+**Dica:** Pense em entrada e saída de dinheiro.
+
+**Alternativas:**
+- **A)** C é compra e D é depósito.  
+  _0 pts. As letras não indicam o tipo de operação, e sim o sentido do dinheiro._
+- **B)** C é saída de dinheiro e D é entrada de dinheiro.  
+  _10 pts. Percebe que as letras indicam o sentido do dinheiro, mas inverte entrada e saída._
+- **C)** C é crédito (entrada de dinheiro) e D é débito (saída de dinheiro).  
+  _30 pts ✔ CORRETA. C é crédito (entrada, como receber um Pix) e D é débito (saída, como pagar uma conta)._
+- **D)** C é conta-corrente e D é conta-poupança.  
+  _0 pts. Conta-corrente e conta-poupança são indicadas por CC e CP._
+
+_Critério:_ Reconhecer as siglas do extrato (C crédito = entrada; D débito = saída) · _BNCC:_ EF07MA12 (habilidade indicada na aula 3); Tema transversal: Educação Financeira
+
+### 2. Os três saldos  _(escolha · Compreender · Aula 3)_
+
+**Situação:** No extrato aparecem o saldo anterior, o saldo atual e o saldo disponível.
+
+**Pergunta:** Qual explicação está correta?
+
+**Alternativas:**
+- **A)** O saldo atual é sempre o valor que pode ser gasto agora.  
+  _10 pts. O saldo atual pode incluir valores pendentes ou bloqueados: parte dele pode não estar disponível._
+- **B)** O saldo anterior é o valor de antes das movimentações do período, e o saldo disponível é o que realmente pode ser usado agora, depois de pagamentos agendados.  
+  _30 pts ✔ CORRETA. Diferencia o valor que havia antes das movimentações do que pode ser usado no momento._
+- **C)** Os três saldos são sempre iguais.  
+  _0 pts. Os saldos mudam conforme as movimentações e os pagamentos agendados._
+- **D)** O saldo anterior é o dinheiro que a pessoa tem agora.  
+  _0 pts. O saldo anterior mostra o que havia antes das movimentações, não o que há agora._
+
+_Critério:_ Diferenciar saldo anterior, saldo atual e saldo disponível · _BNCC:_ EF07MA12 (habilidade indicada na aula 3); Tema transversal: Educação Financeira
+
+### 3. O extrato da Ana Maria  _(multisseleção · Aplicar · Aula 3)_
+
+**Situação:** No extrato da conta-corrente de Ana Maria, na última semana de outubro, aparecem: aula de natação (R$ 158,00), manutenção da conta (R$ 28,00), supermercado (R$ 280,00) e transferência TED (R$ 12,50).
+
+**Pergunta:** Selecione TODOS os lançamentos que são tarifas (valores cobrados pelo banco por um serviço).
+
+**Dica:** Tarifas são cobradas pelo banco: manutenção, transferências, saques, cartão…
+
+**Alternativas:**
+- **A)** Aula de natação (R$ 158,00).  
+  _✘. É um gasto não essencial pago a um terceiro, não uma cobrança do banco._
+- **B)** Manutenção da conta (R$ 28,00).  
+  _✔ CORRETA. É a tarifa que o banco cobra para manter a conta funcionando._
+- **C)** Supermercado (R$ 280,00).  
+  _✘. É um gasto essencial (alimentação), não uma tarifa._
+- **D)** Transferência TED (R$ 12,50).  
+  _✔ CORRETA. É a tarifa cobrada pelo banco pela transferência._
+
+_Critério:_ Conjunto correto B e D; pontuação proporcional, sem crédito se marcar tudo · _BNCC:_ EF07MA12 (habilidade indicada na aula 3); Tema transversal: Educação Financeira
+
+### 4. Essenciais ou não?  _(escolha · Analisar · Aula 3)_
+
+**Situação:** No extrato de Ana Maria: aula de natação R$ 158,00, manutenção da conta R$ 28,00, supermercado R$ 280,00, pizzaria R$ 80,00, aluguel R$ 2.400,00 e TED R$ 12,50.
+
+**Pergunta:** Qual afirmação sobre esses gastos está correta?
+
+**Dica:** Some os essenciais (mercado e aluguel) e os não essenciais (natação e pizzaria).
+
+**Alternativas:**
+- **A)** Os gastos não essenciais foram maiores, porque natação e pizzaria somam mais que o supermercado.  
+  _0 pts. Natação e pizzaria somam R$ 238,00, menos que só o supermercado (R$ 280,00)._
+- **B)** Os gastos essenciais foram maiores (R$ 2.680,00), e a manutenção e a TED também são gastos essenciais.  
+  _10 pts. Acerta que os essenciais foram maiores, mas manutenção e TED são tarifas, não gastos essenciais._
+- **C)** Os gastos essenciais (supermercado e aluguel, R$ 2.680,00) foram maiores que os não essenciais (natação e pizzaria, R$ 238,00).  
+  _30 pts ✔ CORRETA. Soma corretamente: R$ 280 + R$ 2.400 = R$ 2.680 contra R$ 158 + R$ 80 = R$ 238._
+- **D)** Os gastos foram iguais, porque tudo saiu da mesma conta.  
+  _0 pts. Sair da mesma conta não torna os valores iguais: eles são muito diferentes._
+
+_Critério:_ Classificar gastos em essenciais, não essenciais e tarifas e comparar os totais · _BNCC:_ EF07MA12 (habilidade indicada na aula 3); Tema transversal: Educação Financeira
+
+### 5. Lendo a fatura do cartão  _(ordenação · Aplicar · Aula 4)_
+
+**Situação:** Chegou a fatura do cartão de crédito e você quer conferi-la com atenção antes de pagar.
+
+**Pergunta:** Coloque os passos na ordem mais adequada.
+
+**Dica:** Comece pelo que aparece em destaque na fatura.
+
+**Ordem correta:**
+1. Ver na área de destaque o valor total, o vencimento e o limite. — _A área de destaque traz as informações principais da fatura._
+2. Conferir as alternativas de pagamento, com juros e encargos. — _Mostra o que acontece se não pagar o total: juros e encargos._
+3. Conferir cada compra, o local e as parcelas. — _A conferência detalhada mostra os hábitos de consumo e permite achar erros._
+4. Pagar o valor total até a data de vencimento. — _Pagar o total em dia evita juros e multa._
+
+_Critério:_ Ordem exata 100%; 2 relações corretas 65%; 1 relação 30%; nenhuma 0% · _BNCC:_ EF07MA12 (habilidade indicada na aula 4); Tema transversal: Educação Financeira
+
+### 6. A fatura que cresceu  _(escolha · Analisar · Aula 4)_
+
+**Situação:** Uma fatura mostra compras de R$ 928,00, multa por atraso de R$ 55,12 e saldo anterior não pago de R$ 91,88.
+
+**Pergunta:** Qual é o valor total da fatura e o que poderia ter evitado a multa e o saldo anterior?
+
+**Alternativas:**
+- **A)** R$ 1.075,00; a multa e o saldo não poderiam ser evitados.  
+  _10 pts. Soma certo, mas esses valores poderiam ser evitados com o pagamento integral em dia._
+- **B)** R$ 928,00, porque a multa e o saldo anterior não entram na fatura.  
+  _0 pts. A fatura inclui compras, multas e valores não pagos de meses anteriores._
+- **C)** R$ 1.019,88 (compras mais saldo anterior); pagar a fatura anterior em dia evitaria a multa.  
+  _20 pts. Esquece de somar a multa (R$ 55,12), mas percebe que o atraso é evitável._
+- **D)** R$ 1.075,00 (928 + 55,12 + 91,88); pagar a fatura anterior integralmente e no vencimento evitaria a multa e o saldo.  
+  _30 pts ✔ CORRETA. Soma todos os valores e liga a multa e o saldo à fatura anterior não paga._
+
+_Critério:_ Somar compras, multa e saldo anterior; relacionar à quitação da fatura anterior · _BNCC:_ EF07MA12 (habilidade indicada na aula 4); Tema transversal: Educação Financeira
+
 ### 7. Onde economizar?  _(escolha · Avaliar · Aula 3)_
 
 **Situação:** Na semana do extrato de Ana Maria, os gastos essenciais foram R$ 2.680 (supermercado R$ 280 e aluguel R$ 2.400), os não essenciais R$ 238 (natação R$ 158 e pizzaria R$ 80) e as tarifas R$ 40,50 (manutenção R$ 28 e TED R$ 12,50). Ela quer economizar R$ 100 na semana seguinte.
@@ -151,27 +305,27 @@ _Critério:_ Calcular a variação e reconhecer o limite da média · _BNCC:_ EF
 
 _Critério:_ Escala: integral 30; adequada parcial 20; incipiente 10; inadequada 0 · _BNCC:_ EF07MA12 (habilidade indicada na aula 3); Tema transversal: Educação Financeira
 
-### 8. Acompanhar o dinheiro da conta  _(escolha · Criar · Aula 3)_
+### 8. Fugindo da bola de neve  _(escolha · Criar · Aula 4)_
 
-**Situação:** Uma família quer acompanhar melhor o dinheiro que entra e sai da conta durante o mês e evitar surpresas.
+**Situação:** Larissa vai começar a usar o cartão de crédito e quer evitar que uma dívida pequena vire uma “bola de neve”.
 
-**Pergunta:** Escolha o plano que usa o extrato com mais critério.
+**Pergunta:** Escolha o plano com mais evidências de responsabilidade financeira.
 
 **Alternativas:**
-- **A)** Olhar o extrato só no fim do ano.  
-  _0 pts. Um controle só no fim do ano não evita surpresas durante o mês._
-- **B)** Consultar o extrato toda semana, conferir entradas (C) e saídas (D), separar gastos essenciais, não essenciais e tarifas e comparar com o saldo disponível antes de novas compras.  
-  _30 pts ✔ CORRETA. Combina periodicidade, leitura de C e D, classificação dos gastos e atenção ao saldo disponível._
-- **C)** Olhar apenas o saldo atual e gastar tudo o que aparecer, sem conferir o resto.  
-  _10 pts. O saldo atual pode incluir valores bloqueados ou pendentes; o disponível é o que pode ser usado._
-- **D)** Consultar o extrato e anotar só os maiores gastos, ignorando tarifas e pequenas saídas.  
-  _20 pts. Acompanha parte do dinheiro, mas pequenas saídas e tarifas também pesam no mês._
+- **A)** Pagar só o mínimo todo mês e continuar usando o cartão normalmente.  
+  _0 pts. Os valores não pagos geram juros e acumulam, que é justamente o efeito bola de neve._
+- **B)** Parcelar todas as compras em muitas vezes, para as parcelas ficarem pequenas.  
+  _10 pts. Muitas parcelas em aberto podem pesar no orçamento e gerar a bola de neve._
+- **C)** Conferir a fatura, separar gastos essenciais e não essenciais, limitar as compras ao orçamento e pagar o valor total até o vencimento.  
+  _30 pts ✔ CORRETA. Combina conferência, planejamento do orçamento e pagamento integral em dia._
+- **D)** Pagar a fatura sempre em dia, mas sem conferir os itens cobrados.  
+  _20 pts. Pagar em dia ajuda, mas sem conferir os itens não se percebe erros nem hábitos de consumo._
 
-_Critério:_ Avaliar plano por 4 critérios: periodicidade, entradas e saídas, classificação dos gastos e saldo disponível · _BNCC:_ EF07MA12 (habilidade indicada na aula 3); Tema transversal: Educação Financeira
+_Critério:_ Avaliar plano por 4 critérios: conferir a fatura, separar gastos, limitar compras ao orçamento e pagar o total em dia · _BNCC:_ EF07MA12 (habilidade indicada na aula 4); Tema transversal: Educação Financeira
 
-## s7-tema-2: Fatura, Cupom e Cobranças
+## s7-tema-3: Compras e Porcentagem
 
-*Entender o que está escrito antes de pagar* · Tópicos: Fatura do cartão de crédito; Cupom fiscal e nota fiscal; Impostos, taxa de serviço e gorjeta
+*Cupom, descontos, acréscimos e contas de consumo* · Tópicos: Cupom fiscal, impostos e taxas; Descontos e acréscimos; Contas de consumo
 
 ### 1. O papelzinho da compra  _(escolha · Lembrar · Aula 5)_
 
@@ -231,160 +385,6 @@ _Critério:_ Diferenciar cupom fiscal (compras do dia a dia, informações simpl
 
 _Critério:_ Conjunto correto A e B; pontuação proporcional, sem crédito se marcar tudo · _BNCC:_ EF07CI06 (habilidade indicada na aula 5); Tema transversal: Educação Financeira
 
-### 4. Os impostos da nota  _(escolha · Analisar · Aula 5)_
-
-**Situação:** Uma nota fiscal fictícia de um kit de higiene mostra: valor total da compra R$ 42,90; ICMS R$ 5,00; PIS/COFINS R$ 1,80.
-
-**Pergunta:** Qual afirmação sobre os impostos dessa nota está correta?
-
-**Dica:** Os impostos são cobrados à parte ou já estão no preço?
-
-**Alternativas:**
-- **A)** Não há impostos, porque o produto é de higiene.  
-  _0 pts. Produtos de higiene também têm impostos; a nota mostra ICMS e PIS/COFINS._
-- **B)** Os impostos são de R$ 5,00, porque só o ICMS conta.  
-  _10 pts. Soma só uma parte: o PIS/COFINS (R$ 1,80) também é imposto._
-- **C)** Os impostos somam R$ 6,80 (R$ 5,00 + R$ 1,80) e já estão incluídos no valor de R$ 42,90.  
-  _30 pts ✔ CORRETA. Soma os dois impostos corretamente e entende que ficam dentro do preço._
-- **D)** Os impostos são cobrados à parte, e o total a pagar é R$ 49,70.  
-  _0 pts. Os impostos já estão no valor total; somar de novo conta duas vezes._
-
-_Critério:_ Interpretar impostos incluídos no preço e calcular o total · _BNCC:_ EF07CI06 (habilidade indicada na aula 5); Tema transversal: Educação Financeira
-
-### 5. Lendo a fatura do cartão  _(ordenação · Aplicar · Aula 4)_
-
-**Situação:** Chegou a fatura do cartão de crédito e você quer conferi-la com atenção antes de pagar.
-
-**Pergunta:** Coloque os passos na ordem mais adequada.
-
-**Dica:** Comece pelo que aparece em destaque na fatura.
-
-**Ordem correta:**
-1. Ver na área de destaque o valor total, o vencimento e o limite. — _A área de destaque traz as informações principais da fatura._
-2. Conferir as alternativas de pagamento, com juros e encargos. — _Mostra o que acontece se não pagar o total: juros e encargos._
-3. Conferir cada compra, o local e as parcelas. — _A conferência detalhada mostra os hábitos de consumo e permite achar erros._
-4. Pagar o valor total até a data de vencimento. — _Pagar o total em dia evita juros e multa._
-
-_Critério:_ Ordem exata 100%; 2 relações corretas 65%; 1 relação 30%; nenhuma 0% · _BNCC:_ EF07MA12 (habilidade indicada na aula 4); Tema transversal: Educação Financeira
-
-### 6. A fatura que cresceu  _(escolha · Analisar · Aula 4)_
-
-**Situação:** Uma fatura mostra compras de R$ 928,00, multa por atraso de R$ 55,12 e saldo anterior não pago de R$ 91,88.
-
-**Pergunta:** Qual é o valor total da fatura e o que poderia ter evitado a multa e o saldo anterior?
-
-**Alternativas:**
-- **A)** R$ 1.075,00; a multa e o saldo não poderiam ser evitados.  
-  _10 pts. Soma certo, mas esses valores poderiam ser evitados com o pagamento integral em dia._
-- **B)** R$ 928,00, porque a multa e o saldo anterior não entram na fatura.  
-  _0 pts. A fatura inclui compras, multas e valores não pagos de meses anteriores._
-- **C)** R$ 1.019,88 (compras mais saldo anterior); pagar a fatura anterior em dia evitaria a multa.  
-  _20 pts. Esquece de somar a multa (R$ 55,12), mas percebe que o atraso é evitável._
-- **D)** R$ 1.075,00 (928 + 55,12 + 91,88); pagar a fatura anterior integralmente e no vencimento evitaria a multa e o saldo.  
-  _30 pts ✔ CORRETA. Soma todos os valores e liga a multa e o saldo à fatura anterior não paga._
-
-_Critério:_ Somar compras, multa e saldo anterior; relacionar à quitação da fatura anterior · _BNCC:_ EF07MA12 (habilidade indicada na aula 4); Tema transversal: Educação Financeira
-
-### 7. Qual armário compensa?  _(escolha · Avaliar · Aula 6)_
-
-**Situação:** A loja A vende um armário por R$ 300,00, mas cobra entrega de R$ 45,00 e montagem de 4% do valor do móvel. A loja B vende o mesmo armário por R$ 330,00, com entrega e montagem incluídas.
-
-**Pergunta:** Qual escolha é melhor para o orçamento da família?
-
-**Alternativas:**
-- **A)** Loja A, porque o armário custa R$ 300,00 e isso é o que importa.  
-  _0 pts. Olha só o preço do móvel e ignora entrega e montagem._
-- **B)** Loja B: o custo total é R$ 330,00, contra R$ 357,00 na loja A (300 + 45 + 12).  
-  _30 pts ✔ CORRETA. Calcula a montagem (4% de 300 = 12) e compara o custo total: R$ 27,00 mais barato na loja B._
-- **C)** Loja A, porque a montagem de 4% (R$ 12,00) é um valor pequeno.  
-  _10 pts. Considera só a montagem e deixa a entrega (R$ 45,00) de fora._
-- **D)** As duas custam o mesmo, porque a diferença do preço do armário se compensa.  
-  _0 pts. Os totais são diferentes: R$ 357,00 e R$ 330,00._
-
-_Critério:_ Escala: integral 30; adequada parcial 20; incipiente 10; inadequada 0 · _BNCC:_ EF07MA02 (habilidade indicada na aula 6); Tema transversal: Educação Financeira
-
-### 8. Fugindo da bola de neve  _(escolha · Criar · Aulas 4–6)_
-
-**Situação:** Larissa vai começar a usar o cartão de crédito e quer evitar que uma dívida pequena vire uma “bola de neve”.
-
-**Pergunta:** Escolha o plano com mais evidências de responsabilidade financeira.
-
-**Alternativas:**
-- **A)** Pagar só o mínimo todo mês e continuar usando o cartão normalmente.  
-  _0 pts. Os valores não pagos geram juros e acumulam, que é justamente o efeito bola de neve._
-- **B)** Parcelar todas as compras em muitas vezes, para as parcelas ficarem pequenas.  
-  _10 pts. Muitas parcelas em aberto podem pesar no orçamento e gerar a bola de neve._
-- **C)** Conferir a fatura, separar gastos essenciais e não essenciais, limitar as compras ao orçamento e pagar o valor total até o vencimento.  
-  _30 pts ✔ CORRETA. Combina conferência, planejamento do orçamento e pagamento integral em dia._
-- **D)** Pagar a fatura sempre em dia, mas sem conferir os itens cobrados.  
-  _20 pts. Pagar em dia ajuda, mas sem conferir os itens não se percebe erros nem hábitos de consumo._
-
-_Critério:_ Avaliar plano por 4 critérios: conferir a fatura, separar gastos, limitar compras ao orçamento e pagar o total em dia · _BNCC:_ EF07MA12 (habilidade indicada na aula 4); Tema transversal: Educação Financeira
-
-## s7-tema-3: Porcentagem no Dia a Dia
-
-*Descontos, aumentos e contas de consumo* · Tópicos: Porcentagem na mídia e nas promoções; Descontos e acréscimos; Contas de consumo, impostos e multas
-
-### 1. A notícia dos 9%  _(escolha · Lembrar · Aula 7)_
-
-**Situação:** Uma notícia afirma: “Apenas 9% do plástico global é reciclado”.
-
-**Pergunta:** O que significa a porcentagem 9% nessa notícia?
-
-**Dica:** Nas porcentagens, o todo é sempre 100%: “100 partes em cada 100”.
-
-**Alternativas:**
-- **A)** Que apenas 9 produtos de plástico foram reciclados no mundo.  
-  _10 pts. Percebe o número 9, mas esquece que o todo é 100: não é a quantidade total._
-- **B)** Que 9 em cada 100 produtos de plástico foram reciclados.  
-  _30 pts ✔ CORRETA. A porcentagem indica 9 partes em cada 100 do todo._
-- **C)** Que 9 em cada 10 produtos de plástico foram reciclados.  
-  _0 pts. Confunde 100 com 10: 9 em cada 10 seria 90%._
-- **D)** Que o plástico reciclado custa 9% menos.  
-  _0 pts. A notícia fala da quantidade reciclada, não do preço._
-
-_Critério:_ Interpretar porcentagem como parte de 100 · _BNCC:_ EF07MA02 (habilidade indicada nas aulas 7 a 9); Tema transversal: Educação Financeira
-
-### 2. A promoção do smartphone  _(escolha · Compreender · Aula 7)_
-
-**Situação:** Um anúncio diz: “15% de desconto na compra de smartphones. Válido só para pagamento à vista no Pix”.
-
-**Pergunta:** O que a porcentagem indica nessa oferta?
-
-**Dica:** Além da porcentagem, leia a condição da compra.
-
-**Alternativas:**
-- **A)** Um desconto de R$ 15,00 em qualquer smartphone.  
-  _0 pts. 15% é uma parte de cada 100 do preço, não um valor fixo em reais._
-- **B)** Um desconto de 15% sobre o preço, válido para qualquer forma de pagamento.  
-  _10 pts. Entende o desconto, mas ignora a condição: só vale para pagamento à vista no Pix._
-- **C)** Um aumento de 15% no preço de quem paga no Pix.  
-  _0 pts. Troca desconto por aumento._
-- **D)** Um desconto de 15% sobre o preço do produto, válido só para pagamento à vista no Pix.  
-  _30 pts ✔ CORRETA. Interpreta a porcentagem e a condição de compra._
-
-_Critério:_ Interpretar porcentagem e condição de compra em propaganda · _BNCC:_ EF07MA02 (habilidade indicada nas aulas 7 a 9); Tema transversal: Educação Financeira
-
-### 3. A conta de luz  _(multisseleção · Aplicar · Aula 9)_
-
-**Situação:** A família de Caio quer entender por que a conta de luz muda de um mês para outro.
-
-**Pergunta:** Selecione TODAS as afirmações corretas sobre contas de consumo.
-
-**Dica:** Pense em consumo, bandeiras e em quem define o ICMS.
-
-**Alternativas:**
-- **A)** Em contas de água e luz, quanto mais se consome, maior é a tarifa proporcional em cada faixa de consumo.  
-  _✔ CORRETA. Correto: as faixas de consumo têm tarifas proporcionais maiores para quem consome mais._
-- **B)** As bandeiras tarifárias acrescentam (ou não) uma porcentagem extra na conta de luz, conforme o custo de geração de energia.  
-  _✔ CORRETA. Correto: as bandeiras podem acrescentar uma porcentagem extra à conta._
-- **C)** A bandeira verde sempre acrescenta 25% à conta.  
-  _✘. Na bandeira verde não há acréscimo; o acréscimo de 25% do exemplo é o da bandeira vermelha._
-- **D)** O ICMS é igual em todos os estados, porque é um imposto federal.  
-  _✘. O ICMS é um imposto estadual: cada estado define o percentual._
-
-_Critério:_ Conjunto correto A e B; pontuação proporcional, sem crédito se marcar tudo · _BNCC:_ EF07MA02 (habilidade indicada nas aulas 7 a 9); Tema transversal: Educação Financeira
-
 ### 4. Preços no supermercado  _(escolha · Analisar · Aula 9)_
 
 **Situação:** No supermercado: óleo de soja subiu de R$ 9,00 para R$ 9,99 (+11%), o sabão em pó caiu de R$ 18,00 para R$ 14,40 (−20%) e o pacote de arroz subiu de R$ 25,00 para R$ 26,50 (+6%).
@@ -403,7 +403,7 @@ _Critério:_ Conjunto correto A e B; pontuação proporcional, sem crédito se m
 - **D)** O pacote de arroz: subiu R$ 1,50, contra R$ 0,99 do óleo, mesmo com percentual menor.  
   _30 pts ✔ CORRETA. Compara os valores em reais: R$ 26,50 − R$ 25,00 = R$ 1,50, maior que R$ 0,99._
 
-_Critério:_ Distinguir variação percentual de variação em reais · _BNCC:_ EF07MA02 (habilidade indicada nas aulas 7 a 9); Tema transversal: Educação Financeira
+_Critério:_ Distinguir variação percentual de variação em reais · _BNCC:_ EF07MA02 (habilidade indicada nas aulas 6 a 9); Tema transversal: Educação Financeira
 
 ### 5. O novo preço da passagem  _(ordenação · Aplicar · Aula 8)_
 
@@ -419,25 +419,27 @@ _Critério:_ Distinguir variação percentual de variação em reais · _BNCC:_ 
 3. Somar o aumento ao preço inicial: R$ 50,00 + R$ 5,00. — _Em um aumento, o valor do acréscimo é somado ao preço original._
 4. Conferir: o novo preço (R$ 55,00) é maior que o original, como esperado em um aumento. — _Conferir se o resultado faz sentido evita erros._
 
-_Critério:_ Ordem exata 100%; 2 relações corretas 65%; 1 relação 30%; nenhuma 0% · _BNCC:_ EF07MA02 (habilidade indicada nas aulas 7 a 9); Tema transversal: Educação Financeira
+_Critério:_ Ordem exata 100%; 2 relações corretas 65%; 1 relação 30%; nenhuma 0% · _BNCC:_ EF07MA02 (habilidade indicada nas aulas 6 a 9); Tema transversal: Educação Financeira
 
-### 6. O querosene ficou mais barato  _(escolha · Analisar · Aula 8)_
+### 6. O desconto só no Pix  _(escolha · Analisar · Aulas 7–8)_
 
-**Situação:** Uma empresa aérea gasta R$ 1.000,00 com querosene de aviação, e o preço sofreu uma redução de 7%. Ana calculou: 1% de R$ 1.000 é R$ 10; 7% é R$ 70; então R$ 1.000 − R$ 70 = R$ 930. Bia calculou: 7% de R$ 1.000 é R$ 7; então R$ 1.000 − R$ 7 = R$ 993.
+**Situação:** Na loja A, um smartphone custa R$ 2.000,00 e a propaganda diz: “15% de desconto, só para pagamento à vista no Pix”. Na loja B, o mesmo smartphone custa R$ 1.800,00 em qualquer forma de pagamento. Carla só pode pagar no cartão.
 
-**Pergunta:** Qual raciocínio está correto?
+**Pergunta:** Para Carla, qual loja sai mais barata?
+
+**Dica:** Leia a condição da promoção, além da porcentagem.
 
 **Alternativas:**
-- **A)** O de Ana: 1% de R$ 1.000 é R$ 10, então 7% é R$ 70 e a empresa passa a gastar R$ 930,00.  
-  _30 pts ✔ CORRETA. Calcula 1% (R$ 10), depois 7% (R$ 70) e subtrai: R$ 930,00._
-- **B)** O de Bia: 7% de R$ 1.000 é R$ 7, e a empresa passa a gastar R$ 993,00.  
-  _0 pts. Confunde 7% com 7 reais: 7% de R$ 1.000 é R$ 70._
-- **C)** Os dois, porque os resultados ficam parecidos.  
-  _10 pts. Os resultados são diferentes (R$ 930 e R$ 993), e só um está certo._
-- **D)** Nenhum, porque uma redução deve ser somada ao valor.  
-  _0 pts. Em uma redução, o valor é subtraído, não somado._
+- **A)** Loja A, porque com 15% de desconto custaria R$ 1.700,00.  
+  _0 pts. Ignora a condição: o desconto vale só no Pix, e Carla paga no cartão._
+- **B)** Qualquer uma, porque o desconto de 15% compensa a diferença.  
+  _0 pts. Sem o Pix, o desconto não vale; as lojas custam R$ 2.000,00 e R$ 1.800,00._
+- **C)** Loja B: no cartão Carla não tem o desconto da loja A, então pagaria R$ 2.000,00 contra R$ 1.800,00.  
+  _30 pts ✔ CORRETA. Interpreta a condição da promoção e compara o preço que Carla realmente pagaria._
+- **D)** Loja B, porque R$ 1.800,00 equivale a 15% de desconto sobre R$ 2.000,00.  
+  _20 pts. Acerta a loja, mas 15% de R$ 2.000 é R$ 300 (R$ 1.700), e não R$ 200._
 
-_Critério:_ Calcular redução percentual a partir de 1% · _BNCC:_ EF07MA02 (habilidade indicada nas aulas 7 a 9); Tema transversal: Educação Financeira
+_Critério:_ Interpretar porcentagem e condição de compra em propaganda e comparar o preço final · _BNCC:_ EF07MA02 (habilidade indicada nas aulas 6 a 9); Tema transversal: Educação Financeira
 
 ### 7. A televisão do Paulo  _(escolha · Avaliar · Aula 8)_
 
@@ -455,7 +457,7 @@ _Critério:_ Calcular redução percentual a partir de 1% · _BNCC:_ EF07MA02 (h
 - **D)** Parcelar, porque o desconto à vista seria de apenas R$ 23,00.  
   _0 pts. Erra o cálculo: 10% de R$ 2.300 é R$ 230,00, não R$ 23,00._
 
-_Critério:_ Escala: integral 30; adequada parcial 20; incipiente 10; inadequada 0 · _BNCC:_ EF07MA02 (habilidade indicada nas aulas 7 a 9); Tema transversal: Educação Financeira
+_Critério:_ Escala: integral 30; adequada parcial 20; incipiente 10; inadequada 0 · _BNCC:_ EF07MA02 (habilidade indicada nas aulas 6 a 9); Tema transversal: Educação Financeira
 
 ### 8. Bandeira vermelha na conta de luz  _(escolha · Criar · Aula 9)_
 
@@ -473,7 +475,7 @@ _Critério:_ Escala: integral 30; adequada parcial 20; incipiente 10; inadequada
 - **D)** Reduzir o consumo, mas sem calcular o valor da bandeira nem reservar dinheiro.  
   _20 pts. Reduzir o consumo ajuda, mas sem calcular a conta e separar o valor, o pagamento pode faltar._
 
-_Critério:_ Avaliar plano por 4 critérios: cálculo do acréscimo, reserva do valor, redução do consumo e pagamento em dia · _BNCC:_ EF07MA02 (habilidade indicada nas aulas 7 a 9); Tema transversal: Educação Financeira
+_Critério:_ Avaliar plano por 4 critérios: cálculo do acréscimo, reserva do valor, redução do consumo e pagamento em dia · _BNCC:_ EF07MA02 (habilidade indicada nas aulas 6 a 9); Tema transversal: Educação Financeira
 
 ## s7-tema-4: Metas e Gráficos Financeiros
 
