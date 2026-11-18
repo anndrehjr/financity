@@ -29,3 +29,31 @@ dados-alunos/
 **/credenciais*.csv
 **/*credenciais*.csv
 credenciais-*.html
+
+# --- segurança: segredos, chaves, dumps e dados pessoais NUNCA entram no repositório ---
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+*.dump
+*.sql.gz
+*.bak
+*.sqlite
+*.sqlite3
+*.db
+data-test/
+backups/
+# listas e cartões de credenciais de alunos/professores (qualquer formato)
+**/*credenciais*.csv
+**/*credenciais*.html
+**/*credenciais*.txt
+**/*credenciais*.json
+**/*credenciais*.pdf
+**/*senhas*.txt
+**/*senhas*.csv
+dados-alunos/
+*.xlsx
+*.xls
+alunos*.csv

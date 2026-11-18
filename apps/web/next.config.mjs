@@ -11,7 +11,25 @@ const nextConfig = {
   transpilePackages: ["@financity/gateway-sign"],
   poweredByHeader: false,
   async headers() {
+    // Content-Security-Policy: segunda barreira contra XSS. Tudo é do próprio site (inclusive os áudios da Nina e as fontes);
+    // 'unsafe-inline' é necessário para os scripts de hidratação do Next e para os estilos do Tailwind (não há nonce).
+    const csp = [
+      "default-src 'self'",
+      `script-src 'self' 'unsafe-inline'${isProd ? "" : " 'unsafe-eval'"}`,
+      "style-src 'self' 'unsafe-inline'",
+      "img-src 'self' data: blob:",
+      "media-src 'self' blob:",
+      "font-src 'self' data:",
+      `connect-src 'self'${isProd ? "" : " ws: wss:"}`,
+      "worker-src 'self' blob:",
+      "object-src 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "frame-ancestors 'none'",
+      ...(isProd ? ["upgrade-insecure-requests"] : []),
+    ].join("; ");
     const h = [
+      { key: "Content-Security-Policy", value: csp },
       { key: "X-Frame-Options", value: "DENY" },
       { key: "X-Content-Type-Options", value: "nosniff" },
       { key: "Referrer-Policy", value: "same-origin" },

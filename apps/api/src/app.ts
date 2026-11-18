@@ -222,7 +222,7 @@ app.get("/api/admin/students", async (c) => {
 });
 app.post("/api/admin/students", async (c) => {
   const t = await requireRole(c, "teacher");
-  const { rows } = await json(c, z.object({ rows: z.array(z.object({ name: z.string(), className: z.string(), pin: z.string().optional(), noPin: z.boolean().optional() })) }));
+  const { rows } = await json(c, z.object({ rows: z.array(z.object({ name: z.string().max(200), className: z.string().max(80), pin: z.string().max(20).optional(), noPin: z.boolean().optional() })).max(500) }));
   if (!rows.length) throw new HttpError(400, "Nenhum aluno informado.");
   return c.json(await createStudents(rows as NewStudent[], t.id));
 });

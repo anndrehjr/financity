@@ -65,7 +65,7 @@ describe("segurança da API", () => {
       const r = await app.request("/api/session"); assert.equal(r.status, 401);
     });
     it("assinatura válida: 200", async () => { assert.equal((await call("GET", "/api/session")).status, 200); });
-    it("segredo errado: 401", async () => { assert.equal((await call("GET", "/api/session", { secret: "outro-segredo-qualquer-com-32-caracteres-ou-mais" })).status, 401); });
+    it("segredo errado: 401", async () => { assert.equal((await call("GET", "/api/session", { secret: "errado-".repeat(8) /* valor propositalmente errado, montado em tempo de execução */ })).status, 401); });
     it("caminho adulterado depois de assinar: 401", async () => { assert.equal((await call("GET", "/api/me", { tamperPath: "/api/session" })).status, 401); });
     it("assinatura vencida (2 min): 401", async () => { assert.equal((await call("GET", "/api/session", { ts: Date.now() - 120_000 })).status, 401); });
     it("hora no futuro (2 min): 401", async () => { assert.equal((await call("GET", "/api/session", { ts: Date.now() + 120_000 })).status, 401); });
