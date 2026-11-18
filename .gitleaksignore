@@ -1,0 +1,4 @@
+# Falsos positivos JA AVALIADOS, um a um (impressao digital = commit:arquivo:regra:linha). Nao ha excecao global.
+# Valor propositalmente ERRADO usado no teste 'segredo errado: 401'; nao e um segredo. A linha atual ja nao contem literal.
+a9be649222ea016acc1f15a4404f2b390a1cd589:apps/api/test/security.test.ts:generic-api-key:68
+0938394507363591354b168ba806379f35cc72a3:apps/api/test/security.test.ts:generic-api-key:68

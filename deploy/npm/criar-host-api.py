@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Cadastra o host público da API do Financity no Nginx Proxy Manager (rodar NA VPS).
 
-  python3 criar-host-api.py [dominio]        # padrão: api.144-217-161-241.sslip.io
+  python3 criar-host-api.py <dominio>          # ex.: api.seudominio.com.br (obrigatório; nada é assumido)
 
 - Pede o e-mail e a senha do painel do Nginx Proxy Manager (a senha não aparece na tela e não é gravada).
 - Cria (ou reaproveita) o host  dominio -> http://financity-api:8787, pede o certificado Let's Encrypt e força HTTPS.
@@ -16,7 +16,9 @@ import urllib.error
 import urllib.request
 
 NPM = "http://127.0.0.1:81/api"          # o painel só escuta em 127.0.0.1 da VPS
-DOMINIO = sys.argv[1] if len(sys.argv) > 1 else "api.144-217-161-241.sslip.io"
+if len(sys.argv) < 2:
+    sys.exit("Uso: python3 criar-host-api.py <dominio>  (informe o domínio da API; não há valor padrão)")
+DOMINIO = sys.argv[1]
 DESTINO, PORTA = "financity-api", 8787
 
 

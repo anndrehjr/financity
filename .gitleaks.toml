@@ -1,0 +1,15 @@
+# Gitleaks: usa o conjunto padrão de regras e acrescenta UMA exceção estreita e documentada.
+# Não coloque segredos aqui. Não use exceções globais para silenciar achados isolados: use o comentário "gitleaks:allow" na linha.
+title = "Financity"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Credenciais de DESENVOLVIMENTO LOCAL, públicas e sem acesso a nada (banco embutido em 127.0.0.1 e segredos de teste)"
+regexTarget = "match"
+regexes = [
+  '''dev-local-only''',
+  '''do-not-use-in-production''',
+  '''segredo-de-teste-do-gateway''',
+]

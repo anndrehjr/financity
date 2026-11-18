@@ -50,7 +50,7 @@ Backup (na VPS): `~/docker/financity/src/deploy/backup/backup-financity.sh`
 ## Alunos do 7º
 ```
 npx tsx tools/alunos/importar.ts CAMINHO\alunos.csv --local            # simulação no banco de desenvolvimento
-FINANCITY_SSH="-p 2222 -i CAMINHO\chave usuario@host" npx tsx tools/alunos/importar.ts CAMINHO\alunos.csv --vps            # simulação na VPS
+FINANCITY_SSH="-p <porta-ssh> -i CAMINHO\chave usuario@host" npx tsx tools/alunos/importar.ts CAMINHO\alunos.csv --vps            # simulação na VPS
 FINANCITY_SSH=... npx tsx tools/alunos/importar.ts CAMINHO\alunos.csv --vps --gravar                                       # grava e gera os cartões
 ```
 - CSV (`nome,serie,turma`, UTF-8) **fora do repositório**; turma vazia vira "7 ano". A ferramenta recusa CSV dentro do repositório.

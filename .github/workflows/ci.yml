@@ -1,0 +1,60 @@
+name: CI
+
+# Tipos, testes e build a cada pull request e push na main. Permissões mínimas, ações fixadas por SHA.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  testes:
+    runs-on: ubuntu-latest
+    services:
+      # PostgreSQL só para os testes (usuário/senha locais e descartáveis; os testes criam e apagam bancos "fc_*").
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: financity_dev
+          POSTGRES_PASSWORD: dev-local-only
+          POSTGRES_DB: postgres
+        ports:
+          - 54329:5432
+        options: >-
+          --health-cmd "pg_isready -U financity_dev"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Tipos (API)
+        run: npx tsc --noEmit
+        working-directory: apps/api
+      - name: Tipos (site)
+        run: npx tsc --noEmit
+        working-directory: apps/web
+      - name: Testes (API)
+        run: npm test
+        working-directory: apps/api
+      - name: Testes (site)
+        run: npm test
+        working-directory: apps/web
+      - name: Build do site
+        run: npm run build
+        working-directory: apps/web
+        env:
+          API_URL: http://127.0.0.1:8787
+          GATEWAY_SECRET: valor-ficticio-so-para-o-build-0123456789abcdef

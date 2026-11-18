@@ -6,10 +6,11 @@ param([switch]$Reiniciar)
 $ErrorActionPreference = "Stop"
 $root = $PSScriptRoot
 $api = Join-Path $root "apps\api"
-$bk = Get-ChildItem "D:\Projetos Serios\Jogos Novos\financity-backups\final-*" -Directory | Sort-Object Name -Descending | Select-Object -First 1
+if (-not $env:FINANCITY_BACKUPS) { throw "Defina FINANCITY_BACKUPS com a pasta dos backups do cenário SQLite." }
+$bk = Get-ChildItem (Join-Path $env:FINANCITY_BACKUPS "final-*") -Directory | Sort-Object Name -Descending | Select-Object -First 1
 if (-not $bk) { throw "Backup final não encontrado em financity-backups." }
 $sqlite = Join-Path $bk.FullName "financity.db"
-$secret = "segredo-local-de-teste-com-mais-de-32-caracteres"
+$secret = "segredo-local-de-teste-com-mais-de-32-caracteres"  # verificar-segredos: ignorar (valor fixo só de teste local, sem relação com produção)
 $pidFile = Join-Path $root ".e2e\local-pids.json"
 New-Item -ItemType Directory -Force (Join-Path $root ".e2e") | Out-Null
 function Listening($port) {
@@ -62,6 +63,6 @@ $pids | ConvertTo-Json | Set-Content $pidFile
 
 Write-Host ""
 Write-Host "PRONTO. Abra: http://localhost:3300" -ForegroundColor Green
-Write-Host "Professor: usuário e senha estão em D:\Projetos Serios\Jogos Novos\financity\data\credenciais-professor.txt"
+Write-Host "Professor: usuário e senha estão em <pasta-do-projeto-sqlite>\data\credenciais-professor.txt"
 Write-Host "Aluno de teste: usuario e PIN 135790 aparecem acima. TODOS os mapas ficam desbloqueados neste ambiente (so aqui; a VPS continua em sequencia)."
 Write-Host "Para encerrar: .\parar-local.ps1"

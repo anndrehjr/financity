@@ -1,0 +1,27 @@
+# Nada disto deve entrar em uma imagem ou no contexto de build (segredos, dados locais, dependências e artefatos).
+**/node_modules
+**/.next
+**/dist
+.git
+.github
+.env
+.env.*
+!.env.example
+!.env.production.example
+**/.pgdev
+**/.e2e
+data
+data-test
+dados-alunos
+**/*credenciais*.csv
+**/*credenciais*.html
+**/*credenciais*.txt
+**/*credenciais*.json
+**/*.dump
+**/*.sql.gz
+**/*.log
+tools/nina-voz/origem
+tools/nina-voz/.venv
+tools/nina-voz/trabalho
+apps/web/design
+docs

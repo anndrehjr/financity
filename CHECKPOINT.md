@@ -3,9 +3,9 @@
 Sem senhas, PINs ou chaves neste arquivo.
 
 ## Onde está cada coisa
-- **Sistema atual (SQLite) — INTACTO**: `D:\Projetos Serios\Jogos Novos\financity` (branch `main`, tag `v0-sqlite-estavel`). É o caminho de retorno.
-- **Versão nova (PostgreSQL + API na VPS + web na Vercel)**: `D:\Projetos Serios\Jogos Novos\financity-pg` (branch `feat/postgres-api`, commits locais; **nada enviado ao GitHub**).
-- **Backups verificados**: `D:\Projetos Serios\Jogos Novos\financity-backups\<data-hora>\` (SQLite + código + cópia bruta; contém dados de alunos e `secret.key`).
+- **Sistema atual (SQLite) — INTACTO**: `<pasta-do-projeto-sqlite>` (branch `main`, tag `v0-sqlite-estavel`). É o caminho de retorno.
+- **Versão nova (PostgreSQL + API na VPS + web na Vercel)**: `<pasta-do-projeto>` (branch `feat/postgres-api`, commits locais; **nada enviado ao GitHub**).
+- **Backups verificados**: `<pasta-de-backups>\<data-hora>\` (SQLite + código + cópia bruta; contém dados de alunos e `secret.key`).
 - Documentos: `docs/ARQUITETURA.md`, `docs/OPERACAO.md`, `docs/MIGRACAO-E-ROLLBACK.md`, `docs/relatorios/*.json`.
 
 ## Concluído e verificado
@@ -33,7 +33,7 @@ Sem senhas, PINs ou chaves neste arquivo.
 5. Conteúdo/avaliações do 7º ano; seletor de série/avaliação na interface (a API já suporta).
 
 ## Como retomar
-`cd "D:\Projetos Serios\Jogos Novos\financity-pg"` e peça: "leia CHECKPOINT.md e docs/MIGRACAO-E-ROLLBACK.md e continue". Para testar: `npm run pg:dev` (PostgreSQL local), depois ver docs/OPERACAO.md.
+`cd "<pasta-do-projeto>"` e peça: "leia CHECKPOINT.md e docs/MIGRACAO-E-ROLLBACK.md e continue". Para testar: `npm run pg:dev` (PostgreSQL local), depois ver docs/OPERACAO.md.
 
 ## Atualização 2026-11-16 (tarde): Mapas 2–4 ATIVOS
 - 15 questões novas (BNCC + Bloom) em `apps/api/src/content/mapa{2,3,4}.ts`; `npm`/`node dist/ativar-cli.js` cria o que falta e libera as avaliações do 8º ano (idempotente; não sobrescreve pontuações).
@@ -46,7 +46,7 @@ Sem senhas, PINs ou chaves neste arquivo.
 
 
 ## Atualização 2026-11-16 (noite): produção, Culminância, Nina e voz
-- **Produção:** https://financity-eta.vercel.app (Vercel, branch main). API/PostgreSQL na VPS (https://api.144-217-161-241.sslip.io). Publicação: merge na main.
+- **Produção:** https://financity-eta.vercel.app (Vercel, branch main). API/PostgreSQL na VPS (https://<HOST-DA-API>). Publicação: merge na main.
 - **Culminância (8º ano):** 4 temas × 8 questões (960 pts), tipos escolha/multisseleção/ordenação, dica sem penalidade. Mapas antigos arquivados (sem apagar). Conteúdo: apps/api/src/content/culminancia.ts.
 - **Nina Anime 2.0:** tutorial guiado por eventos (Driver.js), personagem com imagem de referência (arte em camadas pendente; Phaser só carrega quando houver arte), catálogo de falas em apps/web/src/data/nina/falas.json (37 falas), inventário em tools/nina-voz/INVENTARIO.md.
 - **Voz:** 10 falas com a gravação original (ElevenLabs "sylphiette") no ar. O site só toca MP3 estáticos; sem API, sem voz substituta (sem áudio = só legenda). Créditos ElevenLabs ligados em config/personagem.ts até confirmar plano pago.
@@ -58,7 +58,7 @@ Sem senhas, PINs ou chaves neste arquivo.
 - **No ar (financity-eta.vercel.app + VPS):** Culminância 8º ano, Nina com tutorial guiado e **37 falas com voz**, importador (somente código).
 - **NÃO publicado: PR #12** (estrutura por série 7º/8º; migração 004). Banco da VPS na migração 003. **Para publicar:** o André roda o backup (`~/docker/financity/src/deploy/backup/backup-financity.sh`) e diz "pode publicar" → ver `docs/PUBLICACAO-E-REVERSAO.md`. Recomendado fazer ANTES da entrega das senhas do 8º (que ficam iguais).
 - **Documentos:** `docs/HISTORICO.md` (tudo que foi feito, PRs, decisões, pendências), `docs/PUBLICACAO-E-REVERSAO.md` (como publicar e reverter), `docs/CONTEUDO-7-ANO.md` (preencher/validar/publicar o 7º), `tools/nina-voz/README.md` (voz), `docs/nina/ASSETS-NECESSARIOS.md` (arte).
-- **Lista do 7º ano:** `D:\Projetos Serios\Jogos Novos\dados-alunos\7ano.csv` (fora do git; 14 alunos). Importar só com autorização, simulação primeiro.
+- **Lista do 7º ano:** `<pasta-fora-do-repositório>\7ano.csv` (fora do git; 14 alunos). Importar só com autorização, simulação primeiro.
 - **Próximos passos (tarde):** preencher temas do 7º → validar → falas/áudios do 7º → backup → publicar → importar → imprimir credenciais → apagar CSV/HTML.
 
 ## Atualização 2026-11-17 (madrugada, depois): PR #12 e #15 PUBLICADOS
@@ -71,6 +71,6 @@ Sem senhas, PINs ou chaves neste arquivo.
 - **No ar:** Nina 3D no tutorial (visual novo, animações CSS, fixa no canto inferior; guia em `docs/NINA-3D.md`), **7º ano** (4 temas × 8 desafios, aprovados pelo professor; `docs/REVISAO-CONTEUDO-7-ANO.md`), 5 falas da Nina do 7º com áudio. PR #24 (main `86b5607`).
 - **Banco (VPS):** migração 006 (sem migração nova). Backups: `financity-20261118-141304Z.dump` (antes de publicar; restauração testada) e `financity-20261118-141756Z.dump` (depois de importar o 7º). Conteúdo do 7º gravado com `serie-cli publicar` (maps 12, questions 84).
 - **Alunos:** 14 do 7º importados (turma "7 ano"); 8º intacto (attempts 21, answers 149). Totais: 56 alunos.
-- **Do André:** imprimir `D:\Projetos Serios\Jogos Novos\dados-alunos\credenciais-7ano.html`, entregar os cartões e **apagar o HTML e o `7ano.csv`**. Ver a Nina 3D no site real e passar o tutorial; entrar com um aluno do 7º e conferir os 4 temas.
+- **Do André:** imprimir `<pasta-fora-do-repositório>\credenciais-7ano.html`, entregar os cartões e **apagar o HTML e o `7ano.csv`**. Ver a Nina 3D no site real e passar o tutorial; entrar com um aluno do 7º e conferir os 4 temas.
 - **Não verificado:** tela de um aluno real do 7º; Nina em Safari/Firefox/celular físico/leitor de tela; áudio saindo pelo alto-falante.
 - **Pendências antigas:** trocar a senha do professor e apagar `credenciais-professor.txt`; plano da ElevenLabs (créditos no rodapé); envio dos backups ao Google Drive; arte própria dos cenários.
