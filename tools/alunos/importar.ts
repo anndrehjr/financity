@@ -32,7 +32,7 @@ const csv = fs.readFileSync(abs);
 let r;
 if (alvo === "vps") {
   const ssh = process.env.FINANCITY_SSH;
-  if (!ssh) sair("Defina FINANCITY_SSH (ex.: \"-p 2222 -i C:\\\\caminho\\\\chave usuario@host\") para usar --vps.");
+  if (!ssh) sair("Defina FINANCITY_SSH (ex.: \"-p <porta-ssh> -i C:\\\\caminho\\\\chave usuario@host\") para usar --vps.");
   r = spawnSync("ssh", [...ssh!.split(/\s+/).filter(Boolean), "docker", "exec", "-i", "financity-api-1", "node", "dist/importar-cli.js", ...(gravar ? ["--executar"] : [])], { input: csv, encoding: "utf8", maxBuffer: 20 * 1024 * 1024 });
 } else {
   r = spawnSync(process.platform === "win32" ? "npx.cmd" : "npx", ["tsx", path.join("apps", "api", "src", "importar-cli.ts"), ...(gravar ? ["--executar"] : [])],

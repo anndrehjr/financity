@@ -3,7 +3,7 @@
 # 🏙️ FINANCITY
 ### A jornada das decisões financeiras
 
-**Um jogo de Educação Financeira para o 8º ano, onde cada escolha ensina algo novo.**
+**Um jogo de Educação Financeira para o 7º e o 8º ano, onde cada escolha ensina algo novo.**
 
 🎮 &nbsp;**[Abrir o Financity](https://financity-eta.vercel.app)**
 
@@ -40,6 +40,19 @@ Cada tema tem **8 desafios** e vale **240 pontos**. Eles são liberados em ordem
 | 2 | 🤝 **Ética Financeira** | Transparência, nota fiscal, honestidade no caixa |
 | 3 | 🛡️ **Segurança Digital e Privacidade** | Golpes e *phishing*, proteção de dados, privacidade |
 | 4 | 🧮 **Consumo Consciente e Matemática** | Publicidade, porcentagem, orçamento |
+
+#### 7º ano
+
+O 7º ano tem a própria trilha, também com **4 temas de 8 desafios** (240 pontos cada), construída a partir das aulas do bimestre:
+
+| # | Tema | O que o aluno exercita |
+|:-:|---|---|
+| 1 | 💼 **Renda e Trabalho** | Renda formal e informal, leitura de gráficos de renda, planejar com renda variável |
+| 2 | 🧾 **Controle do Dinheiro** | Extrato bancário, fatura do cartão, juros e "bola de neve" |
+| 3 | 🛒 **Compras e Porcentagem** | Cupom fiscal, impostos, descontos e acréscimos, contas de consumo |
+| 4 | 📊 **Metas e Gráficos Financeiros** | Metas, orçamento, gráfico de setores, leitura crítica de dados |
+
+Cada aluno vê apenas os temas da própria série.
 
 ### 🎯 Três jeitos de responder
 
@@ -249,6 +262,8 @@ Os alunos são menores de idade, então a proteção dos dados é levada a séri
 - ⏱️ Para a presença, o sistema guarda **apenas horários** (entrou, saiu, quanto tempo ficou). Nada além disso.
 - 💾 São feitas **cópias de segurança todos os dias**.
 - 🚫 O jogo **não pede dados pessoais** do aluno além do nome e da turma.
+
+Para relatar uma falha de segurança de forma privada, veja a [Política de segurança](SECURITY.md). Os controles técnicos e as limitações conhecidas estão em [`docs/security/`](docs/security/).
 
 ---
 
