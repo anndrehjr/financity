@@ -14,7 +14,7 @@
     "driver.js": "1.14.0",
     "lucide-react": "^0.460.0",
     "next": "^15.1.0",
-    "phaser": "3.90.0",
+    "phaser": "4.2.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "recharts": "^2.13.3",
