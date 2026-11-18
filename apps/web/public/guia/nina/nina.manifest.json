@@ -2,7 +2,7 @@
   "versao": 1,
   "comentario": "Manifesto da Nina em camadas. Marque \"existe\": true quando o arquivo PNG for colocado em public/guia/nina/camadas/. Enquanto nenhuma camada existir, a Nina usa a imagem de referência estática. Âncoras em pixels da tela-base.",
   "base": { "largura": 1024, "altura": 1365 },
-  "referencia": "/guia/nina/referencia.webp",
+  "referencia": "/guia/nina/nina-3d.webp",
   "pasta": "/guia/nina/camadas/",
   "respiracao": false,
   "poses": {
