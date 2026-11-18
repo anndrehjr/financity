@@ -12,25 +12,25 @@ Fases: A inventário · B segredos e dados sensíveis · C histórico Git · D a
 |---|:-:|:-:|:-:|:-:|
 | Crítica | 0 | – | – | – |
 | Alta | 0 | – | – | – |
-| Média | 5 | 3 | 0 | 2 |
+| Média | 5 | 4 | 0 | 1 |
 | Baixa | 7 | 3 | 3 | 1 |
 | Informativa | 2 | – | 2 | – |
-| **Total** | **14** | **6** | **5** | **3** |
+| **Total** | **14** | **7** | **5** | **2** |
 
-> "Corrigidos (local)" = alteração feita e testada na branch `security/auditoria-2026-11`, **ainda não publicada**. Nada foi alterado na produção, no GitHub remoto, nas credenciais ou na infraestrutura.
+> **Atualização (2026-11-18, após autorização do proprietário):** as correções foram publicadas (PR #26) e implantadas no site e na API, com backup verificado antes; as proteções do GitHub foram ativadas (ver `GITHUB-HARDENING.md`). Credenciais **não** foram rotacionadas (nenhum segredo real foi encontrado) e a visibilidade do repositório **não** foi alterada (aguarda decisão do proprietário).
 
 ## Achados
 | ID | Gravidade | Achado | Estado |
 |---|---|---|---|
-| F-01 | Média | O repositório no GitHub está **público**. Não contém segredos nem dados de alunos, mas expõe código e detalhes operacionais de um sistema que atende menores. Não havia varredura de segredos nem proteção de push habilitadas | **Depende de decisão do proprietário** |
-| F-02 | Média | Site sem `Content-Security-Policy` (segunda barreira contra XSS) | Corrigido (CSP restritivo, 0 violações nas telas testadas) |
+| F-01 | Média | O repositório no GitHub está **público**. Não contém segredos nem dados de alunos, mas expõe código e detalhes operacionais de um sistema que atende menores. Não havia varredura de segredos nem proteção de push habilitadas | **Depende de decisão do proprietário** (trocar para privado desativa, no plano gratuito, o Secret Scanning e a proteção da `main`) |
+| F-02 | Média | Site sem `Content-Security-Policy` (segunda barreira contra XSS) | Corrigido e **em produção** (CSP restritivo, 0 violações nas telas testadas) |
 | F-03 | Média | `zod` < 4.6.6: esgotamento de memória ao validar coleções grandes (GHSA-mrhx-c7xc-m3w5); exploração difícil (corpo limitado a 1 MB, chamadas assinadas) | Corrigido (zod 4.6.7; 87 testes passam) + limite de linhas no cadastro em lote |
 | F-04 | Média | `next` 15 embute `postcss` 8.4.31 (avisos de leitura de `.map` e XSS de serialização; só em tempo de build) | Corrigido (`overrides` → 8.5.33) |
 | F-05 | Baixa | `@hono/node-server` com falha em `serveStatic` (não usado pelo projeto) | Corrigido (2.1.9) |
 | F-06 | Baixa | 10 avisos altos só em **ferramentas de desenvolvimento** (cadeia do `tailwindcss` 3: `picomatch`, `micromatch`…). Não vão para produção | Aceito; migração do Tailwind planejada |
 | F-07 | Baixa | Documentação com detalhes operacionais internos (host da API, usuário/porta de SSH, caminhos locais) | Corrigido no arquivo atual; permanece em commits antigos (impacto baixo, sem credenciais) |
 | F-08 | Baixa | `.gitignore` não cobria credenciais em HTML/TXT, chaves, dumps; não havia `.dockerignore` | Corrigido |
-| F-09 | Média | Sem mecanismos preventivos (hook, Gitleaks, CI de segurança, Dependabot, política de reporte) | Corrigido nos arquivos; **ativação no GitHub depende de autorização** |
+| F-09 | Média | Sem mecanismos preventivos (hook, Gitleaks, CI de segurança, Dependabot, política de reporte) | **Corrigido**: arquivos publicados e proteções do GitHub ativadas (Secret Scanning, Push Protection, Dependabot, proteção da `main`) |
 | F-10 | Baixa | Login de professor responde ~4× mais devagar que o de aluno/inexistente (custo do bcrypt), permitindo inferir quais usuários de professor existem | Aceito (mitigado pelo limite de tentativas); ver plano |
 | F-11 | Baixa | PIN de aluno com 6 dígitos (10⁶ combinações) e bloqueio por usuário permite bloqueio temporário de uma conta por terceiros | Aceito (risco inerente ao desenho para crianças; limite de 10 falhas/15 min por usuário) |
 | F-12 | Baixa | Backups só na própria VPS (sem cópia externa configurada) | **Depende de autorização** (infraestrutura) |
@@ -47,7 +47,7 @@ OWASP Top 10, OWASP ASVS (autenticação, sessão, controle de acesso, validaç�
 
 ## Limitações
 - Não foi feito teste de intrusão em produção nem em infraestrutura de terceiros (por desenho).
-- Os fluxos do GitHub (Gitleaks, CI, Dependabot) foram escritos mas **ainda não executados**: exigem envio ao GitHub.
+- Os fluxos do GitHub foram executados no PR #26 e na `main` (Segredos, Dependências e testes passaram; o Gitleaks apontou 1 falso positivo conhecido, avaliado e registrado).
 - Navegador testado: Chrome (CSP e telas); Firefox/Safari não testados.
 - O histórico foi varrido por padrões conhecidos; segredos sem formato reconhecível podem escapar. A rotação periódica de segredos continua recomendada.
 - Uma auditoria não elimina todos os riscos.

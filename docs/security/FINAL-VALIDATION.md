@@ -1,6 +1,6 @@
 # Validação final da auditoria (2026-11-18)
 
-Executada na branch `security/auditoria-2026-11` (base: `main` publicada). **Nada foi publicado, rotacionado ou alterado em produção.**
+Executada na branch `security/auditoria-2026-11` e, **após autorização do proprietário**, publicada (PR #26) e implantada em 2026-11-18, com backup verificado antes. **Nenhuma credencial foi rotacionada e a visibilidade do repositório não foi alterada.**
 
 ## Verificações executadas e resultado
 | Verificação | Resultado |
@@ -27,7 +27,7 @@ Executada na branch `security/auditoria-2026-11` (base: `main` publicada). **Nad
 | Segredos expostos identificados | ✅ nenhum real encontrado |
 | Dados pessoais versionados | ✅ nenhum encontrado |
 | `.gitignore` correto | ✅ |
-| Medidas contra novas exposições | ✅ no código · ⏳ ativação no GitHub depende de autorização |
+| Medidas contra novas exposições | ✅ no código e ativadas no GitHub |
 | Principais falhas corrigidas ou justificadas | ✅ |
 | Controles de acesso testados | ✅ |
 | Projeto funcional e build de produção | ✅ |
@@ -36,17 +36,24 @@ Executada na branch `security/auditoria-2026-11` (base: `main` publicada). **Nad
 | Autoria e atribuições preservadas | ✅ histórico **não** foi reescrito; trailers `Co-Authored-By` dos commits existentes mantidos como registro de contribuição |
 | Pendências e limitações documentadas | ✅ |
 
+## Pós-implantação (2026-11-18)
+| Verificação | Resultado |
+|---|---|
+| Backup antes do deploy | `financity-20261118-151953Z.dump`, soma de verificação OK, restauração de teste reproduz o banco |
+| Fluxos no PR #26 | Segredos e dados pessoais ✔ · Vulnerabilidades de dependências ✔ · testes (com PostgreSQL) ✔ · prévia da Vercel ✔ |
+| API reconstruída (zod 4, @hono/node-server 2) | Saudável; sem migração; **dados idênticos** (57 alunos, 22 tentativas, 157 respostas, 12 mapas, 84 questões) |
+| Validação de entrada em produção | Login falso → mensagem padrão; corpo inválido → "Requisição inválida."; sem assinatura → 401 |
+| CSP em produção | Presente na resposta do site |
+| Proteções do GitHub | Secret Scanning, Push Protection, Dependabot, permissões somente leitura e proteção da `main` ativados e conferidos; fluxo de segurança passou na `main` |
+
 ## O que NÃO foi validado
-- Os fluxos do GitHub Actions (Gitleaks, CI, Dependabot) — exigem o envio da branch.
-- Secret Scanning / Push Protection / proteção de branch — não ativados (dependem do proprietário).
+- Login e jogada de um **aluno real** em produção (não foram usadas contas reais); recomenda-se uma conferência manual com conta de teste.
 - Firefox e Safari; dispositivos móveis reais; leitor de tela.
 - Teste de intrusão em produção ou em infraestrutura de terceiros (fora do escopo, por desenho).
-- Implantação das correções em produção (a API usa agora `zod` 4 e `@hono/node-server` 2; recomenda-se validar login e uma jogada com conta de teste logo após o deploy).
 
 ## Riscos remanescentes
 1. Repositório público (F-01) até decisão do proprietário.
-2. Correções ainda não implantadas: produção continua sem CSP e com as dependências antigas até o deploy.
-3. Backups sem cópia externa (F-12).
-4. Ausência de política de retenção e de fluxo para direitos dos titulares (ver `PRIVACY-REVIEW.md`).
+2. Backups sem cópia externa (F-12).
+3. Ausência de política de retenção e de fluxo para direitos dos titulares (ver `PRIVACY-REVIEW.md`).
 
 Uma auditoria não elimina todos os riscos; mantenha a rotina de atualização de dependências, rotação de segredos e revisão a cada mudança relevante.
