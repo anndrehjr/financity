@@ -1,7 +1,7 @@
 # Plano de remediação
 
 Legenda: ✅ feito e testado localmente · ⏳ depende de autorização do proprietário · 🗓️ planejado.
-Tudo que é ✅ está na branch `security/auditoria-2026-11` e **ainda não foi publicado**.
+Atualização: os itens ✅ foram publicados (PR #26) e implantados em 2026-11-18, com backup antes; veja a seção 2 para o que ainda depende do proprietário.
 
 ## 1. Já corrigido (local)
 | ID | Ação | Verificação |
@@ -15,14 +15,14 @@ Tudo que é ✅ está na branch `security/auditoria-2026-11` e **ainda não foi 
 | F-09 | Verificador de segredos (`scripts/verificar-segredos.mjs`), hook de pre-commit, `.gitleaks.toml`, fluxos `seguranca.yml` e `ci.yml`, `dependabot.yml`, modelo de PR, `CODEOWNERS`, `SECURITY.md` | Hook barrou commit com senha de banco e CPF fictícios; verificador limpo no repositório e no histórico |
 | – | Minimização: tentativas de login antigas (IP) apagadas após 24 h | Teste automatizado |
 
-## 2. Depende de autorização (ações remotas ou em produção)
-| Prioridade | Ação | Por que precisa de autorização | Como |
-|---|---|---|---|
-| 1 | **F-01 — decidir a visibilidade do repositório.** Se o público não é intencional, torná-lo privado; se for intencional, manter público com as proteções abaixo | Altera acesso de terceiros ao projeto | Settings → General → Danger zone → *Change visibility* |
-| 2 | Publicar esta branch (PR → merge na `main`) e implantar site e API com as correções | Mudança remota e em produção | Roteiro: `docs/PUBLICACAO-E-REVERSAO.md` (backup antes; a API usa `zod` 4 e `@hono/node-server` 2: validar com o `login`/jogo de um aluno de teste) |
-| 3 | **F-09 — ativar** Secret Scanning, Push Protection, alertas e atualizações de segurança do Dependabot; proteger a `main` | Configuração do GitHub | `GITHUB-HARDENING.md` |
-| 4 | **F-12 — cópia externa dos backups** (variável `RCLONE_REMOTE`) | Infraestrutura de produção | Configurar o `rclone`; depois conferir com `restore-financity.sh --test` |
-| 5 | Remover o IP/host do histórico antigo | **Não recomendado**: o endereço da API é público por natureza e não há credenciais; reescrever histórico traz mais risco que benefício | – |
+## 2. Estado das ações que dependiam de autorização
+| Prioridade | Ação | Estado |
+|---|---|---|
+| 1 | **F-01 — visibilidade do repositório** | ⏳ **Aguarda decisão.** O repositório está público. Tornar privado melhora o sigilo do código, mas no plano gratuito do GitHub **desativa** o Secret Scanning, o Push Protection e a proteção da `main` recém-ativados; o verificador do projeto e o Gitleaks da CI continuam. Se o público for intencional (ex.: portfólio), manter |
+| 2 | Publicar a branch e implantar site e API | ✅ **Feito** (PR #26). Backup `financity-20261118-151953Z.dump` antes (restauração testada). API reconstruída; saúde ok; dados idênticos antes/depois; validação de entrada (zod 4) conferida de fora; CSP no ar |
+| 3 | **F-09 — ativar** Secret Scanning, Push Protection, alertas e atualizações do Dependabot; proteger a `main`; permissões de fluxo somente leitura | ✅ **Feito e conferido** |
+| 4 | **F-12 — cópia externa dos backups** | ⏳ Pendente (infraestrutura) |
+| 5 | Remover o IP/host do histórico antigo | Não recomendado (sem credenciais; endereço público por natureza) |
 
 ## 3. Planejado (sem urgência)
 - 🗓️ **F-06:** migrar `tailwindcss` 3 → 4 (remove os 10 avisos de desenvolvimento).

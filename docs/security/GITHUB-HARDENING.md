@@ -13,41 +13,34 @@
 | `SECURITY.md` | Como reportar vulnerabilidades de forma privada |
 | `.gitignore`, `.dockerignore` | Impedem segredos, dumps, chaves e credenciais de entrarem no repositório e nas imagens |
 
-> Os fluxos **ainda não foram executados** (exigem o envio ao GitHub). Ao abrir o primeiro PR, confira que os dois ficam verdes; ajustes de ambiente do `ci.yml` podem ser necessários.
+> Os fluxos foram executados no PR #26 e na `main`: **Segredos e dados pessoais**, **Vulnerabilidades de dependências** e **testes** passaram. O Gitleaks apontou 1 falso positivo (valor propositalmente errado em um teste), avaliado e registrado em `.gitleaksignore` por impressão digital, sem exceção global.
 
-## Configurações do GitHub que dependem de ação do proprietário (não executadas)
-Estado observado em 2026-11-18: repositório **público**; Secret Scanning, Push Protection e atualizações de segurança do Dependabot **desativados**; 26 branches remotas (várias já fundidas); sem fluxos de Actions; sem deploy keys nem webhooks; um único colaborador (o proprietário).
+## Configurações do GitHub (aplicadas em 2026-11-18, via `gh`)
+| Configuração | Estado |
+|---|---|
+| Secret Scanning | ✅ ativado |
+| Push Protection | ✅ ativado |
+| Alertas de vulnerabilidade e atualizações de segurança do Dependabot | ✅ ativados |
+| Permissões padrão dos fluxos | ✅ somente leitura; Actions não aprova PRs |
+| Proteção da `main` | ✅ exige PR e as verificações *Segredos e dados pessoais*, *Vulnerabilidades de dependências* e *testes*; sem force-push e sem exclusão; o proprietário (admin) não fica bloqueado |
+| Visibilidade | ⏳ **pública**; decisão pendente (ver `REMEDIATION-PLAN.md`) |
 
-Em repositório público estes recursos são gratuitos. Com a CLI `gh` (como proprietário):
+Estado observado antes: repositório público, recursos acima desativados, 26 branches remotas, sem fluxos de Actions, sem deploy keys nem webhooks e um único colaborador.
+
+Comandos usados (referência para reaplicar em outro repositório):
 
 ```bash
-# 1) Secret Scanning + Push Protection + Dependabot (alertas e atualizações de segurança)
 gh api -X PATCH repos/<dono>/<repo> \
   -f 'security_and_analysis[secret_scanning][status]=enabled' \
   -f 'security_and_analysis[secret_scanning_push_protection][status]=enabled' \
   -f 'security_and_analysis[dependabot_security_updates][status]=enabled'
 gh api -X PUT repos/<dono>/<repo>/vulnerability-alerts
-
-# 2) Permissões padrão dos fluxos: somente leitura
 gh api -X PUT repos/<dono>/<repo>/actions/permissions/workflow -f default_workflow_permissions=read -F can_approve_pull_request_reviews=false
-
-# 3) Proteger a main: exigir PR, verificações verdes e histórico linear; sem force-push nem exclusão
-gh api -X PUT repos/<dono>/<repo>/branches/main/protection --input - <<'JSON'
-{
-  "required_status_checks": { "strict": true, "contexts": ["Segredos e dados pessoais", "Vulnerabilidades de dependências", "testes"] },
-  "enforce_admins": false,
-  "required_pull_request_reviews": { "required_approving_review_count": 0, "dismiss_stale_reviews": true },
-  "restrictions": null,
-  "required_linear_history": false,
-  "allow_force_pushes": false,
-  "allow_deletions": false
-}
-JSON
+gh api -X PUT repos/<dono>/<repo>/branches/main/protection --input protecao.json   # exige PR + verificações; sem force-push/exclusão
 ```
-Ajuste os nomes em `contexts` aos nomes reais dos jobs após a primeira execução. Com um único mantenedor, `required_approving_review_count: 0` evita travar o fluxo, mas ainda exige PR e verificações.
 
 ## Limpeza de branches
 Branches já fundidas (`docs/*`, `feat/*`, `fix/*`) podem ser removidas depois de confirmadas no `main`: reduz a superfície do histórico e a chance de reintroduzir conteúdo antigo.
 
 ## Observação sobre a visibilidade
-Se o repositório for tornado privado (F-01), mantenha `SECURITY.md` e os fluxos; o Secret Scanning de repositório privado exige GitHub Advanced Security, então o verificador do projeto e o Gitleaks da CI passam a ser a principal barreira.
+Se o repositório for tornado privado (F-01): no plano gratuito, a proteção de branch e o Secret Scanning **deixam de estar disponíveis** (exigem plano pago ou GitHub Advanced Security). Mantenha `SECURITY.md`, o hook e os fluxos: o verificador do projeto e o Gitleaks da CI passam a ser a principal barreira.
