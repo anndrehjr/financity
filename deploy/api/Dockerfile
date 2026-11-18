@@ -1,6 +1,6 @@
 # API do Financity (VPS). Build multi-stage; contexto de build = raiz do repositório.
 #   docker build -f deploy/api/Dockerfile -t financity-api:TAG .
-FROM node:22-bookworm-slim AS build
+FROM node:26-bookworm-slim AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
 COPY apps/api/package.json apps/api/
@@ -11,7 +11,7 @@ RUN npm ci --workspace apps/api --workspace packages/gateway-sign --include-work
 COPY apps/api apps/api
 RUN npm run build --workspace apps/api
 
-FROM node:22-bookworm-slim AS run
+FROM node:26-bookworm-slim AS run
 ENV NODE_ENV=production
 WORKDIR /app
 COPY package.json package-lock.json ./
