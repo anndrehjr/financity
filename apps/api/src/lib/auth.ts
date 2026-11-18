@@ -75,6 +75,8 @@ export async function login(c: C, username: string, secretValue: string): Promis
   const token = crypto.randomBytes(32).toString("base64url");
   const ttl = user.role === "teacher" ? 4 * 3600_000 : 8 * 3600_000;
   await q("DELETE FROM sessions WHERE expires_at < $1", [Date.now()]);
+  // minimização de dados: tentativas de login (que guardam IP) com mais de 24 h e sem bloqueio vigente não precisam ser mantidas
+  await q("DELETE FROM login_attempts WHERE window_start < $1 AND locked_until < $2", [Date.now() - 24 * 3600_000, Date.now()]);
   await q("INSERT INTO sessions(token_hash,role,user_id,expires_at) VALUES($1,$2,$3,$4)", [sha(token), user.role, user.id, Date.now() + ttl]);
   if (user.role === "student") await presenceStart(user.id, sha(token)); // hora de entrada
   setCookie(c, COOKIE, token, { httpOnly: true, sameSite: "Lax", secure: config.isProd, path: "/", maxAge: ttl / 1000 });
