@@ -11,8 +11,8 @@ const falas = falasJson as Falas;
 const catalogo = (catalogoJson as { falas: { id: string; publico: string; texto: string }[] }).falas;
 const manifesto = JSON.parse(fs.readFileSync(path.join(process.cwd(), "public", "guia", "nina", "audio", "manifest.json"), "utf8")) as { falas: Record<string, unknown> };
 
-// Séries que já têm temas publicados. AMANHÃ, ao publicar o 7º ano, acrescente 7 aqui: o teste passará a exigir as falas de tema do 7º.
-const SERIES_COM_CONTEUDO = [8];
+// Séries com falas de tema: o 8º (publicado) e o 7º (falas s7.mapa_1..4 já cadastradas, com áudio; os temas do 7º ainda são rascunho).
+const SERIES_COM_CONTEUDO = [7, 8];
 const TODAS_AS_SERIES = [7, 8];
 const MOMENTOS_GERAIS = ["acerto", "parcial", "erro", "parado", "fase_concluida", "vitoria"]; // usados em qualquer série
 const MOMENTOS_DE_TEMA = ["mapa_1", "mapa_2", "mapa_3", "mapa_4"];                              // dependem dos temas da série
@@ -33,7 +33,7 @@ test("cobertura por série: as falas de tema existem para toda série que tem te
 
 test("o aluno do 7º NUNCA ouve/lê as falas dos temas do 8º (e vice-versa)", () => {
   for (const m of MOMENTOS_DE_TEMA) {
-    assert.equal(resolverMomento(falas, m, 7), undefined, `${m} do 8º vazou para o 7º`);
+    assert.equal(resolverMomento(falas, m, 7), `s7.${m}`, `${m}: o 7º deve usar a fala própria (s7.${m}), nunca a do 8º`);
     assert.equal(resolverMomento(falas, m, 8), m);
   }
 });

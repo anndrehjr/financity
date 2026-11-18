@@ -17,7 +17,7 @@ const { seedContent } = await import("../src/lib/seed-content.js");
 const { seedCulminancia } = await import("../src/lib/seed-culminancia.js");
 const { createStudents } = await import("../src/lib/students.js");
 const { startAttempt, assessmentState, submitAnswer } = await import("../src/lib/game.js");
-const { SERIE_7 } = await import("../src/content/serie7.js");
+const { SERIE_7, temaVazio } = await import("../src/content/serie7.js");
 const { seedSerie, validarTema } = await import("../src/lib/serie.js");
 const { closePool, one, q } = await import("../src/lib/db.js");
 const SECRET = process.env.GATEWAY_SECRET!;
@@ -38,7 +38,7 @@ const login = async (u: string, p: string) => cookieOf(await call("POST", "/api/
 
 /** Tema completo e válido, com texto fictício (só para o teste). */
 function temaPronto(slug: string) {
-  const t = structuredClone(SERIE_7[0]);
+  const t = structuredClone(temaVazio(1));
   t.slug = slug; t.title = "Tema de teste"; t.subtitle = "Teste"; t.topics = ["a"]; t.rascunho = false;
   t.questions.forEach((qq, i) => {
     Object.assign(qq, { title: `D${i + 1}`, theme: "t", scenario: "cenário", prompt: "enunciado?", rubric: "r", strength: "s", retake: "r", bncc: "EF07MA02" });
@@ -128,14 +128,20 @@ describe("estrutura por série", () => {
     assert.equal((await call("GET", "/api/me", { cookie: aluno8 })).json.maps.length, 4); // o 8º não é afetado
   });
 
-  it("molde do 7º: 4 temas em branco, em rascunho; a validação aponta o que falta e a carga de rascunho não grava nada", async () => {
+  it("7º ano: 4 temas aprovados e válidos (rascunho: false); a carga de rascunho não grava nada e tema incompleto é recusado", async () => {
     assert.equal(SERIE_7.length, 4);
-    for (const t of SERIE_7) { assert.equal(t.questions.length, 8); assert.equal(t.rascunho, true); assert.equal(t.serie, 7); assert.ok(validarTema(t).length > 0); }
+    for (const t of SERIE_7) {
+      assert.equal(t.questions.length, 8); assert.equal(t.rascunho, false); assert.equal(t.serie, 7);
+      assert.deepEqual(validarTema(t), [], `${t.slug} deve estar completo e válido`);
+    }
     const antesMapas = (await one<{ c: number }>("SELECT COUNT(*)::int c FROM maps"))!.c;
-    const r = await seedSerie(SERIE_7);
+    // os mesmos 4 temas marcados como rascunho: nada vai ao banco (aqui NÃO se carrega o conteúdo real, para não misturar com os outros testes)
+    const comoRascunho = SERIE_7.map((t) => ({ ...structuredClone(t), rascunho: true }));
+    const r = await seedSerie(comoRascunho);
     assert.deepEqual(r.publicados, []); assert.equal(r.rascunhos.length, 4);
     assert.equal((await one<{ c: number }>("SELECT COUNT(*)::int c FROM maps"))!.c, antesMapas);
-    const incompleto = structuredClone(SERIE_7[0]); incompleto.rascunho = false;
+    const incompleto = structuredClone(temaVazio(1)); incompleto.rascunho = false;
+    assert.ok(validarTema(incompleto).length > 0);
     await assert.rejects(() => seedSerie([incompleto]), /nada foi gravado/);
     assert.equal((await one<{ c: number }>("SELECT COUNT(*)::int c FROM maps"))!.c, antesMapas);
   });
