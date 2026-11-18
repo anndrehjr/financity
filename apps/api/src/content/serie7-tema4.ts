@@ -1,4 +1,4 @@
-// 7º ano — Tema 4 (RASCUNHO para revisão do professor). Fonte: aulas 10, 11 e 12 do 4º bimestre (Educação Financeira, SEDUC-SP).
+// 7º ano — Tema 4 (APROVADO pelo professor em 2026-11-18; só vai ao banco com `serie-cli publicar`). Fonte: aulas 10, 11 e 12 do 4º bimestre (Educação Financeira, SEDUC-SP).
 //   Aula 10 · Porcentagem no dia a dia – Parte 4: metas e gráficos (metas, orçamento, "Pizza financeira")
 //   Aula 11 · Construindo gráficos financeiros – Parte 1 (gráfico de setores na mídia, tabela de hábitos financeiros)
 //   Aula 12 · Construindo gráficos financeiros – Parte 2 (cuidados ao ler gráficos, POF/IBGE)
@@ -17,7 +17,7 @@ const q = (number: number, kind: Kind, bloom: Bloom, rest: Omit<QuestaoC, "code"
   ({ code: `S7-4-${number}`, number, kind, bloom, max: 30, ...rest });
 
 export const TEMA_7_4: TemaSerie = {
-  slug: "s7-tema-4", serie: 7, rascunho: true,
+  slug: "s7-tema-4", serie: 7, rascunho: false,
   title: "Metas e Gráficos Financeiros", subtitle: "Planejar o dinheiro e entender o que os dados mostram",
   topics: ["Metas e planejamento financeiro", "Gráfico de setores e porcentagem", "Cuidados ao ler tabelas e gráficos"],
   questions: [

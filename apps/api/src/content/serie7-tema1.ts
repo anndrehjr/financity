@@ -1,4 +1,4 @@
-// 7º ano — Tema 1 (RASCUNHO para revisão do professor). Fonte: aulas 1 e 2 do 4º bimestre (Educação Financeira, SEDUC-SP).
+// 7º ano — Tema 1 (APROVADO pelo professor em 2026-11-18; só vai ao banco com `serie-cli publicar`). Fonte: aulas 1 e 2 do 4º bimestre (Educação Financeira, SEDUC-SP).
 //   Aula 1 · Introdução à renda – Parte 1 (renda formal x informal; histograma)
 //   Aula 2 · Introdução à renda – Parte 2 (leitura de gráficos de renda)
 // Todos os números abaixo são os dos próprios slides ou dados fictícios coerentes com eles.
@@ -16,7 +16,7 @@ const q = (number: number, kind: Kind, bloom: Bloom, rest: Omit<QuestaoC, "code"
   ({ code: `S7-1-${number}`, number, kind, bloom, max: 30, ...rest });
 
 export const TEMA_7_1: TemaSerie = {
-  slug: "s7-tema-1", serie: 7, rascunho: true,
+  slug: "s7-tema-1", serie: 7, rascunho: false,
   title: "Renda e Trabalho", subtitle: "Quem trabalha, quanto ganha e o que os dados mostram",
   topics: ["Renda formal e informal", "Leitura de gráficos de renda", "Planejar com renda variável"],
   questions: [

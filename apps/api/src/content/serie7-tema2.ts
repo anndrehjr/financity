@@ -1,4 +1,4 @@
-// 7º ano — Tema 2 (RASCUNHO para revisão do professor). Fonte: aulas 3 e 4 do 4º bimestre (Educação Financeira, SEDUC-SP).
+// 7º ano — Tema 2 (APROVADO pelo professor em 2026-11-18; só vai ao banco com `serie-cli publicar`). Fonte: aulas 3 e 4 do 4º bimestre (Educação Financeira, SEDUC-SP).
 //   Aula 3 · Quanto tem na conta? (extrato bancário; gastos essenciais, não essenciais e tarifas)
 //   Aula 4 · Chegou a fatura. E agora? (fatura do cartão de crédito, juros, "bola de neve")
 // Todos os números abaixo são os dos próprios slides ou dados fictícios coerentes com eles.
@@ -16,7 +16,7 @@ const q = (number: number, kind: Kind, bloom: Bloom, rest: Omit<QuestaoC, "code"
   ({ code: `S7-2-${number}`, number, kind, bloom, max: 30, ...rest });
 
 export const TEMA_7_2: TemaSerie = {
-  slug: "s7-tema-2", serie: 7, rascunho: true,
+  slug: "s7-tema-2", serie: 7, rascunho: false,
   title: "Controle do Dinheiro", subtitle: "Extrato, fatura e o saldo de cada dia",
   topics: ["Extrato bancário", "Fatura do cartão de crédito", "Juros e efeito bola de neve"],
   questions: [
