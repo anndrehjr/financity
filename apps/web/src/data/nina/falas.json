@@ -51,6 +51,54 @@
       "inativa": false
     },
     {
+      "id": "s7.mapa_1.1",
+      "publico": "7",
+      "tela": "s7.mapa_1",
+      "contexto": "Introdução do Tema 1 (7º ano) — Renda e Trabalho.",
+      "texto": "Tema 1: **renda e trabalho**. De onde vem o dinheiro e o que os dados mostram.",
+      "emocao": "alegria",
+      "animacao": "happy",
+      "grupo": "s7.mapa_1",
+      "sorteio": false,
+      "inativa": false
+    },
+    {
+      "id": "s7.mapa_2.1",
+      "publico": "7",
+      "tela": "s7.mapa_2",
+      "contexto": "Introdução do Tema 2 (7º ano) — Controle do Dinheiro.",
+      "texto": "Tema 2: **controle do dinheiro**. Extrato e fatura contam para onde o dinheiro vai.",
+      "emocao": "curiosidade",
+      "animacao": "thinking",
+      "grupo": "s7.mapa_2",
+      "sorteio": false,
+      "inativa": false
+    },
+    {
+      "id": "s7.mapa_3.1",
+      "publico": "7",
+      "tela": "s7.mapa_3",
+      "contexto": "Introdução do Tema 3 (7º ano) — Compras e Porcentagem.",
+      "texto": "Tema 3: **compras e porcentagem**. Leia o cupom e faça as contas antes de pagar.",
+      "emocao": "curiosidade",
+      "animacao": "thinking",
+      "grupo": "s7.mapa_3",
+      "sorteio": false,
+      "inativa": false
+    },
+    {
+      "id": "s7.mapa_4.1",
+      "publico": "7",
+      "tela": "s7.mapa_4",
+      "contexto": "Introdução do Tema 4 (7º ano) — Metas e Gráficos Financeiros.",
+      "texto": "Tema 4: **metas e gráficos**. Planeje o dinheiro e leia os dados com atenção.",
+      "emocao": "alegria",
+      "animacao": "happy",
+      "grupo": "s7.mapa_4",
+      "sorteio": false,
+      "inativa": false
+    },
+    {
       "id": "acerto.1",
       "publico": "geral",
       "tela": "Atividade — logo após confirmar (pontuação alta)",

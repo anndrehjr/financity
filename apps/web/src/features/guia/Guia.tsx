@@ -1,8 +1,9 @@
 "use client";
-import { memo, useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { Avatar } from "./Avatar";
 import { personagem } from "./config/personagem";
 import { parseNegrito } from "./motor";
+import { escolherLado, type Lado } from "./posicao";
 import { useTutorial } from "./tutorial/TutorialProvider";
 import { TUTORIAIS } from "./tutorial/registro";
 import type { EstadoNina } from "./tutorial/tipos";
@@ -12,6 +13,10 @@ import { useGuia } from "./useGuia";
 const { velocidadeDigitacaoMs } = personagem.comportamento;
 const SEM_PRESSA = "Sem pressa! Se quiser, pode continuar sem fazer isso agora."; // id de áudio: guia.sem-pressa
 const reduzMovimento = () => { try { return window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch { return false; } };
+const { altura: ALTURA_NINA, margemPx } = personagem.visual;
+const LADO_PADRAO: Lado = personagem.visual.posicao === "inferior-direita" ? "direita" : "esquerda";
+// Medidas da Nina (config/personagem.ts) viram variáveis CSS lidas por .nina-guia / .nina-3d (globals.css).
+const VARS_NINA = { "--nina-h-desktop": `${ALTURA_NINA.desktop}px`, "--nina-h-tablet": `${ALTURA_NINA.tablet}px`, "--nina-h-cel-min": `${ALTURA_NINA.celularMin}px`, "--nina-h-cel-max": `${ALTURA_NINA.celularMax}px`, "--nina-ratio": `${personagem.visual.arte.largura} / ${personagem.visual.arte.altura}` } as CSSProperties;
 const ESTADO_DA_EXPRESSAO: Record<Expressao, EstadoNina> = { feliz: "happy", pensando: "thinking", preocupada: "encouraging", comemorando: "celebrating" };
 
 function Texto({ texto, completo, onFim }: { texto: string; completo: boolean; onFim: (digitando: boolean) => void }) {
@@ -47,6 +52,11 @@ function GuiaBase() {
   const [digitando, setDigitando] = useState(false);
   const [, forcar] = useState(0);
   const [bocaVoz, setBocaVoz] = useState<string | null>(null);
+  const [saindo, setSaindo] = useState(false);
+  const raiz = useRef<HTMLDivElement>(null);
+  const [ladoAtual, setLadoAtual] = useState<Lado>(LADO_PADRAO);
+  const timerSaida = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (timerSaida.current) clearTimeout(timerSaida.current); }, []);
   useEffect(() => g.voz.onMudar(() => forcar((x) => x + 1)), [g.voz]);
   useEffect(() => g.servico.onMudar(() => forcar((x) => x + 1)), [g.servico]);
   useEffect(() => { const a = g.servico.on("boca", (f) => setBocaVoz(f)); const b = g.servico.on("fim", () => setBocaVoz(null)); return () => { a(); b(); }; }, [g.servico]);
@@ -61,6 +71,26 @@ function GuiaBase() {
   }, [s, a]);
 
   useEffect(() => { setCompleto(false); }, [c?.chave]);
+  // Lado: durante o tutorial, a Nina troca de LADO (nunca de altura) se estiver na frente do elemento que a etapa destaca (posicao.ts).
+  const seletorAlvo = s && s.alvo.tipo === "dom" ? s.alvo.seletor : null;
+  useEffect(() => {
+    if (!c) return;
+    let quadro = 0;
+    const medir = () => {
+      const el = raiz.current; if (!el) return;
+      const r = seletorAlvo ? document.querySelector(seletorAlvo)?.getBoundingClientRect() : undefined;
+      const alvo = r && r.width > 0 && r.height > 0 ? { x: r.x, y: r.y, w: r.width, h: r.height } : null;
+      // retângulos reais do avatar e do balão (no lado atual); o outro lado é o espelho deles
+      const rects = Array.from(el.children).map((f) => { const q = f.getBoundingClientRect(); return { x: q.x, y: q.y, w: q.width, h: q.height }; });
+      setLadoAtual((atual) => escolherLado(alvo, rects, window.innerWidth, atual, LADO_PADRAO));
+    };
+    const agendar = () => { cancelAnimationFrame(quadro); quadro = requestAnimationFrame(medir); };
+    medir();
+    const ciclo = setInterval(medir, 400); // o alvo pode demorar a aparecer (ex.: pergunta carregando); a conta é barata (1 retângulo)
+    window.addEventListener("resize", agendar); window.addEventListener("scroll", agendar, { passive: true });
+    return () => { clearInterval(ciclo); cancelAnimationFrame(quadro); window.removeEventListener("resize", agendar); window.removeEventListener("scroll", agendar); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [c?.chave, seletorAlvo]);
   // Voz: fala o texto novo e cancela ao trocar de tela/etapa, pular ou esconder a Nina.
   useEffect(() => {
     if (!c || g.silenciada) return;
@@ -81,7 +111,16 @@ function GuiaBase() {
 
   if (!personagem.ativo) return null;
   const direita = personagem.visual.posicao === "inferior-direita";
-  const lado = direita ? "right-3 sm:right-5 items-end sm:flex-row-reverse" : "left-3 sm:left-5 items-start sm:flex-row";
+  // A Nina fica SEMPRE no canto inferior: no celular o balão fica ACIMA dela (flex-col-reverse) e cresce para cima; no tablet/desktop
+  // ela fica ao lado do balão, alinhada pela base. Assim o tamanho da mensagem nunca a faz subir ou descer.
+  const aDireita = ladoAtual === "direita";
+  const lado = aDireita ? "flex-col-reverse items-end sm:flex-row-reverse sm:items-end" : "flex-col-reverse items-start sm:flex-row sm:items-end";
+  // Esconder: a Nina some com um fade-out curto (sem animação se o aluno pediu menos movimento).
+  const esconder = () => {
+    if (reduzMovimento()) { g.silenciar(true); return; }
+    setSaindo(true);
+    timerSaida.current = setTimeout(() => { setSaindo(false); g.silenciar(true); }, 220);
+  };
   const btn = "pointer-events-auto rounded-full px-4 py-2 text-base font-extrabold focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-indigo-700";
   const Z = "z-[10001]"; // acima do overlay de destaque
 
@@ -106,14 +145,21 @@ function GuiaBase() {
 
   const ultima = c.indice === c.total - 1;
   const falando = digitando || g.servico.falando;
+  const escutando = !falando && !!s && s.fase === "aguardando"; // o tutorial espera o aluno agir
   return (
-    <div className={`pointer-events-none fixed bottom-0 ${Z} flex max-w-[calc(100vw-1.5rem)] flex-col gap-2 pb-2 ${lado}`}>
-      <div key={c.chave} className="motion-safe:animate-pop shrink-0" style={{ width: "min(" + personagem.visual.tamanhoPx * 0.75 + "px, 28vw)" }}>
-        <Avatar estado={c.estado} falando={falando} boca={bocaVoz} tamanho={personagem.visual.tamanhoPx} />
+    <div ref={raiz} className={`nina-guia pointer-events-none fixed ${Z} flex max-w-[calc(100vw-2rem)] gap-2 ${lado} ${saindo ? "nina-sai" : "nina-entra"}`}
+      style={{ ...VARS_NINA, bottom: margemPx, [aDireita ? "right" : "left"]: margemPx }}>
+      <div className="shrink-0">
+        <Avatar estado={c.estado} falando={falando} escutando={escutando} boca={bocaVoz} tamanho={personagem.visual.tamanhoPx} />
       </div>
-      <div role="status" aria-live="polite" onClick={() => setCompleto(true)}
-        className="pointer-events-auto mb-4 w-[min(92vw,26rem)] rounded-3xl border-4 bg-white p-4 shadow-xl" style={{ borderColor: personagem.visual.corDestaque }}>
-        <p className="text-xl font-bold leading-snug text-slate-900">
+      <div key={c.chave} role="status" aria-live="polite" onClick={() => setCompleto(true)}
+        className="nina-balao pointer-events-auto w-[min(92vw,26rem)] rounded-3xl border-2 bg-white p-4 shadow-lg" style={{ borderColor: personagem.visual.corDestaque }}>
+        {c.tutorial && s && (
+          <div className="mb-3 h-1.5 w-full overflow-hidden rounded-full bg-slate-200" role="progressbar" aria-label="Progresso do tutorial" aria-valuemin={1} aria-valuemax={s.total} aria-valuenow={s.indice + 1}>
+            <div className="h-full w-full rounded-full transition-transform duration-300" style={{ background: personagem.visual.corDestaque, transform: `scaleX(${(s.indice + 1) / s.total})`, transformOrigin: "left" }} />
+          </div>
+        )}
+        <p className="text-lg font-bold leading-snug text-slate-900 sm:text-xl">
           <span className="sr-only">{personagem.nome}: </span>
           <Texto texto={c.texto} completo={completo} onFim={setDigitando} />
         </p>
@@ -136,8 +182,8 @@ function GuiaBase() {
             <button type="button" className={`${btn} text-white`} style={{ background: personagem.visual.corDestaque }} onClick={g.avancar}>{ultima ? "Ok" : "Próximo ▸"}</button>
           )}
         </div>
-        <div className="mt-2 flex flex-wrap items-center gap-3">
-          <button type="button" onClick={() => g.silenciar(true)} className="pointer-events-auto text-sm font-bold text-slate-600 underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-indigo-700">Esconder {personagem.nome}</button>
+        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-2xl bg-slate-50 px-3 py-2">
+          <button type="button" onClick={esconder} className="pointer-events-auto text-sm font-bold text-slate-600 underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-indigo-700">Esconder {personagem.nome}</button>
           {(
             <button type="button" aria-pressed={g.voz.ativa} onClick={() => { const ligar = !g.voz.ativa; g.servico.setAtivo(ligar); if (ligar) void g.servico.tocar(c.vozId, c.texto); }}
               className="pointer-events-auto text-sm font-bold text-slate-600 underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-indigo-700">{g.voz.ativa ? "🔊 Voz ligada" : "🔇 Ligar voz"}</button>
@@ -145,7 +191,7 @@ function GuiaBase() {
         </div>
         {g.voz.ativa && personagem.creditos.mostrarElevenLabs && <p className="mt-2 text-xs font-semibold text-slate-500">{personagem.creditos.texto}</p>}
         {g.voz.ativa && (
-          <div className="mt-2 flex flex-wrap items-center gap-2 text-sm font-semibold text-slate-700">
+          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-2xl bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-700">
             <button type="button" className="pointer-events-auto underline" onClick={() => g.servico.repetir()}>🔁 Repetir fala</button>
             <label>Volume <input type="range" min={0} max={1} step={0.1} defaultValue={g.servico.volume} onChange={(e) => g.servico.setVolume(Number(e.target.value))} aria-label="Volume da voz" /></label>
             <label>Velocidade <input type="range" min={0.7} max={1.5} step={0.1} defaultValue={g.voz.velocidade} onChange={(e) => g.voz.definirVelocidade(Number(e.target.value))} aria-label="Velocidade da voz" /></label>

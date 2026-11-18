@@ -46,6 +46,50 @@
       ],
       "publico": "8"
     },
+    "s7.mapa_1": {
+      "tipo": "unica",
+      "quando": "Introdução do Tema 1 (7º ano) — Renda e Trabalho.",
+      "falas": [
+        {
+          "expressao": "feliz",
+          "texto": "Tema 1: **renda e trabalho**. De onde vem o dinheiro e o que os dados mostram."
+        }
+      ],
+      "publico": "7"
+    },
+    "s7.mapa_2": {
+      "tipo": "unica",
+      "quando": "Introdução do Tema 2 (7º ano) — Controle do Dinheiro.",
+      "falas": [
+        {
+          "expressao": "pensando",
+          "texto": "Tema 2: **controle do dinheiro**. Extrato e fatura contam para onde o dinheiro vai."
+        }
+      ],
+      "publico": "7"
+    },
+    "s7.mapa_3": {
+      "tipo": "unica",
+      "quando": "Introdução do Tema 3 (7º ano) — Compras e Porcentagem.",
+      "falas": [
+        {
+          "expressao": "pensando",
+          "texto": "Tema 3: **compras e porcentagem**. Leia o cupom e faça as contas antes de pagar."
+        }
+      ],
+      "publico": "7"
+    },
+    "s7.mapa_4": {
+      "tipo": "unica",
+      "quando": "Introdução do Tema 4 (7º ano) — Metas e Gráficos Financeiros.",
+      "falas": [
+        {
+          "expressao": "feliz",
+          "texto": "Tema 4: **metas e gráficos**. Planeje o dinheiro e leia os dados com atenção."
+        }
+      ],
+      "publico": "7"
+    },
     "acerto": {
       "tipo": "sorteio",
       "quando": "Resposta com pontuação alta (config minAcerto).",
