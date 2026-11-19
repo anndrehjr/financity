@@ -263,7 +263,7 @@ Os alunos são menores de idade, então a proteção dos dados é levada a séri
 - 💾 São feitas **cópias de segurança todos os dias**.
 - 🚫 O jogo **não pede dados pessoais** do aluno além do nome e da turma.
 
-Para relatar uma falha de segurança de forma privada, veja a [Política de segurança](SECURITY.md). Os controles técnicos e as limitações conhecidas estão em [`docs/security/`](docs/security/).
+Para relatar uma falha de segurança de forma privada, veja a [Política de segurança](SECURITY.md). Os controles técnicos e as limitações conhecidas estão em [`docs/security/`](docs/security/). A integridade das partidas (antitrapaça, penalidades, painel *Segurança* e limites dos navegadores) está em [`docs/ANTITRAPACA.md`](docs/ANTITRAPACA.md).
 
 ---
 
