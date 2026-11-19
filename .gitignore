@@ -7,6 +7,7 @@ data/*
 next-env.d.ts
 *.tsbuildinfo
 .next-audit
+.next-e2e
 
 # novo
 .pgdev

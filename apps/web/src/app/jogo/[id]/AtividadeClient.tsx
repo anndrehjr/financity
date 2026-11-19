@@ -8,10 +8,12 @@ import { reacaoPorPontos } from "@/features/guia/motor";
 import { useGuia } from "@/features/guia/useGuia";
 import { emitir } from "@/features/guia/tutorial/barramento";
 import { useTutorial } from "@/features/guia/tutorial/TutorialProvider";
+import Protecao, { usePaginaVisivel } from "@/features/integridade/Protecao";
+import type { EstadoIntegridade } from "@/features/integridade/deteccao";
 
 
 type Question = { id: number; number: number; title: string; scene: string; scenario: string; dialog: string; prompt: string; kind: "choice" | "multi" | "order"; hint: string | null; options: { id: number; letter: string; text: string }[] };
-type State = { map: { title: string; subtitle: string; sort?: number }; status: "not_started" | "in_progress" | "completed"; score: number; max: number; answered: number; total: number; question?: Question };
+type State = { map: { title: string; subtitle: string; sort?: number }; status: "not_started" | "in_progress" | "completed"; score: number; max: number; answered: number; total: number; question?: Question; integrity?: EstadoIntegridade };
 type Result = { studentName: string; score: number; max: number; pct: number; medal: { key: string; title: string; msg: string }; dominio?: { key: string; label: string } };
 
 export default function AtividadeClient({ id }: { id: number }) {
@@ -28,6 +30,7 @@ export default function AtividadeClient({ id }: { id: number }) {
   const tut = useTutorial();
   const falouIntro = useRef<number | null>(null);
   const falouFim = useRef(false);
+  const paginaVisivel = usePaginaVisivel(); // minimizar/bloquear a tela só pausa o relógio local de ociosidade; nunca é penalidade
 
   const load = useCallback(async () => {
     setError(null);
@@ -54,10 +57,10 @@ export default function AtividadeClient({ id }: { id: number }) {
   const perguntaId = state?.status === "in_progress" && !transition ? state.question?.id : undefined;
   useEffect(() => { if (perguntaId !== undefined) emitir("pergunta:exibida", { id, pergunta: perguntaId }); }, [perguntaId, id]);
   useEffect(() => {
-    if (perguntaId === undefined) return;
+    if (perguntaId === undefined || !paginaVisivel) return; // página oculta: o tempo de "parado" fica pausado e recomeça ao voltar
     const t = setTimeout(() => guia.falar("parado"), personagem.comportamento.segundosParado * 1000);
     return () => clearTimeout(t);
-  }, [perguntaId, guia]);
+  }, [perguntaId, guia, paginaVisivel]);
 
   async function start() {
     setBusy(true); setError(null);
@@ -161,6 +164,7 @@ export default function AtividadeClient({ id }: { id: number }) {
   if (!q) return <main className="game-bg"><Spinner /></main>;
   return (
     <main className="game-bg px-4 pb-10">
+      <Protecao assessmentId={id} ativo estado={state.integrity} onLiberada={load} />
       <Top score={state.score} />
       <div className="mx-auto max-w-4xl">
         <div className="mb-3" role="progressbar" aria-valuemin={1} aria-valuemax={state.total} aria-valuenow={state.answered + 1} aria-label={`Desafio ${state.answered + 1} de ${state.total}`}>
@@ -168,7 +172,7 @@ export default function AtividadeClient({ id }: { id: number }) {
           <div className="h-3 overflow-hidden rounded-full bg-white/80"><div className="h-full rounded-full bg-city-grape transition-all" style={{ width: `${(state.answered / state.total) * 100}%` }} /></div>
         </div>
 
-        <section key={q.id} className="overflow-hidden rounded-3xl bg-white shadow-xl animate-pop">
+        <section key={q.id} data-protegido className="fc-protegido overflow-hidden rounded-3xl bg-white shadow-xl animate-pop">
           <div className="relative aspect-[16/9] md:aspect-[2/1]"><SceneByKey k={q.scene} />
             <div className="absolute bottom-0 left-3 h-[58%]"><Alex pose="think" /></div>
           </div>

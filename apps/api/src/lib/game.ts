@@ -2,6 +2,7 @@ import { config } from "../config.js";
 import { one, q, tx } from "./db.js";
 import { HttpError } from "./auth.js";
 import { dominio, grade, RespostaInvalida, type Kind, type OptG, type Resp } from "./grading.js";
+import { analyzeAnswer, assertNotLocked, gateOf } from "./integrity.js";
 
 /** Medalhas por percentual da pontuação máxima (para o Mapa 1, de 25 pontos: 23, 19 e 13 — igual ao sistema anterior). */
 export const MEDALS = [
@@ -46,7 +47,7 @@ async function studentGrade(studentId: number): Promise<number | null> {
 }
 
 /** Avaliação da série do aluno. Outra série ou id inexistente => 404 (não revela que existe). */
-async function assessmentOf(studentId: number, assessmentId: number): Promise<AssessmentRow> {
+export async function assessmentOf(studentId: number, assessmentId: number): Promise<AssessmentRow> {
   const grade = await studentGrade(studentId);
   const a = Number.isInteger(assessmentId) && grade !== null
     ? await one<AssessmentRow>(`${ASSESSMENT_SQL} WHERE a.id=$1 AND a.grade=$2`, [assessmentId, grade]) : undefined;
@@ -116,8 +117,8 @@ export async function assessmentState(studentId: number, assessmentId: number) {
   const a = await assessmentOf(studentId, assessmentId);
   await assertPlayable(studentId, a);
   const max = await maxPointsForMap(a.map_id);
-  const attempt = await one<{ id: number; status: string; total_points: number }>(
-    "SELECT id,status,total_points FROM attempts WHERE student_id=$1 AND assessment_id=$2 AND status<>'voided'", [studentId, a.id]);
+  const attempt = await one<{ id: number; status: string; total_points: number; served_question_id: number | null }>(
+    "SELECT id,status,total_points,served_question_id FROM attempts WHERE student_id=$1 AND assessment_id=$2 AND status<>'voided'", [studentId, a.id]);
   const totalQ = (await one<{ c: number }>("SELECT COUNT(*) c FROM questions WHERE map_id=$1", [a.map_id]))!.c;
   const mapInfo = { id: a.id, title: a.title, subtitle: a.subtitle, sort: a.sort };
   if (!attempt) return { map: mapInfo, status: "not_started", score: 0, max, answered: 0, total: totalQ };
@@ -126,6 +127,9 @@ export async function assessmentState(studentId: number, assessmentId: number) {
   if (attempt.status === "completed") return base;
   const qq = await one<{ id: number; number: number; title: string; scene: string; scenario: string; dialog: string; prompt: string; kind: Kind; max_points: number; hint: string | null }>(NEXT_Q, [a.map_id, attempt.id]);
   if (!qq) return base;
+  // marca quando esta pergunta foi entregue ao aluno (só na primeira vez: atualizar a página não "zera o relógio"); base do tempo mínimo plausível
+  if (attempt.served_question_id !== qq.id) await q("UPDATE attempts SET served_question_id=$1, served_at=now() WHERE id=$2", [qq.id, attempt.id]);
+  const integrity = await gateOf(attempt.id);
   let order = await shuffledOptionIds(attempt.id, qq.id);
   const rows = await q<{ id: number; text: string; seq: number | null }>("SELECT id,text,seq FROM options WHERE question_id=$1", [qq.id]); // sem pontos, gabarito nem letra canônica
   const byId = new Map(rows.map((r) => [r.id, r.text]));
@@ -136,6 +140,7 @@ export async function assessmentState(studentId: number, assessmentId: number) {
   }
   return {
     ...base,
+    integrity,
     question: {
       id: qq.id, number: qq.number, title: qq.title, scene: qq.scene, scenario: qq.scenario, dialog: qq.dialog, prompt: qq.prompt,
       kind: qq.kind, hint: qq.hint,
@@ -144,23 +149,24 @@ export async function assessmentState(studentId: number, assessmentId: number) {
   };
 }
 
-export async function submitAnswer(studentId: number, assessmentId: number, questionId: number, resp: Resp, usedHint = false) {
+export async function submitAnswer(studentId: number, assessmentId: number, questionId: number, resp: Resp, usedHint = false, ctx: { sessionRef?: string | null } = {}) {
   const a = await assessmentOf(studentId, assessmentId);
   await assertPlayable(studentId, a);
   let earned = 0, questionMax = 0;
   try {
     await tx(async (c) => {
       // trava a tentativa: duas respostas simultâneas do mesmo aluno são processadas uma de cada vez
-      const attempt = await one<{ id: number; status: string; scoring: number }>(
-        "SELECT id,status,scoring FROM attempts WHERE student_id=$1 AND assessment_id=$2 AND status<>'voided' FOR UPDATE", [studentId, a.id], c);
+      const attempt = await one<{ id: number; status: string; scoring: number; served_question_id: number | null; elapsed: number | null }>(
+        "SELECT id,status,scoring,served_question_id,CASE WHEN served_at IS NULL THEN NULL ELSE extract(epoch FROM (now()-served_at))::float8 END elapsed FROM attempts WHERE student_id=$1 AND assessment_id=$2 AND status<>'voided' FOR UPDATE", [studentId, a.id], c);
       if (!attempt) throw new HttpError(409, "Atividade não iniciada.");
       if (attempt.status === "completed") throw new HttpError(409, "Esta atividade já foi concluída.");
+      await assertNotLocked(attempt.id, c); // partida suspensa/bloqueada pela integridade não aceita respostas (423)
       const next = await one<{ id: number }>(NEXT_Q.replace("SELECT *", "SELECT id"), [a.map_id, attempt.id], c);
       if (!next || next.id !== questionId) throw new HttpError(409, "Esta pergunta já foi respondida ou não é a atual.");
       // tentativas anteriores à padronização (scoring 1) terminam com os valores antigos; as novas (scoring 2) usam a escala padrão
       const legacy = attempt.scoring === 1;
-      const qinfo = (await one<{ kind: Kind; max_points: number }>(
-        `SELECT kind,${legacy ? "COALESCE(legacy_max_points,max_points)" : "max_points"} max_points FROM questions WHERE id=$1`, [questionId], c))!;
+      const qinfo = (await one<{ kind: Kind; max_points: number; prompt: string }>(
+        `SELECT kind,prompt,${legacy ? "COALESCE(legacy_max_points,max_points)" : "max_points"} max_points FROM questions WHERE id=$1`, [questionId], c))!;
       const opts = await q<OptG>(
         `SELECT id,${legacy ? "COALESCE(legacy_points,points)" : "points"} points,is_correct,seq FROM options WHERE question_id=$1`, [questionId], c);
       let g;
@@ -173,6 +179,8 @@ export async function submitAnswer(studentId: number, assessmentId: number, ques
       const left = (await one<{ c: number }>(
         "SELECT COUNT(*) c FROM questions WHERE map_id=$1 AND id NOT IN (SELECT question_id FROM answers WHERE attempt_id=$2)", [a.map_id, attempt.id], c))!.c;
       if (left === 0) await q("UPDATE attempts SET status='completed', completed_at=now() WHERE id=$1", [attempt.id], c);
+      // indicadores (tempo plausível, padrões, sessões simultâneas): só geram alerta para o professor; nunca alteram a pontuação
+      await analyzeAnswer(c, { studentId, attemptId: attempt.id, assessmentId: a.id, sessionRef: ctx.sessionRef ?? null, questionId, prompt: qinfo.prompt, elapsed: attempt.served_question_id === questionId ? attempt.elapsed : null });
     });
   } catch (e) {
     if (e instanceof HttpError) throw e;

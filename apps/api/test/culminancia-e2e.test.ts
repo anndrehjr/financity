@@ -9,6 +9,7 @@ const ADMIN = process.env.PG_ADMIN_URL || "postgres://financity_dev:dev-local-on
 process.env.DATABASE_URL = ADMIN.replace(/\/postgres$/, "/fc_culm");
 process.env.GATEWAY_SECRET = "segredo-de-teste-do-gateway-com-mais-de-32-caracteres";
 delete process.env.REQUIRE_SIGNATURE;
+process.env.ANSWER_FLOOD_MAX = "1000"; // este teste joga 32 questões seguidas em milissegundos; o limite anti-automação é testado em integridade.test.ts
 
 const { signRequest } = await import("@financity/gateway-sign");
 const { app } = await import("../src/app.js");

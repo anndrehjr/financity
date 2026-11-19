@@ -78,7 +78,17 @@ export async function login(c: C, username: string, secretValue: string): Promis
   // minimização de dados: tentativas de login (que guardam IP) com mais de 24 h e sem bloqueio vigente não precisam ser mantidas
   await q("DELETE FROM login_attempts WHERE window_start < $1 AND locked_until < $2", [Date.now() - 24 * 3600_000, Date.now()]);
   await q("INSERT INTO sessions(token_hash,role,user_id,expires_at) VALUES($1,$2,$3,$4)", [sha(token), user.role, user.id, Date.now() + ttl]);
-  if (user.role === "student") await presenceStart(user.id, sha(token)); // hora de entrada
+  if (user.role === "student") {
+    // sessão única (opcional, configurável na tela Segurança): uma nova entrada encerra as anteriores do mesmo aluno
+    try {
+      const cfg = JSON.parse((await one<{ value: string }>("SELECT value FROM settings WHERE key='integrity_config'"))?.value || "{}");
+      if (cfg.singleSession === true && cfg.enabled !== false) {
+        await presenceEndStudent(user.id, "nova entrada em outro aparelho");
+        await q("DELETE FROM sessions WHERE role='student' AND user_id=$1 AND token_hash<>$2", [user.id, sha(token)]);
+      }
+    } catch { /* configuração ilegível: mantém o comportamento padrão (várias sessões) */ }
+    await presenceStart(user.id, sha(token)); // hora de entrada
+  }
   setCookie(c, COOKIE, token, { httpOnly: true, sameSite: "Lax", secure: config.isProd, path: "/", maxAge: ttl / 1000 });
   return user;
 }

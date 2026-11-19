@@ -74,3 +74,9 @@ Sem senhas, PINs ou chaves neste arquivo.
 - **Do André:** imprimir `<pasta-fora-do-repositório>\credenciais-7ano.html`, entregar os cartões e **apagar o HTML e o `7ano.csv`**. Ver a Nina 3D no site real e passar o tutorial; entrar com um aluno do 7º e conferir os 4 temas.
 - **Não verificado:** tela de um aluno real do 7º; Nina em Safari/Firefox/celular físico/leitor de tela; áudio saindo pelo alto-falante.
 - **Pendências antigas:** trocar a senha do professor e apagar `credenciais-professor.txt`; plano da ElevenLabs (créditos no rodapé); envio dos backups ao Google Drive; arte própria dos cenários.
+
+## Atualização 2026-11-19: antitrapaça e integridade das partidas (branch `feat/antitrapaca`, local, NÃO enviada)
+- Implementado: migração `007_integridade.sql`, `apps/api/src/lib/integrity.ts` (ocorrências, níveis 1–3, suspensão/bloqueio, desconto opcional e reversível, indicadores do servidor, auditoria, retenção), rotas de aluno e de professor, integração em `game.ts` (423 ao responder suspensa/bloqueada; relógio de leitura), componente `features/integridade/Protecao.tsx`, tela `/admin/seguranca`, marca d'água configurável, impressão bloqueada por CSS.
+- Documentação: `docs/ANTITRAPACA.md` (inclui limitações dos navegadores e opções nativas futuras).
+- Testes: API 121/121 (34 novos em `integridade.test.ts`); web 62/62; E2E em Chrome real 44/44 (`tools/antitrapaca-e2e/`). Build de produção do site OK.
+- **Não feito / aguarda você:** merge e publicação (nada foi enviado ao GitHub, nem à VPS/Vercel); a migração 007 será aplicada quando a API subir (faça backup antes); decidir regras iniciais (marca d'água, suspensão, bloqueio, desconto) e comunicar a política a alunos e responsáveis.

@@ -34,6 +34,7 @@ Navegador ──HTTPS──▶ https://jogos.<domínio>            (Vercel: apps
 ## Modelo de dados (migrações em `apps/api/migrations`)
 - `001_base.sql`: equivalente ao SQLite atual (permite importar com os mesmos IDs).
 - `002_series_avaliacoes.sql` (aditiva): `classes.grade`, `subjects`, `maps.subject_id/kind`, `assessments` (mapa/jogo atribuído a uma **série**, com ordem e situação), `attempts.assessment_id`, `teacher_classes`.
+- `007_integridade.sql` (aditiva): `integrity_events`, `integrity_audit` e colunas de estado em `attempts` (antitrapaça). Ver [ANTITRAPACA.md](ANTITRAPACA.md).
 - Séries atuais: 8º ano. Para criar o 7º ano: inserir `assessments` com `grade=7` apontando para os mapas/questões do 7º. Matérias e jogos novos entram em `subjects`/`maps(kind)`.
 - A série da turma é deduzida do nome ("8º A", "7 ano"…); turma nova sem número é recusada.
 

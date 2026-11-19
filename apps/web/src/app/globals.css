@@ -40,6 +40,17 @@ h1, h2, h3, .font-display { font-family: var(--font-display), system-ui, sans-se
 
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 
+/* Proteção do conteúdo da questão (partida em andamento): sem seleção/arrastar com mouse ou toque.
+   Leitores de tela continuam lendo normalmente (user-select não afeta a árvore de acessibilidade). Desligável na tela Segurança. */
+html[data-fc-copia="1"] .fc-protegido { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+html[data-fc-copia="1"] .fc-protegido img { -webkit-user-drag: none; user-drag: none; }
+
+/* Impressão bloqueada durante a partida: o navegador imprime só esta mensagem. (Não impede captura de tela nem foto: ver docs/ANTITRAPACA.md) */
+@media print {
+  html[data-fc-print="1"] body { display: none !important; }
+  html[data-fc-print="1"]::before { content: "Conteúdo protegido: a impressão desta atividade não é permitida."; display: block; padding: 3rem; font: 700 18pt sans-serif; color: #000; }
+}
+
 /* Impressão / PDF dos relatórios */
 @media print {
   body { background: #fff !important; }
@@ -93,6 +104,15 @@ h1, h2, h3, .font-display { font-family: var(--font-display), system-ui, sans-se
   .admin-root[data-theme="dark"] :is(.text-rose-700, .text-rose-800, .text-red-700) { color: #fda4af; }
   .admin-root[data-theme="dark"] :is(.text-amber-800, .text-amber-900) { color: #fcd34d; }
   .admin-root[data-theme="dark"] .text-sky-900 { color: #bae6fd; }
+  /* tela Segurança e Antitrapaça: tons extras usados nos cartões e etiquetas (fundo e texto remapeados juntos para manter o contraste) */
+  .admin-root[data-theme="dark"] .bg-indigo-100 { background-color: #252d5a; }
+  .admin-root[data-theme="dark"] .bg-rose-100 { background-color: #4a1d2b; }
+  .admin-root[data-theme="dark"] .bg-orange-100 { background-color: #43260f; }
+  .admin-root[data-theme="dark"] :is(.text-amber-950) { color: #fde68a; }
+  .admin-root[data-theme="dark"] :is(.text-rose-900, .text-rose-950) { color: #fecdd3; }
+  .admin-root[data-theme="dark"] .text-orange-900 { color: #fed7aa; }
+  .admin-root[data-theme="dark"] :is(.text-emerald-800, .text-emerald-950) { color: #a7f3d0; }
+  .admin-root[data-theme="dark"] .text-slate-900 { color: var(--d-text); }
   /* cabeçalho do painel: o item ativo do menu continua "claro" sobre o fundo índigo */
   .admin-root[data-theme="dark"] header .bg-white { background-color: #e0e7ff; }
   .admin-root[data-theme="dark"] header .text-indigo-950 { color: #1e1b4b; }

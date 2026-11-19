@@ -62,7 +62,7 @@ describe("pontuação padronizada (migração 006)", () => {
     const r = await createStudents([{ name: "Aluno A Fictício", className: "8 ano", pin: "483921" }, { name: "Aluno B Fictício", className: "8 ano", pin: "719364" }], t!.id);
     [aId, bId] = [r.created[0].id, r.created[1].id]; [aUser, bUser] = [r.created[0].username, r.created[1].username];
     // aluno A já jogou Q1 pela regra antiga (escolheu a alternativa de 10 pontos, de 20): gravado direto, como estava antes da migração
-    await startAttempt(aId, asm);
+    await q("INSERT INTO attempts(student_id,map_id,assessment_id) VALUES($1,$2,$3)", [aId, map, asm]); // direto no banco antigo (o código atual espera colunas da migração 007)
     const tent = (await one<{ id: number }>("SELECT id FROM attempts WHERE student_id=$1", [aId]))!.id;
     const o10 = (await optIds(q1))[2].id;
     await q("INSERT INTO answers(attempt_id,question_id,option_id,points,display_pos,response,used_hint) VALUES($1,$2,$3,10,1,$4::jsonb,false)", [tent, q1, o10, JSON.stringify({ optionId: o10 })]);
