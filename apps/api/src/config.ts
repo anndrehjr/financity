@@ -21,6 +21,8 @@ export const config = {
   /** Em desenvolvimento/testes pode-se dispensar a assinatura (nunca em produção). */
   requireSignature: isProd ? true : process.env.REQUIRE_SIGNATURE !== "0",
   /** SÓ para testes locais: libera todos os mapas publicados para qualquer aluno. Ignorado (sempre falso) em produção. */
+  /** Máximo de envios de resposta por aluno em 10 s antes de recusar (anti-automação). Um aluno real nunca chega perto (há 1,7 s de transição por resposta). */
+  answerFloodMax: Math.max(1, Number(process.env.ANSWER_FLOOD_MAX || 8)),
   unlockAllMaps: isProd ? false : process.env.UNLOCK_ALL_MAPS === "1",
 };
 

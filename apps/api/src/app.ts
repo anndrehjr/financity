@@ -6,7 +6,8 @@ import { z, ZodError } from "zod";
 import { config } from "./config.js";
 import { HttpError, currentTokenHash, getSession, isStrongPassword, login, logout, requireRole, type Env } from "./lib/auth.js";
 import { getPool, getSetting, one, q, setSetting, tx } from "./lib/db.js";
-import { assessmentResult, assessmentState, listAssessments, startAttempt, submitAnswer } from "./lib/game.js";
+import { assessmentOf, assessmentResult, assessmentState, listAssessments, startAttempt, submitAnswer } from "./lib/game.js";
+import { eventDetail, flagFlood, getConfig, listEvents, lockedAttempts, overLimit, parseClientEvent, publicConfig, recentAudit, recordClientEvent, releaseByTeacher, reviewEvent, summary as integritySummary, updateConfig, configSchema, type IntegrityFilter } from "./lib/integrity.js";
 import { assessmentsForTeacher, classReport, dashboard, parseScope, questionDetail, questionIdFor, studentReport, studentsCsvRows, type Filter } from "./lib/analytics.js";
 import { countPendingPins, createStudents, deleteStudents, generatePinsBatch, listStudents, log, releaseNewAttempt, resetPin, setActive, type BatchMode, type NewStudent } from "./lib/students.js";
 import { removeDemo, seedDemo } from "./lib/demo.js";
@@ -115,8 +116,28 @@ app.post("/api/presence/ping", async (c) => {
 app.post("/api/game/:id/start", async (c) => { const u = await requireRole(c, "student"); return c.json(await startAttempt(u.id, pid(c, "id"))); });
 app.get("/api/game/:id/state", async (c) => { const u = await requireRole(c, "student"); return c.json(await assessmentState(u.id, pid(c, "id"))); });
 app.get("/api/game/:id/result", async (c) => { const u = await requireRole(c, "student"); return c.json(await assessmentResult(u.id, pid(c, "id"), u.name)); });
+/** Referência curta da sessão (prefixo do hash do cookie; não é o token): liga ocorrências e marca d'água à sessão sem expô-la. */
+const sessionRefOf = (c: Parameters<typeof currentTokenHash>[0]) => currentTokenHash(c)?.slice(0, 8) ?? null;
+
+/** Proteções que o navegador deve aplicar (marca d'água, bloqueio de cópia/impressão). Não revela regras de penalidade. */
+app.get("/api/integrity/config", async (c) => {
+  const u = await requireRole(c, "student");
+  return c.json({ ...publicConfig(await getConfig()), name: u.name, sessionRef: sessionRefOf(c)?.toUpperCase() ?? null });
+});
+/** O navegador RELATA o que seus componentes observaram (tipo fixo, sem gravidade). Quem decide a consequência é o servidor. */
+app.post("/api/game/:id/integrity/event", async (c) => {
+  const u = await requireRole(c, "student");
+  const id = pid(c, "id");
+  await assessmentOf(u.id, id); // só da série do aluno; outro id => 404
+  const body = parseClientEvent(await c.req.json().catch(() => { throw new HttpError(400, "Requisição inválida."); }));
+  return c.json(await recordClientEvent(u.id, id, sessionRefOf(c), body));
+});
 app.post("/api/game/:id/answer", async (c) => {
   const u = await requireRole(c, "student");
+  if (overLimit(`ans:${u.id}`, config.answerFloodMax, 10_000)) { // envios repetidos/automatizados: recusa e deixa um indicador para o professor
+    await flagFlood(u.id, pid(c, "id"), sessionRefOf(c)).catch(() => undefined);
+    throw new HttpError(429, "Muitos envios em pouco tempo. Aguarde alguns segundos.");
+  }
   const b = await json(c, z.object({
     questionId: z.coerce.number().int(),
     optionId: z.coerce.number().int().optional(),
@@ -124,7 +145,7 @@ app.post("/api/game/:id/answer", async (c) => {
     order: z.array(z.coerce.number().int()).max(10).optional(),
     usedHint: z.boolean().optional(),
   }));
-  return c.json(await submitAnswer(u.id, pid(c, "id"), b.questionId, { optionId: b.optionId, optionIds: b.optionIds, order: b.order }, b.usedHint === true));
+  return c.json(await submitAnswer(u.id, pid(c, "id"), b.questionId, { optionId: b.optionId, optionIds: b.optionIds, order: b.order }, b.usedHint === true, { sessionRef: sessionRefOf(c) }));
 });
 
 // ───────── professor ─────────
@@ -254,6 +275,35 @@ app.patch("/api/admin/students/:id", async (c) => {
 app.get("/api/admin/students/:id/report", async (c) => {
   const t = await requireRole(c, "teacher");
   return c.json(await studentReport(t.id, pid(c, "id"), toId(c.req.query("assessment")) || null));
+});
+
+// ───────── segurança e antitrapaça (professor) ─────────
+const integrityFilter = (c: { req: { query(k: string): string | undefined } }): IntegrityFilter => ({
+  scope: parseScope(c.req.query("scope")), classId: toId(c.req.query("class")) || null, serie: toId(c.req.query("serie")) || null,
+  studentId: toId(c.req.query("student")) || null, from: c.req.query("from") || null, to: c.req.query("to") || null,
+  severity: toId(c.req.query("severity")) || null, status: c.req.query("status") || null, certainty: c.req.query("certainty") || null,
+});
+app.get("/api/admin/integrity/summary", async (c) => { const t = await requireRole(c, "teacher"); const f = integrityFilter(c); return c.json({ ...(await integritySummary(t.id, f)), locked: await lockedAttempts(t.id, f) }); });
+app.get("/api/admin/integrity/events", async (c) => { const t = await requireRole(c, "teacher"); return c.json(await listEvents(t.id, integrityFilter(c))); });
+app.get("/api/admin/integrity/events/:id", async (c) => { const t = await requireRole(c, "teacher"); return c.json(await eventDetail(t.id, pid(c, "id"))); });
+app.patch("/api/admin/integrity/events/:id", async (c) => {
+  const t = await requireRole(c, "teacher");
+  const b = await json(c, z.object({ action: z.string().max(30), note: z.string().max(300).optional() }));
+  await reviewEvent(t.id, pid(c, "id"), b.action, b.note);
+  return c.json(await eventDetail(t.id, pid(c, "id")));
+});
+app.post("/api/admin/integrity/attempts/:id/release", async (c) => {
+  const t = await requireRole(c, "teacher");
+  const b = await json(c, z.object({ note: z.string().max(300) }));
+  await releaseByTeacher(t.id, pid(c, "id"), b.note);
+  return c.json({ ok: true });
+});
+app.get("/api/admin/integrity/audit", async (c) => { const t = await requireRole(c, "teacher"); return c.json(await recentAudit(t.id)); });
+app.get("/api/admin/integrity/config", async (c) => { await requireRole(c, "teacher"); return c.json(await getConfig()); });
+app.put("/api/admin/integrity/config", async (c) => {
+  const t = await requireRole(c, "teacher");
+  const b = await json(c, configSchema);
+  return c.json(await updateConfig(t.id, b));
 });
 
 app.notFound((c) => c.json({ error: "Não encontrado." }, 404));

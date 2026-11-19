@@ -61,10 +61,11 @@ describe("estrutura por série", () => {
     const t = await one<{ id: number }>("INSERT INTO teachers(username,name,password_hash) VALUES($1,$2,$3) RETURNING id", ["prof.s", "Prof S", await bcrypt.hash("Senha-Forte-1!", 4)]);
     const r = await createStudents([{ name: "Aluno Oito Teste", className: "8 ano", pin: "483921" }], t!.id);
     const id = r.created[0].id, username = r.created[0].username;
-    await startAttempt(id, (await q<{ id: number }>("SELECT a.id FROM assessments a WHERE a.grade=8 AND a.status='available' ORDER BY a.sort LIMIT 1"))[0].id);
     const aid = (await q<{ id: number }>("SELECT id FROM assessments WHERE grade=8 AND status='available' ORDER BY sort LIMIT 1"))[0].id;
-    const st: any = await assessmentState(id, aid);
-    // resposta gravada direto no banco antigo (o código atual de jogo já espera as colunas das migrações novas, que só existem depois do migrate())
+    // tentativa e resposta gravadas direto no banco antigo (o código atual de jogo já espera as colunas das migrações novas, que só existem depois do migrate())
+    await q("INSERT INTO attempts(student_id,map_id,assessment_id) SELECT $1,map_id,id FROM assessments WHERE id=$2", [id, aid]);
+    const q1 = (await one<{ id: number }>("SELECT id FROM questions WHERE map_id=(SELECT map_id FROM assessments WHERE id=$1) ORDER BY number LIMIT 1", [aid]))!.id;
+    const st: any = { question: { id: q1, options: [{ id: (await one<{ id: number }>("SELECT id FROM options WHERE question_id=$1 ORDER BY letter LIMIT 1", [q1]))!.id }] } };
     const opt = st.question.options[0].id;
     const tent = (await one<{ id: number }>("SELECT id FROM attempts WHERE student_id=$1", [id]))!.id;
     const pts = (await one<{ points: number }>("SELECT points FROM options WHERE id=$1", [opt]))!.points;
