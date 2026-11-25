@@ -14,9 +14,9 @@
   },
   "dependencies": {
     "@financity/gateway-sign": "*",
-    "@hono/node-server": "^2.1.9",
+    "@hono/node-server": "^2.1.11",
     "bcryptjs": "^2.4.3",
-    "hono": "^4.6.0",
+    "hono": "^4.13.20",
     "pg": "^8.13.0",
     "zod": "^4.6.7"
   },
